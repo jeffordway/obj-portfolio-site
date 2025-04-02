@@ -1,0 +1,51 @@
+# Project-Specific Rules: obj-portfolio (Revised)
+
+## Framework & Core Stack
+
+- **Framework:** Next.js 13+ (App Router).
+- **Styling:** Tailwind CSS. Utilize `tailwind.config.js` for theme customization (colors, fonts, spacing, ring color etc.). Rely on theme values (`foreground`, `background`, etc.) where possible.
+- **Class Merging:** Use the `cn` utility (from `clsx`) imported from `@/lib/utils` for dynamic and conditional class names.
+
+## Directory Structure & Imports
+
+- **Routing:** Adhere to Next.js App Router conventions within `src/app/`.
+- **Components:**
+  - UI Primitives: `src/components/ui/` (e.g., Button, Text, Spinner, Grid).
+  - Layout Components: `src/components/layouts/` (e.g., Navbar, Section, Footer).
+  - Feature-Specific Components: `src/components/features/` (Create if complex features arise).
+  - Icons: Store SVG icon components in `src/components/ui/icon/`.
+- **Hooks:** Place reusable custom hooks in `src/hooks/` (if they become numerous/complex) or within `src/lib/`.
+- **Utilities & Libs:** Place shared functions and configurations in `src/lib/`.
+- **State:** Store Zustand stores (if used) in `src/lib/state/`.
+- **Imports:** Use **absolute imports** configured via `paths` in `tsconfig.json` (e.g., `@/components/...`, `@/lib/...`).
+
+## Component Design
+
+- **Props:** Define component `Props` interfaces within the component file.
+- **Styling Variants:** For components with multiple visual styles (like Button, Text), map `variant`, `size`, or `preset` props to specific Tailwind classes using constant objects (e.g., `variantStyles`, `sizeStyles`, `presetStyles`) within the component file.
+- **Responsiveness:** Apply responsive styles using Tailwind's prefixes (`sm:`, `md:`, `lg:`, etc.).
+- **Interactivity:** Use Tailwind's transition/transform utilities (`transition-*`, `duration-*`, `hover:*`, `active:*`) for interactive states. Define clear focus states (`focus-visible:*`) for accessibility.
+- **Refs:** Use `React.forwardRef` when necessary to forward refs to underlying DOM elements.
+- **Debugging:** Always provide a `displayName` for components created with `forwardRef` or higher-order components.
+
+## Layout & Structure
+
+- **Page Structure:** Use the `Section` component (`src/components/layouts/Section.tsx`) as the primary container for page content sections to ensure consistent padding and max-width.
+- **Content Layout:** Use grid components (`OneColumnGrid`, etc. from `src/components/ui/grid/`) or Flexbox utilities within sections for arranging content. Prefer dedicated layout components over complex inline styles where appropriate.
+
+## Metadata & SEO
+
+- **Page Metadata:** Define page titles and descriptions using Next.js `Metadata` exports in `page.tsx` files.
+
+## State Management
+
+- Adhere to the global rule (Zustand) for complex state needs. Simple, non-shared state can use `useState`.
+
+## Backend Logic (If Applicable)
+
+- **API Routes:** Place traditional API routes in `src/app/api/...`.
+- **Server Actions:** Consider colocating simple Server Actions with the components that use them, or place shared/complex actions in a dedicated `src/lib/actions/` directory.
+
+## Testing
+
+- **File Location:** Colocate test files with the component or utility they test (e.g., `Button.test.tsx` alongside `Button.tsx`). Alternatively, use feature-based `__tests__` directories if preferred for larger features.

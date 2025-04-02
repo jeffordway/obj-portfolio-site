@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 
 // --- Type Definitions ---
 
-// Allowed HTML elements for the component
 export type TextElement =
   | "p"
   | "span"
@@ -19,29 +18,29 @@ export type TextElement =
   | "blockquote"
   | "cite";
 
-// Available style presets (Revised again)
-export type TextPreset =
+export type TextVariant =
   | "title"
   | "heading"
-  | "subtitle" // Primary display text
+  | "subtitle"
   | "lead"
   | "body"
-  | "body-sm" // Body text variations
+  | "body-sm"
   | "quote"
   | "eyebrow"
   | "label"
-  | "caption"; // Other specific styles
+  | "caption";
 
-// Available text alignments (kept separate)
 export type TextAlign = "left" | "center" | "right" | "justify";
 
 // --- Component Props Interface ---
 
-export interface TextProps extends React.HTMLAttributes<HTMLElement> {
-  /** The HTML element to render. @default 'p' */
-  as?: TextElement;
-  /** Style preset to apply. @default 'body' */
-  preset?: TextPreset;
+// Added Generic Type E for the element type
+type BaseTextProps<E extends TextElement = "p"> = {
+  // Defaulting E to 'p'
+  /** The HTML element to render. Overrides default mapping from variant. */
+  as?: E; // Use the generic E
+  /** Style variant to apply. Determines default HTML element. @default 'body' */
+  variant?: TextVariant;
   /** Text alignment. @default 'left' */
   align?: TextAlign;
   /** Apply muted styling (reduced opacity). @default false */
@@ -50,12 +49,16 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   /** Content of the text element. */
   children: React.ReactNode;
-}
+};
+
+// Combine BaseTextProps with standard HTML attributes for the specific element E
+// Omit the props defined in BaseTextProps from the standard HTML attributes to avoid conflicts
+export type TextProps<E extends TextElement = "p"> = BaseTextProps<E> &
+  Omit<React.ComponentPropsWithoutRef<E>, keyof BaseTextProps<E>>;
 
 // --- Style Mappings ---
 
-// Maps preset name to Tailwind classes (Revised again)
-const presetStyles: Record<TextPreset, string> = {
+const variantStyles: Record<TextVariant, string> = {
   // Primary Display Text
   title: "text-xl md:text-2xl text-foreground/60 font-medium tracking-widest",
   subtitle: "text-2xl md:text-3xl font-normal",
@@ -63,19 +66,17 @@ const presetStyles: Record<TextPreset, string> = {
 
   // Body Text & Variations
   lead: "text-lg md:text-xl font-medium leading-relaxed",
-  body: "text-base md:text-lg leading-relaxed", // Default body
+  body: "text-base md:text-lg leading-relaxed",
   "body-sm": "text-sm md:text-base leading-relaxed",
 
   // Other Specific Styles
-  quote:
-    "italic border-l-4 border-border pl-4 py-2 my-4 text-md md:text-lg", // New quote style
+  quote: "italic border-l-4 border-border pl-4 py-2 my-4 text-md md:text-lg",
   eyebrow:
     "text-xs md:text-sm text-foreground/60 font-semibold tracking-wide uppercase",
   label: "text-xs md:text-sm font-medium uppercase tracking-wider",
   caption: "text-xs md:text-sm text-foreground/60 font-normal",
 };
 
-// Maps alignment prop to Tailwind classes
 const alignClasses: Record<TextAlign, string> = {
   left: "text-left",
   center: "text-center",
@@ -85,50 +86,54 @@ const alignClasses: Record<TextAlign, string> = {
 
 // --- Default Element Mapping ---
 
-// Maps presets to their default semantic HTML elements
-const presetToElementMap: Partial<Record<TextPreset, TextElement>> = {
+const variantToElementMap: Partial<Record<TextVariant, TextElement>> = {
   title: "h1",
   subtitle: "h2",
   heading: "h3",
+  lead: "p",
+  body: "p",
+  "body-sm": "p",
   quote: "blockquote",
-  // label often pairs with <label>, but <p> or <span> might be safer defaults
+  eyebrow: "div",
+  label: "div",
+  caption: "span",
 };
 
 // --- Text Component ---
 
-/**
- * Versatile Text Component
- *
- * Renders text with predefined style presets ('title', 'heading', 'body', etc.)
- * Allows overriding the HTML tag with 'as' and controlling alignment,
- * muted state, and truncation independently.
- */
-export const Text = ({
-  as: ComponentProp, // Rename incoming prop to avoid conflict
-  preset = "body",
-  align = "left",
-  truncate = false,
-  className,
-  children,
-  ...props
-}: TextProps) => {
-  // Determine the component to render:
-  // 1. Use explicit `as` prop if provided.
-  // 2. Check map for preset default.
-  // 3. Fallback to 'p'.
-  const Component = ComponentProp || presetToElementMap[preset] || "p";
+// Define directly inside forwardRef with generics
+export const Text = React.forwardRef(
+  <E extends TextElement = "p">(
+    {
+      as: ComponentProp,
+      variant = "body",
+      align = "left",
+      truncate = false,
+      className,
+      children,
+      ...props
+    }: TextProps<E>,
+    ref: React.ForwardedRef<React.ElementRef<E>>
+  ) => {
+    const Component = (ComponentProp ||
+      variantToElementMap[variant] ||
+      "p") as React.ElementType;
 
-  return (
-    <Component
-      className={cn(
-        presetStyles[preset], // Apply preset styles
-        alignClasses[align], // Apply alignment
-        truncate && "truncate", // Apply truncation if true
-        className // Merge custom classes last
-      )}
-      {...props}
-    >
-      {children}
-    </Component>
-  );
-};
+    return (
+      <Component
+        ref={ref}
+        className={cn(
+          variantStyles[variant],
+          alignClasses[align],
+          truncate && "truncate",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </Component>
+    );
+  }
+);
+
+Text.displayName = "Text";

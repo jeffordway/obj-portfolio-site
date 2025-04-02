@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
-import { Navbar } from "@/components/layouts/Navbar";
+import { cn } from "@/lib/utils";
 
 // Font configuration
 export const primaryFont = Inter({
@@ -41,10 +41,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${primaryFont.variable} font-sans antialiased bg-background text-foreground`}
+        className={cn(
+          primaryFont.variable,
+          "font-sans antialiased bg-background text-foreground",
+          // Removed flex flex-col min-h-screen, as individual layouts might handle this
+        )}
       >
-        <Navbar />
-        <main className="flex-grow">{children}</main>
+        {/* Navbar and Footer are removed - handled by (site) layout now */}
+        {/* Root layout now just renders the children passed to it */}
+        {/* (which will be either the SiteLayout or StudioLayout) */}
+        {children}
       </body>
     </html>
   );

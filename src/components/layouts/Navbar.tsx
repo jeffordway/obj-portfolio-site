@@ -1,43 +1,21 @@
-"use client"; 
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils"; 
+import { cn } from "@/lib/utils";
 import { RiMenuLine, RiCloseLine } from "@remixicon/react";
 import { createPortal } from "react-dom";
 
+// Changed to absolute imports
 import { NavItem } from "@/components/ui/navigation/NavItem";
-import { ExternalLink } from "../ui/links/ExternalLink";
+import { ExternalLink } from "@/components/ui/links/ExternalLink";
 import { NavLogo } from "@/components/ui/navigation/NavLogo";
-import { SocialIcon, SupportedIconName } from "../ui/social/SocialIcon";
-import { Container } from "@/components/layouts/Container";
-
-interface NavLink {
-  href: string;
-  label: string;
-}
-
-interface SocialLink {
-  name: string;
-  href: string;
-  iconName: SupportedIconName;
-}
-
-const navLinks: NavLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
-
-const socialLinks: SocialLink[] = [
-  { name: "GitHub", href: "https://github.com/jeffordway", iconName: "github" },
-  {
-    name: "LinkedIn",
-    href: "https://www.linkedin.com/in/jeffordway/",
-    iconName: "linkedin",
-  },
-  { name: "X", href: "https://x.com/indigohawk931", iconName: "X" },
-];
+import {
+  SocialIcon,
+  SupportedIconName,
+} from "@/components/ui/social/SocialIcon";
+import { Section } from "@/components/layouts/Section";
+import { navLinks, socialLinks } from "@/config/site";
 
 export interface NavbarProps {
   className?: string;
@@ -49,7 +27,7 @@ export const Navbar = ({ className }: NavbarProps) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    setMounted(true); 
+    setMounted(true);
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
@@ -57,142 +35,113 @@ export const Navbar = ({ className }: NavbarProps) => {
   }, [mobileMenuOpen]);
 
   const renderNavItems = (isMobile = false) =>
-    navLinks.map((item) => (
-      <NavItem
-        key={item.href}
-        href={item.href}
-        isActive={pathname === item.href}
-        onClick={() => isMobile && setMobileMenuOpen(false)}
-        className={cn(
-          isMobile ? "text-2xl" : "text-base"
-        )}
-      >
-        {item.label}
-      </NavItem>
-    ));
+    navLinks
+      .filter((item) => item.showNavBar)
+      .map((item) => (
+        <NavItem
+          key={item.href}
+          href={item.href}
+          isActive={pathname === item.href}
+          onClick={() => isMobile && setMobileMenuOpen(false)}
+          className={cn(
+            isMobile ? "text-2xl" : "text-base"
+            // Add any other base styling shared between mobile/desktop if needed
+          )}
+        >
+          {item.label}
+        </NavItem>
+      ));
 
   const renderSocialLinks = (isMobile = false) =>
     socialLinks.map((link) => (
       <ExternalLink
         key={link.name}
         href={link.href}
-        ariaLabel={link.name}
-        onClick={() => isMobile && setMobileMenuOpen(false)}
+        ariaLabel={`Follow on ${link.name}`} // Consistent aria-label
+        className={cn(
+          "flex items-center gap-2", // Base flex alignment
+          isMobile ? "text-xl" : "text-base", // Example size adjustment
+        )}
       >
-        <SocialIcon iconName={link.iconName} size={20} />
+        <SocialIcon
+          iconName={link.iconName}
+          className={cn(isMobile ? "h-6 w-6" : "h-5 w-5")}
+        />
+        {/* Name span removed for mobile view - only icons needed */}
       </ExternalLink>
     ));
 
-  const MobileMenu = () => (
-    <div className={cn(
-      "fixed inset-0 z-[999]",
-      "bg-background",
-      "flex flex-col",
-      "animate-fade-in"
-    )}>
-      <div className={cn(
-        "flex justify-end",
-        "p-8" // Use same padding as header button container
-      )}>
-        <button
-          type="button"
-          className={cn(
-            "text-foreground/60 hover:text-foreground",
-            "transition-colors"
-            // Removed internal padding from button itself previously
-          )}
-          onClick={() => setMobileMenuOpen(false)} // Action: Close menu
-          aria-label="Close menu"
-        >
-          <RiCloseLine size={24} />
-        </button>
-      </div>
-      <nav className={cn(
-        "flex-1 flex flex-col",
-        "items-center justify-center",
-        "gap-8"
-      )}>
-        {renderNavItems(true)}
-      </nav>
-      <div className={cn(
-        "flex justify-center items-center",
-        "space-x-8 p-8"
-      )}>
-        {renderSocialLinks(true)}
-      </div>
-    </div>
-  );
+  // Portal component for the mobile menu
+  const MobileMenuPortal = ({ children }: { children: React.ReactNode }) => {
+    if (!mounted) return null; // Ensure portal only mounts client-side
+    return createPortal(children, document.body);
+  };
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 w-full",
-        "bg-background",
-        "backdrop-blur-md",
-        className // Merge incoming classes last
-      )}
-    >
-      <Container
-        maxWidth="full" // Use full width for Navbar structure
-        className={cn(
-          // Apply layout classes to the Container
-          "relative flex items-center justify-between",
-          "h-20 md:h-32"
-          // Responsive padding (p-4 lg:p-8) is now handled by Container itself
-        )}
-      >
-        <nav className={cn(
-          "hidden md:flex",
-          "items-center",
-          "space-x-6 lg:space-x-8"
-        )}>
-          {renderNavItems()}
-        </nav>
-
-        <div className={cn(
-          "absolute left-1/2 top-1/2",
-          "-translate-x-1/2 -translate-y-1/2",
-          "flex items-center"
-        )}>
-          <NavLogo />
-        </div>
-
-        <div className={cn(
-          "hidden md:flex",
-          "items-center",
-          "space-x-6 lg:space-x-8"
-        )}>
-          {renderSocialLinks()}
-        </div>
-
-        {/* Mobile Menu Button */}
-        {/* Add padding to match overlay button container */}
-        <div className={cn(
-          "md:hidden flex-1 flex justify-end",
-          "p-4" // Container for mobile button keeps its padding
-        )}>
-          <button
-            type="button"
-            className={cn(
-              // Button padding was removed
-              "text-foreground/60 hover:text-foreground",
-              "transition-colors"
-            )}
-            onClick={() => setMobileMenuOpen(true)} // Only opens menu now
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"} // Keep dynamic aria-label for state indication
-            aria-expanded={mobileMenuOpen}
+    <>
+      <header className={cn("sticky top-0 z-50 w-full", className)}>
+        {/* Desktop Header (hidden on mobile) */}
+        <Section className="hidden md:flex items-center h-28">
+          <nav
+            className="flex-1 basis-0 justify-start flex items-center gap-6"
+            aria-label="Main Navigation"
           >
-            {/* Icon still changes based on state */}
+            {renderNavItems()}
+          </nav>
+          <NavLogo />
+          <div className="flex-1 basis-0 justify-end flex items-center gap-4">
+            {renderSocialLinks()}
+          </div>
+        </Section>
+
+        {/* Mobile Header (hidden on desktop) */}
+        <Section className="flex md:hidden items-center justify-between h-20">
+          {/* Spacer to balance the button */}
+          <div className="w-8" aria-hidden="true" />
+          <NavLogo />
+          <button
+            className="flex items-center justify-center rounded-md p-2"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close main menu" : "Open main menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
+          >
             {mobileMenuOpen ? (
               <RiCloseLine size={24} />
             ) : (
               <RiMenuLine size={24} />
             )}
           </button>
-        </div>
-      </Container> {/* End of Container */}
+        </Section>
+      </header>
 
-      {mounted && mobileMenuOpen && createPortal(<MobileMenu />, document.body)}
-    </header>
+      {/* Mobile Menu Portal */}
+      <MobileMenuPortal>
+        <div
+          id="mobile-menu"
+          className={cn(
+            "fixed inset-0 z-40 flex flex-col bg-background px-6 pt-24 pb-12 transition-transform duration-300 ease-in-out md:hidden",
+            "justify-center items-center",
+            mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          )}
+        >
+          {/* Mobile Navigation */}
+          <nav
+            className="flex flex-col items-center gap-8"
+            aria-label="Mobile Main Navigation"
+          >
+            {renderNavItems(true)}
+          </nav>
+
+          {/* Mobile Social Links - Horizontal Row */}
+          <div className="mt-12 flex flex-row justify-center gap-8">
+            {renderSocialLinks(true)}
+          </div>
+        </div>
+      </MobileMenuPortal>
+    </>
   );
 };
+
+// Add display name
+Navbar.displayName = "Navbar";
