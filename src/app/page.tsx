@@ -1,31 +1,51 @@
-import type { Metadata } from 'next';
+import { Text } from '@/components/ui/typography/Text';
+import { OneColumnGrid } from '@/components/ui/grid/OneColumnGrid';
 
-// Basic SEO metadata for this page
-export const metadata: Metadata = {
-  title: 'About Me | Your Name - Portfolio', // Replace Your Name
-  description: 'Learn more about my background and journey.', // Simplified description
-};
-
-/**
- * About Page Component (Minimal Placeholder)
- * Basic structure for the About page.
- */
 export default function ProjectPage() {
   return (
-    // Main container for the page content
-    <main className="container mx-auto px-4 py-16 md:py-24"> {/* Centered container with vertical/horizontal padding */}
-      
-      {/* Page Heading */}
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-8">
-        Projects
-      </h1>
-      
-      {/* Minimal placeholder content */}
-      <div className="text-center text-gray-600 dark:text-gray-400">
-        <p>Content for the Projects page will be added here soon.</p>
-        {/* TODO: Add detailed content later or fetch from CMS */}
-      </div>
+    <main className="container mx-auto px-4 py-16 md:py-24">
+      {/* Using OneColumnGrid to stack examples vertically with spacing */}
+      <OneColumnGrid alignItems="center" className="max-w-3xl mx-auto" gap="10"> {/* Wider gap */}
 
+        {/* --- Display Presets --- */}
+        <div className="w-full"> {/* Grouping related display texts */}
+          <Text preset="eyebrow" as="p" align="center">Eyebrow Preset</Text>
+          <Text preset="title" as="h1" align="center">Title Preset</Text>
+          <Text preset="heading" as="h2" align="center">Heading Preset</Text>
+          <Text preset="subtitle" as="p" align="center">Subtitle Preset - Provides additional context.</Text>
+        </div>
+
+        {/* --- Body Text Presets --- */}
+        <div className="w-full space-y-4"> {/* Grouping body texts */}
+           <Text preset="lead" align="center">
+            Lead Preset: Usually used for the opening paragraph of a section to draw the reader in.
+          </Text>
+          <Text preset="body" align="center">
+            Body Preset (Default): This is the standard paragraph text style used for most content. Lorem ipsum dolor sit amet.
+          </Text>
+          <Text preset="body-lg" align="center">
+            Body Large Preset: A slightly larger version of the body text, useful for emphasis or specific layouts.
+          </Text>
+          <Text preset="body-sm" align="center">
+            Body Small Preset: Smaller body text, often used for less critical information or denser layouts.
+          </Text>
+        </div>
+
+        {/* --- Specific Style Presets --- */}
+         <Text preset="quote" as="blockquote" align="left" className="w-full max-w-xl"> {/* Left align quote */}
+          Quote Preset: "Used for quoting text. Typically italicized and indented."
+          <Text preset="caption" as="cite" className="block mt-2 not-italic">- Source Attribution (using caption preset)</Text>
+        </Text>
+
+         <Text preset="label" align="center">
+           Label Preset (e.g., FOR FORM FIELDS)
+        </Text>
+
+         <Text preset="caption" align="center">
+           Caption Preset (e.g., for image captions or footnotes)
+        </Text>
+
+      </OneColumnGrid>
     </main>
   );
 }

@@ -7,6 +7,17 @@
 
 @import "tailwindcss";
 
+/* Expose CSS variables to Tailwind */
+@theme {
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-accent: var(--accent);
+  --color-info: var(--info);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+}
+
 /* Base color scheme for light mode */
 :root {
   /* Main colors */
