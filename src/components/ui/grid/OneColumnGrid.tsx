@@ -17,6 +17,8 @@ interface OneColumnGridProps extends React.HTMLAttributes<HTMLDivElement> {
   alignItems?: AlignItemsOptions;
   /** Vertical alignment/distribution of items within the column. @default 'start' */
   justifyContent?: JustifyContentOptions;
+  /** Optional numeric gap value (maps to Tailwind gap-*). Defaults internally if not provided. */
+  gap?: number | string; // Allow string for potential arbitrary values if needed later
   /** Optional additional CSS classes for the grid container. */
   className?: string;
 }
@@ -46,16 +48,20 @@ export const OneColumnGrid = ({
   children,
   alignItems = 'stretch', // Default horizontal alignment
   justifyContent = 'start', // Default vertical alignment
+  gap, // Add gap prop
   className,
   ...props
 }: OneColumnGridProps) => {
+  // Determine gap class: use prop if provided, otherwise use default responsive gap
+  const gapClass = gap ? `gap-${gap}` : 'gap-6 md:gap-8';
+
   return (
     <div
       className={cn(
         'flex flex-col', // Arrange children vertically
-        'gap-6 md:gap-8', // Responsive gap
-        alignItemsClasses[alignItems], // Apply horizontal alignment class
-        justifyContentClasses[justifyContent], // Apply vertical alignment class
+        alignItemsClasses[alignItems], // Horizontal alignment
+        justifyContentClasses[justifyContent], // Vertical alignment
+        gapClass, // Gap between items
         className // Merge custom classes last
       )}
       {...props}
