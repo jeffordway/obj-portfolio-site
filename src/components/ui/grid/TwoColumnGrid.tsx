@@ -9,6 +9,8 @@ interface TwoColumnGridProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   /** The number of columns (out of 12) the first child should span on desktop. */
   firstColumnWidth?: ColumnSpan;
+  /** Optional numeric gap value (maps to Tailwind gap-*). Defaults internally if not provided. */
+  gap?: number | string;
   /** Optional additional CSS classes for the grid container. */
   className?: string;
 }
@@ -32,6 +34,7 @@ const colSpanClasses: Record<number, string> = {
 export const TwoColumnGrid = ({
   children,
   firstColumnWidth = 6, // Default to 50/50 split
+  gap, // Destructure the new gap prop
   className,
   ...props
 }: TwoColumnGridProps) => {
@@ -51,12 +54,15 @@ export const TwoColumnGrid = ({
   const firstColClass = colSpanClasses[firstColumnWidth];
   const secondColClass = colSpanClasses[secondColumnWidth];
 
+  // Determine gap class: use prop if provided, otherwise use default responsive gap
+  const gapClass = gap ? `gap-${gap}` : 'gap-6 md:gap-8';
+
   return (
     <div
       className={cn(
         'grid',
         'grid-cols-1 md:grid-cols-12', // 1 col mobile, 12 cols desktop
-        'gap-6 md:gap-8',               // Responsive gap (1.5rem mobile, 2rem desktop)
+        gapClass, // Use the calculated gap class
         className
       )}
       {...props}

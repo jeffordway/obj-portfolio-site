@@ -61,7 +61,7 @@ export type TextProps<E extends TextElement = "p"> = BaseTextProps<E> &
 const variantStyles: Record<TextVariant, string> = {
   // Primary Display Text
   title: "text-xl md:text-2xl text-foreground/60 font-medium tracking-widest",
-  subtitle: "text-2xl md:text-3xl font-normal",
+  subtitle: "text-2xl md:text-3xl font-normal leading-relaxed",
   heading: "text-3xl md:text-lg font-semibold",
 
   // Body Text & Variations

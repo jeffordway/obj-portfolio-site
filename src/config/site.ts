@@ -28,7 +28,7 @@ export interface CoreValue {
 // --- Navigation Links ---
 
 export const navLinks: NavLink[] = [
-  { href: "/", label: "Home", showNavBar: true },
+  { href: "/", label: "Projects", showNavBar: true },
   { href: "/about", label: "About", showNavBar: true },
   { href: "/contact", label: "Contact", showNavBar: true },
   { href: "/cookie-policy", label: "Cookie Policy", showNavBar: false },
@@ -73,24 +73,6 @@ export const coreValues: CoreValue[] = [
     ]
   },
   {
-    title: "Pursue Excellence",
-    description: "Pursuing excellence with grit and grace, turning challenges into growth opportunities.",
-    scriptureRefs: [
-      {
-        text: "Colossians 3:23",
-        url: "https://www.bible.com/bible/59/COL.3.23"
-      },
-      {
-        text: "Proverbs 22:29",
-        url: "https://www.bible.com/bible/59/PRO.22.29"
-      },
-      {
-        text: "Philippians 3:14",
-        url: "https://www.bible.com/bible/59/PHP.3.14"
-      }
-    ]
-  },
-  {
     title: "Serve Purposefully",
     description: "Building authentic connections and serving others with strength and humility.",
     scriptureRefs: [
@@ -107,5 +89,24 @@ export const coreValues: CoreValue[] = [
         url: "https://www.bible.com/bible/59/1PE.4.10"
       }
     ]
+  },
+  {
+    title: "Pursue Excellence",
+    description: "Pursuing excellence with grit and grace, turning challenges into growth opportunities.",
+    scriptureRefs: [
+      {
+        text: "Colossians 3:23",
+        url: "https://www.bible.com/bible/59/COL.3.23"
+      },
+      {
+        text: "Proverbs 22:29",
+        url: "https://www.bible.com/bible/59/PRO.22.29"
+      },
+      {
+        text: "Philippians 3:14",
+        url: "https://www.bible.com/bible/59/PHP.3.14"
+      }
+    ]
   }
+
 ];

@@ -92,7 +92,9 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(
               // Base styles
               "absolute z-50 px-3 py-1.5 text-sm font-medium whitespace-nowrap",
               // Theme colors (using example, consider popover variants if available)
-              "text-background bg-foreground",
+              "text-background/60 bg-foreground",
+              // Rounding
+              "rounded-full", // Add fully rounded corners
               // Positioning
               positionStyles[position],
               // Custom classes

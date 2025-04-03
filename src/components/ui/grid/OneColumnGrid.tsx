@@ -19,6 +19,8 @@ interface OneColumnGridProps extends React.HTMLAttributes<HTMLDivElement> {
   justifyContent?: JustifyContentOptions;
   /** Optional numeric gap value (maps to Tailwind gap-*). Defaults internally if not provided. */
   gap?: number | string; // Allow string for potential arbitrary values if needed later
+  /** Whether to show dividers between grid items. @default false */
+  showDividers?: boolean;
   /** Optional additional CSS classes for the grid container. */
   className?: string;
 }
@@ -49,6 +51,7 @@ export const OneColumnGrid = ({
   alignItems = 'stretch', // Default horizontal alignment
   justifyContent = 'start', // Default vertical alignment
   gap, // Add gap prop
+  showDividers = false, // Default dividers to false
   className,
   ...props
 }: OneColumnGridProps) => {
@@ -62,6 +65,7 @@ export const OneColumnGrid = ({
         alignItemsClasses[alignItems], // Horizontal alignment
         justifyContentClasses[justifyContent], // Vertical alignment
         gapClass, // Gap between items
+        showDividers && 'divide-y divide-border', // Conditionally add divider classes
         className // Merge custom classes last
       )}
       {...props}

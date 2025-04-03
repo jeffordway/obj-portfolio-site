@@ -7,7 +7,7 @@ type MaxWidthOptions = "full" | "container" | "narrow";
 // Map the options to Tailwind classes
 const maxWidthClasses: Record<MaxWidthOptions, string> = {
   full: "px-6 lg:px-8",      // Standard padding
-  container: "container",     // Uses Tailwind's container class (centered, max-width based on breakpoints)
+  container: "max-w-5xl",     // Uses Tailwind's container class (centered, max-width based on breakpoints)
   narrow: "max-w-prose",    // Limits width for optimal readability (prose plugin),
 };
 

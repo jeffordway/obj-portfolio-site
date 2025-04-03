@@ -11,6 +11,9 @@ export const projectId = assertValue(
   'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID'
 )
 
+// Determine useCdn based on environment. Use CDN only in production.
+export const useCdn = process.env.NODE_ENV === 'production';
+
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
   if (v === undefined) {
     throw new Error(errorMessage)

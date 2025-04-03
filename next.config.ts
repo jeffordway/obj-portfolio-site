@@ -1,3 +1,4 @@
+import { withNextVideo } from "next-video/process";
 // next.config.ts
 import type { NextConfig } from "next";
 // Import webpack type for custom webpack configuration
@@ -90,4 +91,4 @@ const nextConfig: NextConfig = {
   /* Add other Next.js config options here if needed */
 };
 
-export default nextConfig;
+export default withNextVideo(nextConfig);

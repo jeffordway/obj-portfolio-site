@@ -79,7 +79,12 @@ export const Navbar = ({ className }: NavbarProps) => {
 
   return (
     <>
-      <header className={cn("sticky top-0 z-50 w-full", className)}>
+      <header
+        className={cn(
+          "fixed top-0 z-[100] w-full bg-transparent", // Change to fixed with higher z-index
+          className,
+        )}
+      >
         {/* Desktop Header (hidden on mobile) */}
         <Section className="hidden md:flex items-center h-28">
           <nav

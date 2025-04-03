@@ -12,7 +12,7 @@ const baseStyles = cn(
   "inline-flex items-center", 
   "px-2.5 py-1", 
   "text-xs font-medium",
-  "bg-background/20", 
+  "bg-foreground/10", 
   "text-foreground/60", 
   "rounded-full" 
 );

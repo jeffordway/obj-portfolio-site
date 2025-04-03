@@ -53,7 +53,11 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
 
     // --- Component Return ---
     return (
-      <footer ref={ref} {...props}>
+      <footer 
+        ref={ref} 
+        className={cn("bg-background w-full", className)}
+        {...props}
+      >
         <Section maxWidth="container">
           <div className="flex flex-col items-center gap-4 pb-4 pt-8 md:pt-12">
             {/* Primary Navigation (showNavBar: true) */}

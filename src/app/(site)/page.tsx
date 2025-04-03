@@ -1,58 +1,55 @@
 import type { Metadata } from "next"; // Added
-import { Text } from "@/components/ui/typography/Text";
-import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
+import { Hero } from "@/components/layouts/Hero";
+import { Content } from "@/components/layouts/Content"; // Import Content
 import { Section } from "@/components/layouts/Section";
+import { Text } from "@/components/ui/typography/Text"; // Import Text for placeholder
+import homeVideo from "/videos/home.mp4"; // Import the video file
+import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
+import { Avatar } from "@/components/ui/avatar/Avatar";
+import avatarImage from "@/assets/avatar.png"; // Import the image file
 
 // Added Metadata
-export const metadata: Metadata = {
-  title: "Home", // Or a more descriptive title for the homepage
-  // Add description, keywords etc. if needed, inheriting from layout otherwise
-};
+export const metadata: Metadata = {};
 
 // Renamed to HomePage (Optional)
 export default function HomePage() {
   return (
-      <Section>
-        <OneColumnGrid
-          alignItems="start"
-          gap={4}
-        >
-          {/* --- Display Text Presets --- */}
+    <>
+      {/* Fixed Hero Background */}
+      <Hero videoSrc={homeVideo}>
+        <Section maxWidth="container">
+          <OneColumnGrid gap={4} alignItems="center" justifyContent="center">
+            <Avatar src={avatarImage} alt="Jeff Ordway" size="lg" />
+            <Text variant="title" align="center">
+              Purpose-Driven Design and Development
+            </Text>
+            <Text variant="subtitle" align="center">
+              Hey, I'm Jeff Ordway, a creator with a passion for purpose and a
+              knack for turning faith into action. I build tools to help you
+              live boldly, pursue excellence, and serve purposefully.
+            </Text>
+          </OneColumnGrid>
+        </Section>
+      </Hero>
 
-        
-          <Text variant="title" as="h1" >
-            Title Preset
-          </Text>
-          <Text variant="heading" as="h3" >Heading Preset</Text>
-          <Text variant="subtitle" as="h2" >Subtitle Preset</Text>
+      {/* Use the Content component to wrap scrolling content */}
+      <Content>
+        {/* Add your page content here - Example Sections */}
+        <Section>
+          <div className="flex flex-col gap-6">
+            <h2 className="text-3xl font-bold">Section Title</h2>
+            <p>This content will scroll over the fixed Hero background.</p>
+            <p>Add your actual content here.</p>
+          </div>
+        </Section>
 
-          {/* --- Body Text Presets --- */}
-
-          <Text variant="lead" >
-            Lead Preset: Usually used for the opening paragraph of a section to draw the reader in.
-          </Text>
-          <Text variant="body" >
-            Body Preset (Default): This is the standard paragraph text style used for most content. Lorem ipsum dolor sit amet.
-          </Text>
-          <Text variant="body-sm" >
-            Body Small Preset: Smaller body text, often used for less critical information or denser layouts.
-          </Text>
-
-          {/* --- Specific Text Style Presets --- */}
-          <Text variant="quote" as="blockquote" >
-            Quote Preset: "Used for quoting text. Typically italicized and indented."
-            <Text variant="caption" as="cite" className="block mt-2 not-italic">- Source Attribution (using caption preset)</Text>
-          </Text>
-          <Text variant="label" >
-            Label Preset (e.g., FOR FORM FIELDS)
-          </Text>
-          <Text variant="caption" >
-            Caption Preset (e.g., for image captions or footnotes)
-          </Text>
-          <Text variant="eyebrow" as="p" >
-            Eyebrow Preset
-          </Text>
-        </OneColumnGrid>
-      </Section>
+        <Section>
+          <div className="flex flex-col gap-6">
+            <h2 className="text-3xl font-bold">Another Section</h2>
+            <p>More content that scrolls over the Hero.</p>
+          </div>
+        </Section>
+      </Content>
+    </>
   );
 }
