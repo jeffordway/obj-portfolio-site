@@ -10,10 +10,7 @@ import { createPortal } from "react-dom";
 import { NavItem } from "@/components/ui/navigation/NavItem";
 import { ExternalLink } from "@/components/ui/links/ExternalLink";
 import { NavLogo } from "@/components/ui/navigation/NavLogo";
-import {
-  SocialIcon,
-  SupportedIconName,
-} from "@/components/ui/social/SocialIcon";
+import { SocialIcon } from "@/components/ui/social/SocialIcon";
 import { Section } from "@/components/layouts/Section";
 import { navLinks, socialLinks } from "@/config/site";
 
@@ -125,7 +122,7 @@ export const Navbar = ({ className }: NavbarProps) => {
         <div
           id="mobile-menu"
           className={cn(
-            "fixed inset-0 z-40 flex flex-col bg-background px-6 pt-24 pb-12 transition-transform duration-300 ease-in-out md:hidden",
+            "fixed inset-0 z-40 flex flex-col bg-background/90 px-6 pt-24 pb-12 transition-transform duration-300 ease-in-out md:hidden",
             "justify-center items-center",
             mobileMenuOpen ? "translate-x-0" : "translate-x-full"
           )}

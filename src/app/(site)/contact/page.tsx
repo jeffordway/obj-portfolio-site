@@ -1,9 +1,14 @@
-import type { Metadata } from 'next';
+import { ContactForm } from "@/components/features/ContactForm";
+import { Section } from "@/components/layouts/Section";
+import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
+import { Text } from "@/components/ui/typography/Text";
+
+import type { Metadata } from "next";
 
 // Basic SEO metadata for this page
 export const metadata: Metadata = {
-  title: 'Contact | Your Name - Portfolio', // Replace Your Name
-  description: 'Learn more about my background and journey.', // Simplified description
+  title: "Contact | Your Name - Portfolio", // Replace Your Name
+  description: "Learn more about my background and journey.", // Simplified description
 };
 
 /**
@@ -13,19 +18,15 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     // Main container for the page content
-    <main className="container mx-auto px-4 py-16 md:py-24"> {/* Centered container with vertical/horizontal padding */}
-      
-      {/* Page Heading */}
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-8">
-        Contact
-      </h1>
-      
-      {/* Minimal placeholder content */}
-      <div className="text-center text-gray-600 dark:text-gray-400">
-        <p>Content for the Contact page will be added here soon.</p>
-        {/* TODO: Add detailed content later or fetch from CMS */}
-      </div>
-
-    </main>
+    <Section maxWidth="narrow" className="py-6 md:py-12">
+      <OneColumnGrid gap={4}>
+        <Text variant="title">Get in Touch</Text>
+        <Text variant="body">
+          Have a question or want to chat? Fill out the form below and I'll get
+          back to you as soon as possible.
+        </Text>
+        <ContactForm />
+      </OneColumnGrid>
+    </Section>
   );
 }

@@ -7,10 +7,7 @@ import { SocialIcon } from "@/components/ui/social/SocialIcon";
 import { ExternalLink } from "@/components/ui/links/ExternalLink";
 import { Text } from "@/components/ui/typography/Text";
 
-// --- Component Props Interface ---
-interface FooterProps extends React.HTMLAttributes<HTMLElement> {}
-
-const Footer = React.forwardRef<HTMLElement, FooterProps>(
+const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
   ({ className, ...props }, ref) => {
     const currentYear = new Date().getFullYear();
 

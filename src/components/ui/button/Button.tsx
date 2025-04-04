@@ -52,7 +52,7 @@ const spinnerSizeMap: Record<ButtonSize, 'sm' | 'md'> = {
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "h-10 min-w-36 px-3 text-xs", // Added padding back for content fit
   md: "h-12 min-w-44 px-5 text-sm", // Added padding back
-  lg: "h-16 min-w-54 px-6 text-base", // Added padding back
+  lg: "h-16 min-w-64 px-6 text-base", // Added padding back
 };
 
 // Variant styles including base, hover, and active states

@@ -19,5 +19,40 @@ export default defineType({
       title: "Description",
       type: "text",
     }),
+    // Icon field (using Remix icon names)
+    defineField({
+      name: "iconName",
+      title: "Icon",
+      type: "string",
+      options: {
+        list: [
+          // Analytics & Collaboration icons
+          { title: "Analytics", value: "RiLineChartLine" },
+          { title: "Collaboration", value: "RiTeamLine" },
+          { title: "Chat", value: "RiChat3Line" },
+          { title: "Presentation", value: "RiPresentationLine" },
+          
+          // Product Management icons
+          { title: "Product", value: "RiProductHuntLine" },
+          { title: "Task", value: "RiTaskLine" },
+          { title: "Calendar", value: "RiCalendarLine" },
+          { title: "Roadmap", value: "RiRoadMapLine" },
+          
+          // Software Development icons
+          { title: "Code", value: "RiCodeSSlashFill" },
+          { title: "Terminal", value: "RiTerminalBoxLine" },
+          { title: "Git Branch", value: "RiGitBranchLine" },
+          { title: "Database", value: "RiDatabase2Fill" },
+          
+          // UI/UX Design icons
+          { title: "Design", value: "RiPencilRuler2Line" },
+          { title: "Palette", value: "RiPaletteLine" },
+          { title: "Layout", value: "RiLayoutLine" },
+          { title: "User", value: "RiUserLine" },
+        ],
+        layout: "dropdown"
+      },
+      description: "Select an icon that represents this category"
+    }),
   ],
 });

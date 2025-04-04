@@ -40,7 +40,8 @@ interface TooltipBaseProps {
 
 // --- Final Component Props Type ---
 // Combines base props with standard div attributes, omitting the conflicting 'content' attribute.
-export type TooltipProps = TooltipBaseProps & Omit<React.HTMLAttributes<HTMLDivElement>, 'content'>;
+export type TooltipProps = TooltipBaseProps &
+  Omit<React.HTMLAttributes<HTMLDivElement>, "content">;
 
 // --- Tooltip Component ---
 

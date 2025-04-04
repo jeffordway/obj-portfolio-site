@@ -65,7 +65,7 @@ export default function DesignSystemPage() {
           <Text variant="lead">Lead Variant (p): For introductory paragraphs.</Text>
           <Text variant="body">Body Variant (p): This is the default body text, suitable for longer content blocks.</Text>
           <Text variant="body-sm">Body Small Variant (p): Slightly smaller body text.</Text>
-          <Text variant="quote">Quote Variant (blockquote): "To be or not to be, that is the question."</Text>
+          <Text variant="quote">Quote Variant (blockquote): &quot;To be or not to be, that is the question.&quot;</Text>
           <Text variant="eyebrow">Eyebrow Variant (div)</Text>
           <Text variant="label">Label Variant (div)</Text>
           <Text variant="caption">Caption Variant (span): Used for image captions or small annotations.</Text>

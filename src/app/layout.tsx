@@ -4,7 +4,7 @@ import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 
 // Font configuration
-export const primaryFont = Inter({
+const primaryFont = Inter({
   variable: "--font-primary",
   subsets: ["latin"],
   display: "swap",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     default: "Jeff Ordway - Portfolio",
   },
   description:
-    "Purpose-driven design and development to help you live boldly, pursue excellence, and serve purposefully.",
+    "Hey, I'm Jeff Ordway, a creator with a passion for purpose and a knack for turning faith into action. I build tools to help you live boldly, serve purposefully, and pursue excellence.",
   authors: [{ name: "Jeff Ordway" }],
   creator: "Jeff Ordway",
   publisher: "Jeff Ordway",

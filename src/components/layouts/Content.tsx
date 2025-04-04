@@ -21,7 +21,7 @@ export function Content({ children, className, ...props }: ContentProps) {
       <div className="h-screen" aria-hidden="true"></div>
 
       {/* Inner wrapper: Applies background ONLY to the actual content area below the spacer */}
-      <div className="py6 md:py-8 bg-background">
+      <div className="py-4 md:py-8 bg-background">
         {" "}
         {/* Apply background here */}
         {children} {/* Render the page's content sections */}

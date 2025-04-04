@@ -12,7 +12,8 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
     <div className="flex flex-col min-h-screen">
       <Navbar />
       {/* The flex-grow class ensures this main content area pushes the footer down */}
-      <main className={cn("flex-grow relative")}>{children}</main> {/* Add relative */}
+      {/* Add responsive padding-top based on Navbar height */}
+      <main className={cn("flex-grow relative pt-20 md:pt-28")}>{children}</main> {/* Add pt-20 md:pt-28 */}
       
       {/* Footer with higher z-index to appear over fixed Hero */}
       <div className="relative z-30">

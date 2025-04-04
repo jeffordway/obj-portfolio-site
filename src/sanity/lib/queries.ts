@@ -78,6 +78,7 @@ const categoriesWithSkillsQuery = groq`
   *[_type == "category"] | order(title asc) {
     _id,
     title,
+    iconName,
     "skills": *[_type == "skill" && references(^._id)] | order(title asc) {
       _id,
       title,
