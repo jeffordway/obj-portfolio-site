@@ -43,7 +43,7 @@ export const TagIconExample = () => {
       
       <Text variant="body-sm">
         The examples above demonstrate how Tags and Icons can be combined for rich, 
-        informative UI elements. The Icon component is passed directly to the Tag's 
+        informative UI elements. The Icon component is passed directly to the Tag&apos;s 
         icon prop, and sizing/coloring is handled appropriately.
       </Text>
     </OneColumnGrid>

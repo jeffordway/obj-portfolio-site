@@ -1,4 +1,4 @@
-import * as React from 'react';
+// No React import needed
 import {
   // Analytics & Collaboration icons
   RiLineChartLine,

@@ -1,23 +1,29 @@
 import React from 'react';
-import { cn } from '@/lib/utils'; // Assuming utils location
-import Video from 'next-video'; // Import next-video component
-import { ScrollIndicator } from '@/components/ui/navigation/ScrollIndicator'; // Import ScrollIndicator
-
-// Using 'any' for the imported video source type is common with next-video
+import { cn } from '@/lib/utils';
+import Video from 'next-video';
+import Image, { StaticImageData } from 'next/image';
+import { ScrollIndicator } from '@/components/ui/navigation/ScrollIndicator';
 
 interface HeroProps {
   children: React.ReactNode;
+  // Background media options
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  videoSrc?: any; // Accept imported video source, reverting to any as required by next-video
+  videoSrc?: any; // Accept imported video source
+  imageSrc?: string | StaticImageData; // Accept image source
+  imageAlt?: string; // Alt text for image
+  // Styling options
   className?: string; // Allow passing additional classes
   overlayClassName?: string; // Optional class for overlay customization
   contentClassName?: string; // Optional class for content container
+  // Behavior options
   showScrollIndicator?: boolean; // Add prop to control indicator visibility
 }
 
 export function Hero({
   children,
-  videoSrc, // Use the new prop name
+  videoSrc,
+  imageSrc,
+  imageAlt = 'Background image',
   className,
   overlayClassName,
   contentClassName,
@@ -26,28 +32,45 @@ export function Hero({
   return (
     <section
       className={cn(
-        'fixed inset-0 flex min-h-screen overflow-hidden', // Change to fixed positioning
-        'pointer-events-none', // Allow clicks to pass through the main container
+        'fixed inset-0 flex min-h-screen overflow-hidden', // Fixed positioning for full-screen effect
         className,
       )}
     >
-      {/* Background Video */} 
+      {/* Background Media - Video or Image */}
       {videoSrc && (
         <Video
           src={videoSrc}
-          className="w-full h-screen" // Keep sizing classes
+          className="w-full h-screen"
           style={{
-            position: 'fixed', // Change to fixed positioning
+            position: 'fixed',
             inset: '0px',
             zIndex: 0,
             '--media-object-fit': 'cover',
-          }} // Apply positioning/z-index directly
+          }}
           autoPlay
           loop
           muted
           playsInline
           controls={false}
         />
+      )}
+      {!videoSrc && imageSrc && (
+        <div 
+          className="fixed inset-0 z-0 w-full h-screen"
+          style={{ position: 'relative' }}
+        >
+          <Image
+            src={imageSrc}
+            alt={imageAlt}
+            fill
+            priority
+            sizes="100vw"
+            quality={85}
+            style={{
+              objectFit: 'cover',
+            }}
+          />
+        </div>
       )}
 
       {/* Background Overlay */} 

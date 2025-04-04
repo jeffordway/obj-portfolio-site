@@ -5,9 +5,8 @@ import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { RiArrowDownSLine } from "@remixicon/react";
 
-interface ScrollIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
-  // No specific props needed for now, but allows className passthrough
-}
+// Use HTMLAttributes directly with no additional properties
+type ScrollIndicatorProps = React.HTMLAttributes<HTMLDivElement>
 
 export function ScrollIndicator({ className, ...props }: ScrollIndicatorProps) {
   // Track if component has mounted (for SSR compatibility)

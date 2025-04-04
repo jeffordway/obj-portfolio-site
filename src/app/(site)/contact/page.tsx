@@ -22,7 +22,7 @@ export default function ContactPage() {
       <OneColumnGrid gap={4}>
         <Text variant="title">Get in Touch</Text>
         <Text variant="body">
-          Have a question or want to chat? Fill out the form below and I'll get
+          Have a question or want to chat? Fill out the form below and I&apos;ll get
           back to you as soon as possible.
         </Text>
         <ContactForm />

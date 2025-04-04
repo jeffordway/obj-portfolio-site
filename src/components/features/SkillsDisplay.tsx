@@ -10,7 +10,6 @@ import React from "react";
 import { Text } from "@/components/ui/typography/Text";
 import { Tag } from "@/components/ui/tag/Tag";
 import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
-import { Icon } from "@/components/ui/icon/Icon";
 
 // --- Data Types (Assuming structure from Sanity) ---
 

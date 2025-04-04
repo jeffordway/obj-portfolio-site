@@ -2,8 +2,8 @@ import * as React from "react";
 import { Text, TextProps } from "@/components/ui/typography/Text";
 import { cn } from "@/lib/utils";
 
-// Extend TextProps specifically for a 'label' element, inheriting its attributes
-export interface LabelProps extends TextProps<"label"> {}
+// Use TextProps directly for the label element
+export type LabelProps = TextProps<"label">
 
 const Label = React.forwardRef<
   HTMLLabelElement, // The type of the element the ref points to (a label)

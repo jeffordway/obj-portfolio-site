@@ -29,7 +29,7 @@ interface Project {
   slug: {
     current: string;
   };
-  heroImage: any; // Sanity image type
+  heroImage: { asset: { _ref: string } }; // Sanity image type
   headline: string;
   categories: Category[];
 }
@@ -73,7 +73,7 @@ export default async function HomePage() {
             </Text>
 
             <Text variant="subtitle" align="center" className="mt-2">
-              Hey, I'm Jeff Ordway, a creator with a passion for purpose and a
+              Hey, I&apos;m Jeff Ordway, a creator with a passion for purpose and a
               knack for turning faith into action. I build tools to help you
               live boldly, serve purposefully, and pursue excellence.
             </Text>
