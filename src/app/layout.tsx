@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { GoogleTagManager } from '@next/third-parties/google'
 import "./globals.css";
 
 // --- Metadata & SEO ---
@@ -38,6 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <GoogleTagManager gtmId="GTM-MZGMFFWZ" />
       <body className={`${primaryFont.variable} antialiased`}>{children}</body>
     </html>
   );
