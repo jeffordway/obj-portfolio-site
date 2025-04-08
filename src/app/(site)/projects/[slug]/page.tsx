@@ -124,28 +124,38 @@ export default async function ProjectPage({
   const { slug } = await params;
   const client = createClient({ apiVersion, dataset, projectId, useCdn });
 
-  // Fetch full project data
+  // Fetch full project data with optimized image queries
   const projectQuery = groq`*[_type == "project" && slug.current == $slug][0] {
     _id,
     title,
     slug,
     headline,
+    // Prioritize hero image with complete asset data
     heroImage { 
       ..., 
       asset->{
         _id,
         _ref, 
         _type,
-        url
+        url,
+        metadata {
+          lqip,
+          dimensions
+        }
       }
     },
+    // Also optimize mainImage as it's used as fallback for hero
     mainImage { 
       ..., 
       asset->{
         _id,
         _ref, 
         _type,
-        url
+        url,
+        metadata {
+          lqip,
+          dimensions
+        }
       }
     },
     content,

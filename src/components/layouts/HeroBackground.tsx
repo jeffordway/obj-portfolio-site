@@ -10,6 +10,8 @@ import type {
   SanityImageWithAssetStub
 } from '@sanity/image-url/lib/types/types';
 
+// We'll use standard Sanity types without extensions to keep the code clean
+
 /**
  * Initialize Sanity image URL builder
  */
@@ -98,11 +100,22 @@ export function HeroBackground({
     } else if (isSanityImageWithAsset(imageSrc)) {
       // Handle Sanity CMS images
       try {
-        // Standard Sanity image reference format
-        finalSrc = urlFor(imageSrc).auto('format').fit('max').url();
+        // Standard Sanity image reference format with optimized quality
+        // Using higher quality (90) for hero images since they're visually important
+        finalSrc = urlFor(imageSrc)
+          .auto('format')
+          .fit('max')
+          .quality(90)
+          .url();
+        
         // Generate a low-quality placeholder for blur effect
-        finalBlurUrl = urlFor(imageSrc).width(20).height(20).quality(10).blur(10).url();
-        console.log('Generated Sanity image URL:', finalSrc);
+        // This is the Next.js recommended approach for blur placeholders
+        finalBlurUrl = urlFor(imageSrc)
+          .width(20)
+          .height(20)
+          .quality(20)
+          .blur(10)
+          .url();
       } catch (error) {
         console.error("Error generating Sanity image URL:", error, imageSrc);
       }
@@ -146,6 +159,7 @@ export function HeroBackground({
             muted
             playsInline
             controls={false}
+            preload="auto"
           />
         ) : (
           // Next-video import
@@ -162,6 +176,8 @@ export function HeroBackground({
             muted
             playsInline
             controls={false}
+            // Using higher quality settings to prioritize video loading
+            poster={typeof videoSrc !== 'string' && videoSrc.blurDataURL ? videoSrc.blurDataURL : undefined}
           />
         )
       )}
@@ -174,12 +190,14 @@ export function HeroBackground({
             fill
             priority
             sizes="100vw"
-            quality={85}
+            quality={90}
             placeholder={finalBlurUrl ? "blur" : "empty"}
             blurDataURL={finalBlurUrl}
             style={{
               objectFit: 'cover',
             }}
+            // The 'priority' attribute is the Next.js recommended way to prioritize LCP images
+            // It preloads the image resource, sets fetchpriority='high', and disables lazy loading
           />
         </div>
       )}

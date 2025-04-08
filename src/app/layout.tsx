@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Inter } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { ThemeProvider } from "@/providers/ThemeProvider";
@@ -51,6 +52,7 @@ export default function RootLayout({
       <body className={`${primaryFont.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
