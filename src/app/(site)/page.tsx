@@ -60,7 +60,7 @@ export const metadata: Metadata = {
  */
 async function getProjects(): Promise<Project[]> {
   const client = createClient({ apiVersion, dataset, projectId, useCdn });
-  
+
   const query = `*[_type == "project"] | order(date desc) [0...6] {
     _id,
     title,
@@ -122,39 +122,38 @@ export default async function HomePage() {
 
       <Content>
         {/* Projects Section */}
-        <Section>
-          <AutoGrid gap={8}>
-            {projects.length > 0 ? (
-              projects.map((project) => (
-                <Card
-                  key={project._id}
-                  title={project.title}
-                  description={project.headline}
-                  imageUrl={urlFor(project.heroImage).url()}
-                  imageAlt={`${project.title} project screenshot`}
-                  href={`/projects/${project.slug.current}`}
-                  tags={project.categories?.map((category) => (
-                    <Tag
-                      key={category._id}
-                      label={category.title}
-                      icon={
-                        category.slug?.current ? (
-                          <Icon name={category.slug.current} size="sm" />
-                        ) : undefined
-                      }
-                      tooltipContent={category.description}
-                    />
-                  ))}
-                  className="aspect-square w-full"
-                />
-              ))
-            ) : (
-              <Text variant="body" className="col-span-full text-center italic">
-                No projects found. Check back soon for updates!
-              </Text>
-            )}
-          </AutoGrid>
-        </Section>
+
+        <AutoGrid gap={8}>
+          {projects.length > 0 ? (
+            projects.map((project) => (
+              <Card
+                key={project._id}
+                title={project.title}
+                description={project.headline}
+                imageUrl={urlFor(project.heroImage).url()}
+                imageAlt={`${project.title} project screenshot`}
+                href={`/projects/${project.slug.current}`}
+                tags={project.categories?.map((category) => (
+                  <Tag
+                    key={category._id}
+                    label={category.title}
+                    icon={
+                      category.slug?.current ? (
+                        <Icon name={category.slug.current} size="sm" />
+                      ) : undefined
+                    }
+                    tooltipContent={category.description}
+                  />
+                ))}
+                className="aspect-square w-full"
+              />
+            ))
+          ) : (
+            <Text variant="body" className="col-span-full text-center italic">
+              No projects found. Check back soon for updates!
+            </Text>
+          )}
+        </AutoGrid>
       </Content>
     </>
   );
