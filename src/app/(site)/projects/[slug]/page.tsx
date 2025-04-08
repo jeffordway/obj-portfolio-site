@@ -58,8 +58,8 @@ interface Project {
   heroImage?: ProjectImage; // Optional hero image
   mainImage?: ProjectImage; // Optional main image (fallback)
   content?: PortableTextBlock[];
-  githubRepo?: string;
-  prototype?: { url?: string; buttonText?: string };
+  githubRepo?: { showButton?: boolean; url?: string };
+  prototype?: { showButton?: boolean; url?: string; buttonText?: string };
   skills?: ProjectSkill[];
   projectImages?: ProjectImage[];
   additionalImages?: ProjectImage[];
@@ -211,7 +211,7 @@ export default async function ProjectPage({
 
               {/* Project Links */}
               <div className="flex flex-wrap justify-center gap-4 mt-2">
-                {project.prototype?.url && (
+                {project.prototype?.showButton && project.prototype?.url && (
                   <ExternalLink
                     href={project.prototype.url}
                     ariaLabel={`View ${project.prototype.buttonText || "prototype"}`}
@@ -226,9 +226,9 @@ export default async function ProjectPage({
                     </Button>
                   </ExternalLink>
                 )}
-                {project.githubRepo && (
+                {project.githubRepo?.showButton && project.githubRepo?.url && (
                   <ExternalLink
-                    href={project.githubRepo}
+                    href={project.githubRepo.url}
                     ariaLabel="View project on GitHub"
                     className="inline-block"
                   >
