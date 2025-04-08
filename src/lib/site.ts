@@ -61,7 +61,7 @@ export const navLinks: NavLink[] = [
   { href: "/privacy-policy", label: "Privacy Policy", showNavBar: false },
   { href: "/terms", label: "Terms", showNavBar: false },
   { href: "/disclaimer", label: "Disclaimer", showNavBar: false },
-  { href: "/design-system", label: "Design System", showNavBar: false },
+  //{ href: "/design-system", label: "Design System", showNavBar: false },
   { href: "/studio", label: "Studio", showNavBar: false },
 ];
 
