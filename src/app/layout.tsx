@@ -22,7 +22,12 @@ export const metadata: Metadata = {
     "web development",
     "app development",
   ],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+// Separate viewport export for Next.js 15
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 // --- Font Configuration ---
