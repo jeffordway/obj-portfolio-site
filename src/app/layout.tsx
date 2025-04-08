@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Inter } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import "@/styles/globals.css";
 
@@ -52,7 +53,7 @@ export default function RootLayout({
       <body className={`${primaryFont.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
         <Analytics />
-        <SpeedInsights />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />
       </body>
     </html>
   );
