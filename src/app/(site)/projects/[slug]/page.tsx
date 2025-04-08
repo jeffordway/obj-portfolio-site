@@ -188,22 +188,9 @@ export default async function ProjectPage({
     notFound();
   }
 
-  // Helper function to check if an image has a valid asset reference
-  const hasValidAssetRef = (image: ProjectImage | undefined | null): image is ProjectImage & { asset: { _ref: string } } => {
-    const isValid = !!image?.asset?._ref;
-    if (!isValid && image) {
-      console.log('Invalid image asset:', JSON.stringify(image));
-    }
-    return isValid;
-  };
-
   // Determine the background image source, preferring heroImage
-  // Pass the full Sanity image object instead of just the URL
-  const backgroundImageSource = hasValidAssetRef(project.heroImage)
-    ? project.heroImage // Use validated heroImage object
-    : hasValidAssetRef(project.mainImage)
-    ? project.mainImage // Use validated mainImage object
-    : undefined;
+  // Pass the full Sanity image object directly
+  const backgroundImageSource = project.heroImage || project.mainImage;
 
   return (
     <>
@@ -290,20 +277,18 @@ export default async function ProjectPage({
               {/* Project Images */}
               {project.projectImages && project.projectImages.length > 0 && (
                 <OneColumnGrid gap={4}>
-                  {project.projectImages.map((image, index) =>
-                    hasValidAssetRef(image) ? ( // Check for valid asset ref
-                      <Card
-                        key={`${project._id}-projimg-${index}`}
-                        imageUrl={urlFor(image).width(1200).quality(80).url()}
-                        imageAlt={image.alt || `Project image ${index + 1}`}
-                        title={image.title}
-                        description={image.headline}
-                        sizes="(max-width: 768px) 100vw, 80vw"
-                        className="w-full aspect-video"
-                        hoverEffect={true}
-                      />
-                    ) : null // Don't render Card if asset ref is invalid
-                  )}
+                  {project.projectImages.map((image, index) => (
+                    <Card
+                      key={`${project._id}-projimg-${index}`}
+                      imageUrl={urlFor(image).width(1200).quality(80).url()}
+                      imageAlt={image.alt || `Project image ${index + 1}`}
+                      title={image.title}
+                      description={image.headline}
+                      sizes="(max-width: 768px) 100vw, 80vw"
+                      className="w-full aspect-video"
+                      hoverEffect={true}
+                    />
+                  ))}
                 </OneColumnGrid>
               )}
 
@@ -312,26 +297,24 @@ export default async function ProjectPage({
                 project.additionalImages.length > 0 && (
                   <OneColumnGrid gap={4}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      {project.additionalImages.map((image, index) =>
-                        hasValidAssetRef(image) ? ( // Check for valid asset ref
-                          <Card
-                            key={`${project._id}-addimg-${index}`}
-                            imageUrl={urlFor(image)
-                              .width(800)
-                              .height(800)
-                              .quality(80)
-                              .url()}
-                            imageAlt={
-                              image.alt || `Additional image ${index + 1}`
-                            }
-                            title={image.title}
-                            description={image.headline}
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="w-full aspect-square"
-                            hoverEffect={true}
-                          />
-                        ) : null // Don't render Card if asset ref is invalid
-                      )}
+                      {project.additionalImages.map((image, index) => (
+                        <Card
+                          key={`${project._id}-addimg-${index}`}
+                          imageUrl={urlFor(image)
+                            .width(800)
+                            .height(800)
+                            .quality(80)
+                            .url()}
+                          imageAlt={
+                            image.alt || `Additional image ${index + 1}`
+                          }
+                          title={image.title}
+                          description={image.headline}
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="w-full aspect-square"
+                          hoverEffect={true}
+                        />
+                      ))}
                     </div>
                   </OneColumnGrid>
                 )}
