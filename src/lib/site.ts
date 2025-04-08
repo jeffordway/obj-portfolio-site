@@ -36,6 +36,22 @@ export interface CoreValue {
   scriptureRefs: ScriptureRef[];
 }
 
+/**
+ * Site configuration interface
+ */
+export interface SiteConfig {
+  /** Site name */
+  name: string;
+  /** Site description */
+  description: string;
+  /** Site URL */
+  url: string;
+  /** Author name */
+  author: string;
+  /** Copyright year */
+  copyrightYear: number;
+}
+
 // --- Navigation Links ---
 export const navLinks: NavLink[] = [
   { href: "/", label: "Projects", showNavBar: true },
@@ -70,6 +86,17 @@ export const socialLinks: SocialLink[] = [
     iconName: "X" 
   },
 ];
+
+/**
+ * Site-wide configuration
+ */
+export const siteConfig: SiteConfig = {
+  name: "Jeff Ordway",
+  description: "I build tools to help you live boldly, serve purposefully, and pursue excellence.",
+  url: "https://jeffordway.com",
+  author: "Jeff Ordway",
+  copyrightYear: new Date().getFullYear(),
+};
 
 // --- Core Values ---
 export const coreValues: CoreValue[] = [

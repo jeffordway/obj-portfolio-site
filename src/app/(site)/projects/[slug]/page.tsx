@@ -1,7 +1,7 @@
 import React from "react";
 import { createClient, groq } from "next-sanity";
 import { apiVersion, dataset, projectId, useCdn } from "@/sanity/env";
-import { urlFor } from "@/sanity/image";
+import { urlFor } from "@/sanity/lib/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HeroBackground } from "@/components/layouts/HeroBackground";
@@ -17,7 +17,7 @@ import { RiGithubFill, RiExternalLinkLine } from "@remixicon/react";
 import { Card } from "@/components/ui/card/Card";
 import { SkillsDisplay } from "@/components/features/SkillsDisplay";
 import { PortableText } from "@/components/ui/typography/PortableTextRenderer";
-import { siteConfig } from "@/config/siteConfig";
+import { siteConfig } from "@/lib/site";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageObject } from "@sanity/image-url/lib/types/types";
 
@@ -130,8 +130,24 @@ export default async function ProjectPage({
     title,
     slug,
     headline,
-    heroImage { ..., asset->{_ref, _type} }, // Ensure asset is expanded if needed by urlFor
-    mainImage { ..., asset->{_ref, _type} }, // Fallback image
+    heroImage { 
+      ..., 
+      asset->{
+        _id,
+        _ref, 
+        _type,
+        url
+      }
+    },
+    mainImage { 
+      ..., 
+      asset->{
+        _id,
+        _ref, 
+        _type,
+        url
+      }
+    },
     content,
     githubRepo,
     prototype,
@@ -144,8 +160,24 @@ export default async function ProjectPage({
         title
       }
     },
-    projectImages[] { ..., asset->{_ref, _type} },
-    additionalImages[] { ..., asset->{_ref, _type} },
+    projectImages[] { 
+      ..., 
+      asset->{
+        _id,
+        _ref, 
+        _type,
+        url
+      }
+    },
+    additionalImages[] { 
+      ..., 
+      asset->{
+        _id,
+        _ref, 
+        _type,
+        url
+      }
+    },
     "date": publishedAt // Use publishedAt for date if available
   }`;
 
@@ -158,14 +190,19 @@ export default async function ProjectPage({
 
   // Helper function to check if an image has a valid asset reference
   const hasValidAssetRef = (image: ProjectImage | undefined | null): image is ProjectImage & { asset: { _ref: string } } => {
-    return !!image?.asset?._ref;
+    const isValid = !!image?.asset?._ref;
+    if (!isValid && image) {
+      console.log('Invalid image asset:', JSON.stringify(image));
+    }
+    return isValid;
   };
 
   // Determine the background image source, preferring heroImage
+  // Pass the full Sanity image object instead of just the URL
   const backgroundImageSource = hasValidAssetRef(project.heroImage)
-    ? urlFor(project.heroImage).url() // Use validated heroImage
+    ? project.heroImage // Use validated heroImage object
     : hasValidAssetRef(project.mainImage)
-    ? urlFor(project.mainImage).url() // Use validated mainImage
+    ? project.mainImage // Use validated mainImage object
     : undefined;
 
   return (

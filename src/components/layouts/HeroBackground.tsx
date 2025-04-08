@@ -41,11 +41,12 @@ function isSanityImageWithAsset(obj: unknown): obj is SanityImageObject | Sanity
   return (
     typeof obj === 'object' &&
     obj !== null &&
-    'asset' in obj &&
-    typeof obj.asset === 'object' &&
-    obj.asset !== null &&
-    (('_ref' in obj.asset && typeof obj.asset._ref === 'string') ||
-     ('url' in obj.asset && typeof obj.asset.url === 'string'))
+    (('asset' in obj && 
+      typeof obj.asset === 'object' && 
+      obj.asset !== null && 
+      (('_ref' in obj.asset && typeof obj.asset._ref === 'string') ||
+       ('url' in obj.asset && typeof obj.asset.url === 'string'))) ||
+     ('_type' in obj && obj._type === 'image' && '_ref' in obj))
   );
 }
 
@@ -96,18 +97,14 @@ export function HeroBackground({
       finalBlurUrl = imageSrc.blurDataURL;
     } else if (isSanityImageWithAsset(imageSrc)) {
       // Handle Sanity CMS images
-      if ('asset' in imageSrc && 'url' in imageSrc.asset && typeof imageSrc.asset.url === 'string') {
-        // Direct URL format from Sanity
-        finalSrc = imageSrc.asset.url;
-      } else {
-        try {
-          // Standard Sanity image reference format
-          finalSrc = urlFor(imageSrc).auto('format').fit('max').url();
-          // Generate a low-quality placeholder for blur effect
-          finalBlurUrl = urlFor(imageSrc).width(20).height(20).quality(10).blur(10).url();
-        } catch (error) {
-          console.error("Error generating Sanity image URL:", error);
-        }
+      try {
+        // Standard Sanity image reference format
+        finalSrc = urlFor(imageSrc).auto('format').fit('max').url();
+        // Generate a low-quality placeholder for blur effect
+        finalBlurUrl = urlFor(imageSrc).width(20).height(20).quality(10).blur(10).url();
+        console.log('Generated Sanity image URL:', finalSrc);
+      } catch (error) {
+        console.error("Error generating Sanity image URL:", error, imageSrc);
       }
     } else if (typeof imageSrc === 'string') {
       // Handle direct string URLs

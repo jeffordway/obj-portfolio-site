@@ -16,7 +16,6 @@ import { ProjectCard } from "@/components/ui/project/ProjectCard";
 // Sanity imports
 import { createClient } from "next-sanity";
 import { apiVersion, dataset, projectId, useCdn } from "@/sanity/env";
-import { urlFor } from "@/sanity/lib/image";
 
 // Assets
 import avatarImage from "@/assets/avatar.png";

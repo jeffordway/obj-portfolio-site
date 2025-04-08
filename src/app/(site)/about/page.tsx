@@ -10,11 +10,13 @@ import { Content } from "@/components/layouts/Content";
 import { TwoColumnGrid } from "@/components/ui/grid/TwoColumnGrid";
 import Image from "next/image";
 import profileImage from "@/assets/profile.jpg";
-import { coreValues } from "@/config/siteConfig"; // Updated import path
 import { SkillsDisplay } from "@/components/features/SkillsDisplay";
 import { BentoGrid, type BentoGridItem } from "@/components/features/BentoGrid";
 import { type PortableTextBlock } from "@portabletext/types"; // Import PortableTextBlock
-import aboutVideo from "../../../videos/about.mp4";
+import { coreValues } from "@/lib/site";
+
+// Use direct path to public video file instead of next-video import
+const aboutVideoPath = "/videos/about.mp4";
 
 // --- TypeScript Interfaces for Sanity Data ---
 interface AboutPageSkill {
@@ -181,7 +183,7 @@ export default async function HomePage() {
       <div className="relative">
         {/* Background Layer */}
         <HeroBackground
-          videoSrc={aboutVideo}
+          videoSrc={aboutVideoPath}
           imageAlt="About page background video"
         />
 
