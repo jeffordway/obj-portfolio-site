@@ -11,11 +11,16 @@ import { Text } from "@/components/ui/typography/Text";
 import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
 import { AutoGrid } from "@/components/ui/grid/AutoGrid";
 import { Avatar } from "@/components/ui/avatar/Avatar";
-import { ProjectCard } from "@/components/ui/project/ProjectCard";
+import { Card } from "@/components/ui/card/Card";
 
 // Sanity imports
 import { createClient } from "next-sanity";
 import { apiVersion, dataset, projectId, useCdn } from "@/sanity/env";
+import { urlFor } from "@/sanity/lib/image";
+
+// UI components
+import { Tag } from "@/components/ui/tag/Tag";
+import { Icon } from "@/components/ui/icon/Icon";
 
 // Assets
 import avatarImage from "@/assets/avatar.png";
@@ -60,7 +65,15 @@ async function getProjects(): Promise<Project[]> {
     _id,
     title,
     slug,
-    heroImage,
+    heroImage { 
+      ..., 
+      asset->{
+        _id,
+        _ref, 
+        _type,
+        url
+      }
+    },
     headline,
     "categories": categories[]->{
       _id,
@@ -113,7 +126,27 @@ export default async function HomePage() {
           <AutoGrid gap={8}>
             {projects.length > 0 ? (
               projects.map((project) => (
-                <ProjectCard key={project._id} project={project} />
+                <Card
+                  key={project._id}
+                  title={project.title}
+                  description={project.headline}
+                  imageUrl={urlFor(project.heroImage).url()}
+                  imageAlt={`${project.title} project screenshot`}
+                  href={`/projects/${project.slug.current}`}
+                  tags={project.categories?.map((category) => (
+                    <Tag
+                      key={category._id}
+                      label={category.title}
+                      icon={
+                        category.iconName ? (
+                          <Icon name={category.iconName} size="sm" />
+                        ) : undefined
+                      }
+                      tooltipContent={category.description}
+                    />
+                  ))}
+                  className="aspect-square w-full"
+                />
               ))
             ) : (
               <Text variant="body" className="col-span-full text-center italic">
