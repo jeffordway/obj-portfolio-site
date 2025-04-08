@@ -35,7 +35,7 @@ interface Category {
   _id: string;
   title: string;
   description?: string;
-  iconName?: string;
+  slug?: { current: string }; // Use slug instead of iconName
 }
 
 interface Project {
@@ -79,7 +79,7 @@ async function getProjects(): Promise<Project[]> {
       _id,
       title,
       description,
-      iconName
+      slug
     }
   }`;
 
@@ -138,8 +138,8 @@ export default async function HomePage() {
                       key={category._id}
                       label={category.title}
                       icon={
-                        category.iconName ? (
-                          <Icon name={category.iconName} size="sm" />
+                        category.slug?.current ? (
+                          <Icon name={category.slug.current} size="sm" />
                         ) : undefined
                       }
                       tooltipContent={category.description}

@@ -9,6 +9,7 @@
 import React from "react";
 import { Text } from "@/components/ui/typography/Text";
 import { Tag } from "@/components/ui/tag/Tag";
+import { Icon } from "@/components/ui/icon/Icon";
 import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
 
 // --- Data Types (Assuming structure from Sanity) ---
@@ -16,12 +17,14 @@ import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
 interface SkillCategory {
   _id: string;
   title: string;
+  slug?: { current: string }; // Add slug field for icon mapping
 }
 
 interface ProjectSkill {
   _id: string;
   title: string;
   description?: string; // Optional description for the tooltip
+  slug?: { current: string }; // Add slug field for icon mapping
   category: SkillCategory; // Each skill includes its category
 }
 
@@ -87,6 +90,7 @@ export const SkillsDisplay = ({
                 key={skill._id}
                 label={skill.title}
                 tooltipContent={skill.description}
+                icon={skill.slug?.current ? <Icon name={skill.slug.current} size="sm" /> : undefined}
               />
             ))}
           </div>

@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, SlugValue } from "sanity";
 
 // Category schema definition for Sanity Studio
 export default defineType({
@@ -13,46 +13,41 @@ export default defineType({
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
+    // Slug field (auto-generated from title)
+    defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: {
+        source: "title",
+        maxLength: 96,
+        slugify: (input: string) => input
+          .toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')
+          .slice(0, 96)
+      },
+      validation: (Rule) => Rule.required(),
+    }),
     // Optional description field
     defineField({
       name: "description",
       title: "Description",
       type: "text",
     }),
-    // Icon field (using Remix icon names)
-    defineField({
-      name: "iconName",
-      title: "Icon",
-      type: "string",
-      options: {
-        list: [
-          // Analytics & Collaboration icons
-          { title: "Analytics", value: "RiLineChartLine" },
-          { title: "Collaboration", value: "RiTeamLine" },
-          { title: "Chat", value: "RiChat3Line" },
-          { title: "Presentation", value: "RiPresentationLine" },
-          
-          // Product Management icons
-          { title: "Product", value: "RiProductHuntLine" },
-          { title: "Task", value: "RiTaskLine" },
-          { title: "Calendar", value: "RiCalendarLine" },
-          { title: "Roadmap", value: "RiRoadMapLine" },
-          
-          // Software Development icons
-          { title: "Code", value: "RiCodeSSlashFill" },
-          { title: "Terminal", value: "RiTerminalBoxLine" },
-          { title: "Git Branch", value: "RiGitBranchLine" },
-          { title: "Database", value: "RiDatabase2Fill" },
-          
-          // UI/UX Design icons
-          { title: "Design", value: "RiPencilRuler2Line" },
-          { title: "Palette", value: "RiPaletteLine" },
-          { title: "Layout", value: "RiLayoutLine" },
-          { title: "User", value: "RiUserLine" },
-        ],
-        layout: "dropdown"
-      },
-      description: "Select an icon that represents this category"
-    }),
+    // Note: We're using the slug field for icon mapping instead of a separate icon field
   ],
+  // Preview function to show the slug that will be used for icon mapping
+  preview: {
+    select: {
+      title: 'title',
+      slug: 'slug',
+    },
+    prepare({ title, slug }: { title: string, slug?: { current?: string } }) {
+      return {
+        title,
+        subtitle: slug?.current ? `Icon: ${slug.current}` : 'No slug generated',
+      };
+    },
+  },
 });

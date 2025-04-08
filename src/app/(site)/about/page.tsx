@@ -23,12 +23,12 @@ interface AboutPageSkill {
   _id: string;
   title: string;
   description?: string;
-  iconName?: string; // Optional icon from the skill itself
+  slug?: { current: string }; // Use slug instead of iconName
   category: {
     // Include category info directly
     _id: string;
     title: string;
-    iconName?: string; // Optional icon from the category
+    slug?: { current: string }; // Use slug instead of iconName
   };
 }
 
@@ -48,11 +48,11 @@ export default async function HomePage() {
     _id,
     title,
     description,
-    iconName, // Keep skill icon if needed
+    slug, // Use slug instead of iconName
     "category": category->{ // Expand the referenced category
       _id,
       title,
-      iconName // Keep category icon if needed
+      slug // Use slug instead of iconName
     }
   } | order(category.title asc, title asc)`; // Order by category then skill title
 
