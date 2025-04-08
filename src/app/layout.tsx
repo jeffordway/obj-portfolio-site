@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from '@vercel/analytics/next';
 import { Inter } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { ThemeProvider } from "@/providers/ThemeProvider";
@@ -49,6 +50,7 @@ export default function RootLayout({
       <GoogleTagManager gtmId="GTM-MZGMFFWZ" />
       <body className={`${primaryFont.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
