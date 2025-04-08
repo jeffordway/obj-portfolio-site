@@ -17,6 +17,7 @@
     "@opentelemetry/instrumentation": "^0.200.0",
     "@opentelemetry/sdk-logs": "^0.200.0",
     "@react-email/components": "0.0.36",
+    "@remixicon/react": "^4.6.0",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.82.0",
     "@vercel/otel": "^1.10.4",
