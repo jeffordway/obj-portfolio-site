@@ -1,4 +1,7 @@
-// No React import needed
+/**
+ * Icons library for the application
+ * Uses Remix icons from @remixicon/react
+ */
 import {
   // Analytics & Collaboration icons
   RiLineChartLine,
@@ -23,6 +26,11 @@ import {
   RiPaletteLine,
   RiLayoutLine,
   RiUserLine,
+  
+  // Social Media icons
+  RiGithubFill,
+  RiLinkedinBoxFill,
+  RiTwitterXFill,
 } from '@remixicon/react';
 
 // Import the type from @remixicon/react
@@ -32,9 +40,22 @@ import type { RemixiconComponentType } from '@remixicon/react';
 export type RemixIconType = RemixiconComponentType;
 
 /**
- * Maps icon names from Sanity to their corresponding Remix icon components
+ * Type for supported icon names
+ * This helps with type safety when referencing icons by name
  */
-export const iconMap: Record<string, RemixIconType | undefined> = {
+export type IconName = 
+  // Skill icons
+  | 'RiLineChartLine' | 'RiTeamLine' | 'RiChat3Line' | 'RiPresentationLine'
+  | 'RiProductHuntLine' | 'RiTaskLine' | 'RiCalendarLine' | 'RiRoadMapLine'
+  | 'RiCodeSSlashFill' | 'RiTerminalBoxLine' | 'RiGitBranchLine' | 'RiDatabase2Fill'
+  | 'RiPencilRuler2Line' | 'RiPaletteLine' | 'RiLayoutLine' | 'RiUserLine'
+  // Social media icons
+  | 'github' | 'linkedin' | 'X' | 'twitter';
+
+/**
+ * Maps icon names to their corresponding Remix icon components
+ */
+export const iconMap: Record<IconName, RemixIconType> = {
   // Analytics & Collaboration icons
   'RiLineChartLine': RiLineChartLine,
   'RiTeamLine': RiTeamLine,
@@ -58,14 +79,23 @@ export const iconMap: Record<string, RemixIconType | undefined> = {
   'RiPaletteLine': RiPaletteLine,
   'RiLayoutLine': RiLayoutLine,
   'RiUserLine': RiUserLine,
+  
+  // Social Media icons
+  'github': RiGithubFill,
+  'linkedin': RiLinkedinBoxFill,
+  'X': RiTwitterXFill,
+  'twitter': RiTwitterXFill, // Alias for backward compatibility
 };
 
 /**
- * Gets the icon component based on the icon name from Sanity
- * @param name The icon name from Sanity
+ * Gets the icon component based on the icon name
+ * @param name The icon name from our IconName type
  * @returns The corresponding Remix icon component or undefined if not found
  */
 export function getIconComponent(name?: string): RemixIconType | undefined {
   if (!name) return undefined;
-  return iconMap[name];
+  // Type guard to ensure name is a valid IconName
+  return (Object.keys(iconMap) as IconName[]).includes(name as IconName) 
+    ? iconMap[name as IconName] 
+    : undefined;
 }

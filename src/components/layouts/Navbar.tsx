@@ -6,13 +6,13 @@ import { cn } from "@/lib/utils";
 import { RiMenuLine, RiCloseLine } from "@remixicon/react";
 import { createPortal } from "react-dom";
 
-// Changed to absolute imports
+
 import { NavItem } from "@/components/ui/navigation/NavItem";
 import { ExternalLink } from "@/components/ui/links/ExternalLink";
 import { NavLogo } from "@/components/ui/navigation/NavLogo";
-import { SocialIcon } from "@/components/ui/social/SocialIcon";
+import { Icon } from "@/components/ui/icon/Icon";
 import { Section } from "@/components/layouts/Section";
-import { navLinks, siteConfig } from "@/config/siteConfig";
+import { navLinks, socialLinks } from "@/lib/site";
 
 export interface NavbarProps {
   className?: string;
@@ -49,22 +49,27 @@ export const Navbar = ({ className }: NavbarProps) => {
         </NavItem>
       ));
 
+  /**
+   * Renders social links using the socialLinks array from site.ts
+   * Adjusts styling based on mobile vs desktop view
+   */
   const renderSocialLinks = (isMobile = false) =>
-    Object.entries(siteConfig.links).map(([name, href]) => (
+    socialLinks.map((link) => (
       <ExternalLink
-        key={name}
-        href={href}
-        ariaLabel={`Follow on ${name}`} // Consistent aria-label
+        key={link.name}
+        href={link.href}
+        ariaLabel={`Follow on ${link.name}`}
         className={cn(
           "flex items-center gap-2", // Base flex alignment
-          isMobile ? "text-xl" : "text-base", // Example size adjustment
+          isMobile ? "text-xl" : "text-base", // Size adjustment for mobile/desktop
         )}
       >
-        <SocialIcon
-          iconName={name as keyof typeof siteConfig.links}
+        <Icon
+          name={link.iconName}
+          size={isMobile ? "lg" : "md"}
+          variant="inherit"
           className={cn(isMobile ? "h-6 w-6" : "h-5 w-5")}
         />
-        {/* Name span removed for mobile view - only icons needed */}
       </ExternalLink>
     ));
 

@@ -1,8 +1,28 @@
+/**
+ * Site configuration and content types
+ * Contains navigation links, social links, and other site-wide content
+ */
+
+// Import the IconName type from our icons library
+import { type IconName } from './icons';
+
 // --- Type Interfaces ---
 export interface NavLink {
   href: string;
   label: string;
   showNavBar: boolean;
+}
+
+/**
+ * Represents a social media link with icon
+ */
+export interface SocialLink {
+  /** Display name of the social platform */
+  name: string;
+  /** URL to the social profile */
+  href: string;
+  /** Icon name that matches our IconName type */
+  iconName: IconName;
 }
 
 export interface ScriptureRef {
@@ -27,6 +47,28 @@ export const navLinks: NavLink[] = [
   { href: "/disclaimer", label: "Disclaimer", showNavBar: false },
   { href: "/design-system", label: "Design System", showNavBar: false },
   { href: "/studio", label: "Studio", showNavBar: false },
+];
+
+
+/**
+ * Social media links for the site
+ */
+export const socialLinks: SocialLink[] = [
+  { 
+    name: "GitHub", 
+    href: "https://github.com/jeffordway", 
+    iconName: "github" 
+  },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/in/jeffordway/",
+    iconName: "linkedin",
+  },
+  { 
+    name: "X", 
+    href: "https://x.com/indigohawk931", 
+    iconName: "X" 
+  },
 ];
 
 // --- Core Values ---

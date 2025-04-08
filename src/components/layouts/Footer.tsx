@@ -1,9 +1,9 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/layouts/Section";
-import { navLinks, siteConfig } from "@/config/siteConfig"; // Updated import path and added siteConfig
+import { navLinks, socialLinks } from "@/lib/site";
 import { NavItem } from "@/components/ui/navigation/NavItem";
-import { SocialIcon } from "@/components/ui/social/SocialIcon";
+import { Icon } from "@/components/ui/icon/Icon";
 import { ExternalLink } from "@/components/ui/links/ExternalLink";
 import { Text } from "@/components/ui/typography/Text";
 
@@ -25,21 +25,23 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
 
     // Renders social links (adapted from Navbar, no isMobile needed)
     const renderSocialLinks = () =>
-      Object.entries(siteConfig.links).map(([name, href]) => {
-        const iconName = name === 'twitter' ? 'X' : name as keyof typeof siteConfig.links;
-        return (
-          <ExternalLink
-            key={name}
-            href={href}
-            ariaLabel={`Follow on ${name}`}
-            className={cn(
-              "flex items-center gap-2",
-            )}
-          >
-            <SocialIcon iconName={iconName} className="h-5 w-5" />
-          </ExternalLink>
-        );
-      });
+      socialLinks.map((link) => (
+        <ExternalLink
+          key={link.name}
+          href={link.href}
+          ariaLabel={`Follow on ${link.name}`}
+          className={cn(
+            "flex items-center gap-2",
+          )}
+        >
+          <Icon 
+            name={link.iconName} 
+            size="md" 
+            variant="inherit" 
+            className="h-5 w-5" 
+          />
+        </ExternalLink>
+      ));
 
     // Renders nav items marked showNavBar: false (simplified for footer)
     const renderSecondaryNavItems = () =>
