@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { GoogleTagManager } from '@next/third-parties/google'
+import { ThemeProvider } from "../providers/ThemeProvider";
 import "./globals.css";
 
 // --- Metadata & SEO ---
@@ -38,9 +39,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <GoogleTagManager gtmId="GTM-MZGMFFWZ" />
-      <body className={`${primaryFont.variable} antialiased`}>{children}</body>
+      <body className={`${primaryFont.variable} antialiased`}>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
