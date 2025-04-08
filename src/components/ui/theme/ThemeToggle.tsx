@@ -1,32 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
+import React from 'react';
+import { useTheme } from '@/hooks/useTheme';
 import { cn } from '@/lib/utils';
 import { RiMoonFill, RiSunFill, RiComputerLine } from '@remixicon/react';
 
 type ThemeToggleProps = React.HTMLAttributes<HTMLButtonElement>;
 
 export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  // Ensure component is mounted before rendering to prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Determine the next theme in the cycle: light -> dark -> system -> light
-  const getNextTheme = () => {
-    if (theme === 'system') return 'light';
-    if (theme === 'light') return 'dark';
-    return 'system'; // If theme is 'dark'
-  };
-
-  // Cycle through themes
-  const cycleTheme = () => {
-    setTheme(getNextTheme());
-  };
+  const { 
+    theme, 
+    mounted, 
+    cycleTheme, 
+    getNextTheme,
+    getCurrentThemeLabel,
+    getNextThemeLabel 
+  } = useTheme();
 
   // Determine which icon to display based on the *currently selected* theme setting
   const renderIcon = () => {
@@ -59,9 +48,9 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
     );
   }
 
-  // Labels for accessibility and title
-  const nextThemeLabel = getNextTheme().charAt(0).toUpperCase() + getNextTheme().slice(1);
-  const currentThemeLabel = theme.charAt(0).toUpperCase() + theme.slice(1);
+  // Get labels for accessibility and title
+  const nextThemeLabel = getNextThemeLabel();
+  const currentThemeLabel = getCurrentThemeLabel();
 
   return (
     <button

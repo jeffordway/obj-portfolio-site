@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/form/Input";
 import { Textarea } from "@/components/ui/form/TextArea";
 import { Button } from "@/components/ui/button/Button"; 
 import { Text } from "@/components/ui/typography/Text";
+import { useForm } from "@/hooks/useForm";
 import {
   RiCheckLine,
   RiCloseLine,
@@ -38,102 +39,44 @@ export interface ContactFormProps {
 
 // --- Contact Form Component ---
 export function ContactForm({ className }: ContactFormProps) {
-  const [formData, setFormData] = React.useState<ContactFormData>({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [errors, setErrors] = React.useState<FormErrors>({});
-  const [status, setStatus] = React.useState<FormStatus>("idle");
-
-  const handleChange =
-    (fieldName: keyof ContactFormData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { value } = e.target;
-      setFormData((prev) => ({ ...prev, [fieldName]: value }));
-
-      // Clear error for this field on change
-      if (errors[fieldName]) {
-        setErrors((prev) => ({
-          ...prev,
-          [fieldName]: undefined,
-        }));
+  // Initialize the form using our custom hook
+  const {
+    values,
+    errors,
+    status,
+    handleChange,
+    handleSubmit,
+    resetForm,
+    setStatus
+  } = useForm<ContactFormData>({
+    initialValues: {
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    },
+    validationSchema: contactFormSchema,
+    onSubmit: async (data) => {
+      // Check message length before submission (custom validation)
+      if (data.message.length > 500) {
+        throw new Error("Message exceeds maximum length of 500 characters");
       }
-    };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrors({}); // Clear previous errors
-    setStatus("submitting");
-    
-    // Check message length before validation
-    // This allows typing beyond the limit but prevents submission
-    if (formData.message.length > 500) {
-      setErrors({
-        message: "Message exceeds maximum length of 500 characters"
-      });
-      setStatus("idle");
       
-      // Focus the message field
-      document.querySelector<HTMLElement>('[name="message"]')?.focus();
-      return;
-    }
-
-    const result = contactFormSchema.safeParse(formData);
-
-    if (!result.success) {
-      const fieldErrors: FormErrors = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as keyof ContactFormData] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      setStatus("idle");
-
-      // Focus the first field with an error
-      const firstErrorField = Object.keys(fieldErrors)[0];
-      if (firstErrorField) {
-        const element = document.querySelector<HTMLElement>(
-          `[name="${firstErrorField}"]`
-        );
-        element?.focus();
-      }
-      return;
-    }
-
-    // --- API Submission ---
-    try {
+      // API Submission
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(result.data),
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "API error");
       }
-
-      // Success
-      setStatus("success");
-      setFormData({ name: "", email: "", subject: "", message: "" }); // Reset form
-
-      // Optional: Reset to idle after a delay
-      // setTimeout(() => setStatus('idle'), 5000);
-    } catch (error) {
-      console.error("Contact form submission error:", error);
-      setStatus("error");
-      // Optional: Add a more specific error message to the state
-      // setErrors({ form: error instanceof Error ? error.message : 'An unknown error occurred' });
-
-      // Optional: Reset to idle after a delay
-      // setTimeout(() => setStatus('idle'), 5000);
-    }
-  };
+    },
+  });
 
   // --- Render Logic ---
 
@@ -151,7 +94,7 @@ export function ContactForm({ className }: ContactFormProps) {
         </Text>
         <Button
           variant="outline"
-          onClick={() => setStatus("idle")} // Reset to show form again
+          onClick={() => resetForm()} // Use resetForm from our hook
         >
           Send Another Message
         </Button>
@@ -187,7 +130,7 @@ export function ContactForm({ className }: ContactFormProps) {
         name="name"
         id="contact-name"
         placeholder="Your name"
-        value={formData.name}
+        value={values.name}
         onChange={handleChange("name")}
         error={errors.name}
         required
@@ -199,7 +142,7 @@ export function ContactForm({ className }: ContactFormProps) {
         id="contact-email"
         type="email"
         placeholder="your.email@example.com"
-        value={formData.email}
+        value={values.email}
         onChange={handleChange("email")}
         error={errors.email}
         required
@@ -210,7 +153,7 @@ export function ContactForm({ className }: ContactFormProps) {
         name="subject"
         id="contact-subject"
         placeholder="What is this regarding?"
-        value={formData.subject}
+        value={values.subject}
         onChange={handleChange("subject")}
         error={errors.subject}
         required
@@ -221,7 +164,7 @@ export function ContactForm({ className }: ContactFormProps) {
         name="message"
         id="contact-message"
         placeholder="Your message here..."
-        value={formData.message}
+        value={values.message}
         onChange={handleChange("message")}
         error={errors.message}
         rows={10}
