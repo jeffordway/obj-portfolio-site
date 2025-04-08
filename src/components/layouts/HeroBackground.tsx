@@ -10,18 +10,34 @@ import type {
   SanityImageWithAssetStub
 } from '@sanity/image-url/lib/types/types';
 
+/**
+ * Initialize Sanity image URL builder
+ */
 const builder = imageUrlBuilder(client);
 
+/**
+ * Converts a Sanity image reference to a URL builder
+ */
 function urlFor(source: SanityImageObject | SanityImageWithAssetStub) {
   return builder.image(source);
 }
 
+/**
+ * Type guard for Next.js StaticImageData
+ */
 function isStaticImageData(obj: unknown): obj is StaticImageData {
-  return typeof obj === 'object' && obj !== null && 'src' in obj && typeof obj.src === 'string' && 'height' in obj && 'width' in obj;
+  return typeof obj === 'object' && 
+         obj !== null && 
+         'src' in obj && 
+         typeof obj.src === 'string' && 
+         'height' in obj && 
+         'width' in obj;
 }
 
+/**
+ * Type guard for Sanity image objects
+ */
 function isSanityImageWithAsset(obj: unknown): obj is SanityImageObject | SanityImageWithAssetStub {
-  // More flexible check for Sanity image objects
   return (
     typeof obj === 'object' &&
     obj !== null &&
@@ -33,21 +49,30 @@ function isSanityImageWithAsset(obj: unknown): obj is SanityImageObject | Sanity
   );
 }
 
-// Define a proper type for the imported video
-type VideoImport = {
-  src: string;
-  width?: number;
-  height?: number;
-  blurDataURL?: string;
-  id?: string;
-  poster?: string;
-};
+/**
+ * Import the Video component type
+ */
+import type { VideoProps } from 'next-video';
 
+/**
+ * Define a type that matches what next-video expects for the src prop
+ * Based on the documentation and error messages
+ */
+type VideoSource = NonNullable<VideoProps['src']>;
+
+/**
+ * Props for the HeroBackground component
+ */
 interface HeroBackgroundProps {
-  videoSrc?: VideoImport | string;
+  /** Video source from next-video import */
+  videoSrc?: VideoSource;
+  /** Image source from Sanity CMS or local static import */
   imageSrc?: SanityImageSource | StaticImageData;
+  /** Alt text for the image (accessibility) */
   imageAlt?: string;
+  /** Additional classes for the container */
   className?: string;
+  /** Additional classes for the overlay */
   overlayClassName?: string;
 }
 
@@ -59,25 +84,25 @@ export function HeroBackground({
   overlayClassName,
 }: HeroBackgroundProps) {
 
-  console.log("[HeroBackground] Received Props:", { videoSrc, imageSrc });
-
+  // Process image source to get final URL and blur data
   let finalSrc: string | StaticImageData | undefined = undefined;
   let finalBlurUrl: string | undefined = undefined;
 
   if (imageSrc) {
     if (isStaticImageData(imageSrc)) {
-      console.log("[HeroBackground] Image type: StaticImageData");
+      // Handle locally imported images (via import statement)
       finalSrc = imageSrc;
       finalBlurUrl = imageSrc.blurDataURL;
     } else if (isSanityImageWithAsset(imageSrc)) {
-      console.log("[HeroBackground] Image type: SanityImageWithAsset");
-      // Handle both _ref and direct url formats
+      // Handle Sanity CMS images
       if ('asset' in imageSrc && 'url' in imageSrc.asset && typeof imageSrc.asset.url === 'string') {
+        // Direct URL format from Sanity
         finalSrc = imageSrc.asset.url;
-        // No blur URL for direct URLs
       } else {
         try {
+          // Standard Sanity image reference format
           finalSrc = urlFor(imageSrc).auto('format').fit('max').url();
+          // Generate a low-quality placeholder for blur effect
           finalBlurUrl = urlFor(imageSrc).width(20).height(20).quality(10).blur(10).url();
         } catch (error) {
           console.error("Error generating Sanity image URL:", error);
@@ -85,7 +110,6 @@ export function HeroBackground({
       }
     } else if (typeof imageSrc === 'string') {
       // Handle direct string URLs
-      console.log("[HeroBackground] Image type: Direct URL string");
       finalSrc = imageSrc;
     } else {
       console.error(
@@ -93,11 +117,10 @@ export function HeroBackground({
         imageSrc
       );
     }
-    console.log("[HeroBackground] Calculated Image URLs:", { finalSrc, finalBlurUrl });
   }
 
+  // Only render image if there's no video and we have a valid image source
   const shouldRenderImage = !videoSrc && finalSrc;
-  console.log("[HeroBackground] Render decision:", { hasVideo: !!videoSrc, shouldRenderImage });
 
   return (
     <div
@@ -108,15 +131,18 @@ export function HeroBackground({
       data-has-video={!!videoSrc}
       data-has-image={!!finalSrc}
     >
+      {/* Video Background - uses next-video */}
       {videoSrc && (
         <Video
+          // The imported video already has the correct type
+          // TypeScript will validate this at the import site
           src={videoSrc}
           className="w-full h-screen"
           style={{
             position: 'fixed',
             inset: '0px',
             '--media-object-fit': 'cover',
-          }}
+          } as React.CSSProperties}
           autoPlay
           loop
           muted
@@ -124,6 +150,7 @@ export function HeroBackground({
           controls={false}
         />
       )}
+      {/* Image Background - handles both Sanity and local images */}
       {shouldRenderImage && finalSrc && (
         <div className="fixed inset-0 w-full h-screen">
           <Image
@@ -142,6 +169,7 @@ export function HeroBackground({
         </div>
       )}
 
+      {/* Overlay with customizable opacity */}
       <div
         className={cn(
           'absolute inset-0 bg-background/90 dark:bg-background/70',
