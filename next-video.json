@@ -1,0 +1,5 @@
+{
+  "provider": "file",
+  "folder": "public/videos",
+  "publicPath": "/videos"
+}

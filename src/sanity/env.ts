@@ -11,6 +11,12 @@ export const projectId = assertValue(
   'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID'
 )
 
+/**
+ * Set to true to enable CDN caching for Sanity content
+ * Use false for development to get the latest content
+ */
+export const useCdn = process.env.NODE_ENV === 'production'
+
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
   if (v === undefined) {
     throw new Error(errorMessage)

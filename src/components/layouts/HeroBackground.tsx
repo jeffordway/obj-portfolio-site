@@ -57,14 +57,15 @@ import type { VideoProps } from 'next-video';
 /**
  * Define a type that matches what next-video expects for the src prop
  * Based on the documentation and error messages
+ * Also allows for direct string URLs for videos in public folder
  */
-type VideoSource = NonNullable<VideoProps['src']>;
+type VideoSource = NonNullable<VideoProps['src']> | string;
 
 /**
  * Props for the HeroBackground component
  */
 interface HeroBackgroundProps {
-  /** Video source from next-video import */
+  /** Video source from next-video import or direct URL string */
   videoSrc?: VideoSource;
   /** Image source from Sanity CMS or local static import */
   imageSrc?: SanityImageSource | StaticImageData;
@@ -131,24 +132,41 @@ export function HeroBackground({
       data-has-video={!!videoSrc}
       data-has-image={!!finalSrc}
     >
-      {/* Video Background - uses next-video */}
+      {/* Video Background */}
       {videoSrc && (
-        <Video
-          // The imported video already has the correct type
-          // TypeScript will validate this at the import site
-          src={videoSrc}
-          className="w-full h-screen"
-          style={{
-            position: 'fixed',
-            inset: '0px',
-            '--media-object-fit': 'cover',
-          } as React.CSSProperties}
-          autoPlay
-          loop
-          muted
-          playsInline
-          controls={false}
-        />
+        typeof videoSrc === 'string' ? (
+          // Direct video URL - use native video element to avoid watermark
+          <video
+            src={videoSrc}
+            className="w-full h-screen"
+            style={{
+              position: 'fixed',
+              inset: '0px',
+              objectFit: 'cover',
+            }}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls={false}
+          />
+        ) : (
+          // Next-video import
+          <Video
+            src={videoSrc}
+            className="w-full h-screen"
+            style={{
+              position: 'fixed',
+              inset: '0px',
+              '--media-object-fit': 'cover',
+            } as React.CSSProperties}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls={false}
+          />
+        )
       )}
       {/* Image Background - handles both Sanity and local images */}
       {shouldRenderImage && finalSrc && (
