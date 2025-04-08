@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/* Define the dark mode variant based on the .dark class */
+@custom-variant dark (&.dark *);
+
+/* Expose CSS variables to Tailwind */
+@theme {
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-accent: var(--accent);
+  --color-info: var(--info);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+}
+
+/* Base color scheme for light mode */
+:root {
+  /* Main colors */
+  --foreground: oklch(0.13 0.028 261.692); /* gray-950 */
+  --background: oklch(0.985 0.002 247.839); /* gray-50 */
+
+  /* Accent color */
+  --accent: oklch(0.588 0.158 241.966); /* sky-600 */
+
+  /* Status colors */
+  --info: oklch(0.588 0.158 241.966); /* sky-600 */
+  --success: oklch(0.627 0.194 149.214); /* green-600 */
+  --warning: oklch(0.681 0.162 75.834); /* yellow-600 */
+  --error: oklch(0.577 0.245 27.325); /* red-600 */
+}
+
+/* ===== Base HTML Elements ===== */
+
+/* Enable smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Styles for when the .dark class is applied */
+.dark {
+  /* Inverted main colors for dark mode */
+  --foreground: oklch(0.985 0.002 247.839); /* gray-50 */
+  --background: oklch(0.13 0.028 261.692); /* gray-950 */
+
+  /* Brighter accent for dark mode */
+  --accent: oklch(0.685 0.169 237.323); /* sky-500 */
+
+  /* Adjusted status colors for dark mode */
+  --info: oklch(0.685 0.169 237.323); /* sky-500 */
+  --success: oklch(0.723 0.219 149.579); /* green-500 */
+  --warning: oklch(0.795 0.184 86.047); /* yellow-500 */
+  --error: oklch(0.637 0.237 25.331); /* red-500 */
+}
+
+/* ===== Base Element Styling ===== */
+
+/* Basic body styling */
+body {
+  background: var(--background);
+  color: var(--foreground);
+}

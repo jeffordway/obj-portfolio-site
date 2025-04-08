@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { GoogleTagManager } from '@next/third-parties/google'
-import { ThemeProvider } from "../providers/ThemeProvider";
-import "./globals.css";
+import { GoogleTagManager } from "@next/third-parties/google";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+import "@/styles/globals.css";
 
 // --- Metadata & SEO ---
 export const metadata: Metadata = {
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     "web development",
     "app development",
   ],
+  viewport: "width=device-width, initial-scale=1",
 };
 
 // --- Font Configuration ---
@@ -42,9 +43,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <GoogleTagManager gtmId="GTM-MZGMFFWZ" />
       <body className={`${primaryFont.variable} antialiased`}>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
