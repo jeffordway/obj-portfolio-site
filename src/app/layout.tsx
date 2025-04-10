@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Inter } from "next/font/google";
-import { GoogleTagManager } from "@next/third-parties/google";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { UsercentricsCookieConsent } from "@/components/analytics/UsercentricsCookieConsent";
@@ -51,11 +50,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <UsercentricsCookieConsent />
-      <GoogleTagManager gtmId="GTM-MZGMFFWZ" />
       <body className={`${primaryFont.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
         <Analytics />
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />
+        <SpeedInsights />
       </body>
     </html>
   );
