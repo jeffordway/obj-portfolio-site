@@ -1,5 +1,13 @@
+/**
+ * Environment variables for Sanity configuration
+ * 
+ * For Next.js frontend: Uses NEXT_PUBLIC_ prefixed variables
+ * For Sanity Studio: Uses SANITY_STUDIO_ prefixed variables
+ */
+
+// For Next.js frontend
 export const apiVersion =
-  process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-04-07'
+  process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-04-01'
 
 export const dataset = assertValue(
   process.env.NEXT_PUBLIC_SANITY_DATASET,
