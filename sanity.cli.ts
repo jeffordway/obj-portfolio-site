@@ -4,12 +4,14 @@
 **/
 import { defineCliConfig } from 'sanity/cli'
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
-const studioHost = process.env.NEXT_PUBLIC_SANITY_STUDIO_HOST
+// According to Sanity best practices, we should use SANITY_STUDIO_ prefixed variables
+// But we also support the existing NEXT_PUBLIC_ variables for backward compatibility
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'hcajm3fl'
+const dataset = process.env.SANITY_STUDIO_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+const studioHost = process.env.SANITY_STUDIO_HOST || process.env.NEXT_PUBLIC_SANITY_STUDIO_HOST || 'jeffordway'
 
 export default defineCliConfig({ 
   api: { projectId, dataset },
   // Set the hostname for Sanity Studio deployment
-  studioHost: studioHost
+  studioHost
 })
