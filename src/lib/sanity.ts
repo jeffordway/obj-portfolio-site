@@ -1,0 +1,44 @@
+/**
+ * Sanity client configuration with support for revalidation tags
+ * This file provides a centralized client for all Sanity data fetching
+ * Following official Sanity recommendations for Next.js App Router
+ */
+import { createClient } from "next-sanity";
+import { apiVersion, dataset, projectId, useCdn } from "@/sanity/env";
+import 'server-only';
+
+// Configuration for Sanity client
+const clientConfig = {
+  projectId,
+  dataset,
+  apiVersion,
+  // Only use CDN in production to ensure fresh content during development
+  useCdn: process.env.NODE_ENV === "production",
+  // Disable stega in production for better performance
+  stega: process.env.NODE_ENV !== "production",
+};
+
+// Create a standard Sanity client
+export const client = createClient(clientConfig);
+
+/**
+ * Helper function for fetching data with proper typing and revalidation tags
+ * This follows Sanity's recommended pattern for tag-based revalidation
+ * @template T The expected return type
+ */
+export async function sanityFetch<T>({
+  query,
+  params = {},
+  tags = [],
+}: {
+  query: string;
+  params?: Record<string, any>;
+  tags?: string[];
+}): Promise<T> {
+  return client.fetch<T>(query, params, {
+    // Use force-cache to enable tag-based revalidation
+    cache: "force-cache",
+    // Specify tags for revalidation
+    next: { tags },
+  });
+}

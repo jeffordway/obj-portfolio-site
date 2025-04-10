@@ -1,6 +1,6 @@
 import React from "react";
-import { createClient, groq } from "next-sanity";
-import { apiVersion, dataset, projectId, useCdn } from "@/sanity/env";
+import { groq } from "next-sanity";
+import { sanityFetch } from "@/lib/sanity";
 import { urlFor } from "@/sanity/lib/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -80,21 +80,17 @@ export async function generateMetadata({
   // searchParams // Include if needed later
 }: Props): Promise<Metadata> {
   const { slug } = await params; // Await params here
-  const client = createClient({ 
-    apiVersion, 
-    dataset, 
-    projectId, 
-    useCdn: false // Disable CDN to ensure fresh data
-  });
 
   try {
-    const project = await client.fetch<{
+    // Use sanityFetch with tag-based revalidation
+    const project = await sanityFetch<{
       title: string;
       headline?: string;
-    } | null>(
-      groq`*[_type == "project" && slug.current == $slug][0]{ title, headline }`,
-      { slug }
-    );
+    } | null>({
+      query: groq`*[_type == "project" && slug.current == $slug][0]{ title, headline }`,
+      params: { slug },
+      tags: ['project', `project-${slug}`] // Tag with both collection and specific item
+    });
 
     if (!project) {
       notFound(); // Trigger 404 if project not found
@@ -122,19 +118,16 @@ export async function generateMetadata({
 // --- Page Component ---
 
 // Apply the Props type (params is already awaited inside)
+// Enable revalidation every 60 seconds as a fallback
+export const revalidate = 60;
+
 export default async function ProjectPage({
   params /*, searchParams */,
 }: Props) {
   // Await the promise to get the actual slug value
   const { slug } = await params;
-  const client = createClient({ 
-    apiVersion, 
-    dataset, 
-    projectId, 
-    useCdn: false // Disable CDN to ensure fresh data
-  });
 
-  // Fetch full project data with optimized image queries
+  // Fetch full project data with optimized image queries using sanityFetch
   const projectQuery = groq`*[_type == "project" && slug.current == $slug][0] {
     _id,
     title,
@@ -203,7 +196,11 @@ export default async function ProjectPage({
     "date": publishedAt // Use publishedAt for date if available
   }`;
 
-  const project = await client.fetch<Project | null>(projectQuery, { slug });
+  const project = await sanityFetch<Project | null>({
+    query: projectQuery,
+    params: { slug },
+    tags: ['project', `project-${slug}`] // Tag with both collection and specific item
+  });
 
   // If project data is null or undefined, trigger 404
   if (!project) {
@@ -299,7 +296,7 @@ export default async function ProjectPage({
               {/* Project Images */}
               {project.projectImages && project.projectImages.length > 0 && (
                 <OneColumnGrid gap={4}>
-                  {project.projectImages.map((image, index) => (
+                  {project.projectImages.map((image: ProjectImage, index: number) => (
                     <Card
                       key={`${project._id}-projimg-${index}`}
                       imageUrl={urlFor(image).width(1200).quality(80).url()}
@@ -319,7 +316,7 @@ export default async function ProjectPage({
                 project.additionalImages.length > 0 && (
                   <OneColumnGrid gap={4}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      {project.additionalImages.map((image, index) => (
+                      {project.additionalImages.map((image: ProjectImage, index: number) => (
                         <Card
                           key={`${project._id}-addimg-${index}`}
                           imageUrl={urlFor(image)

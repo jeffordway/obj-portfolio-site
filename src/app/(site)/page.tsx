@@ -14,8 +14,7 @@ import { Avatar } from "@/components/ui/avatar/Avatar";
 import { Card } from "@/components/ui/card/Card";
 
 // Sanity imports
-import { createClient } from "next-sanity";
-import { apiVersion, dataset, projectId, useCdn } from "@/sanity/env";
+import { sanityFetch } from "@/lib/sanity";
 import { urlFor } from "@/sanity/lib/image";
 
 // UI components
@@ -24,6 +23,9 @@ import { Icon } from "@/components/ui/icon/Icon";
 
 // Assets
 import avatarImage from "@/assets/avatar.png";
+
+// Import the LazyProjects component
+import { LazyProjects } from '@/components/features/LazyProjects';
 
 // Use direct path to public video file instead of next-video import
 const homeVideoPath = "/videos/home.mp4";
@@ -56,18 +58,10 @@ export const metadata: Metadata = {
 };
 
 /**
- * Fetch projects from Sanity
+ * Fetch projects from Sanity with tag-based revalidation
  */
 async function getProjects(): Promise<Project[]> {
-  // Disable CDN to ensure fresh data
-  const client = createClient({ 
-    apiVersion, 
-    dataset, 
-    projectId, 
-    useCdn: false // Disable CDN to get latest content
-  });
-
-  // Remove the [0...6] limit to fetch all projects
+  // Define the GROQ query for projects
   const query = `*[_type == "project"] | order(date desc) {
     _id,
     title,
@@ -82,7 +76,7 @@ async function getProjects(): Promise<Project[]> {
       }
     },
     headline,
-    "categories": categories[]->{
+    "categories": categories[]->{ 
       _id,
       title,
       description,
@@ -91,15 +85,19 @@ async function getProjects(): Promise<Project[]> {
   }`;
 
   try {
-    return await client.fetch(query);
+    // Use the sanityFetch function with tag-based revalidation
+    return await sanityFetch<Project[]>({
+      query,
+      tags: ['project'] // This tag will be revalidated when projects change
+    });
   } catch (error) {
     console.error("Failed to fetch projects:", error);
     return [];
   }
 }
 
-// Import the LazyProjects component
-import { LazyProjects } from '@/components/features/LazyProjects';
+// Enable revalidation every 60 seconds as a fallback
+export const revalidate = 60;
 
 export default async function HomePage() {
   const projects = await getProjects();
