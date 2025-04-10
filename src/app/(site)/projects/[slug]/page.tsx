@@ -175,9 +175,11 @@ export default async function ProjectPage({
       _id,
       title,
       description,
+      slug,
       "category": category->{
         _id,
-        title
+        title,
+        slug
       }
     },
     projectImages[] { 
