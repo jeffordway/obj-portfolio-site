@@ -1,28 +1,21 @@
 'use client';
 
-import Script from 'next/script';
-
 /**
  * UsercentricsCookieConsent component
  * 
- * Implements Usercentrics cookie consent management using Next.js Script component.
- * Uses the beforeInteractive strategy to ensure scripts load before any page hydration.
+ * Provides a CSS fix to ensure the cookie banner appears above all other elements.
+ * The actual scripts are loaded in the root layout for better compatibility.
  */
 export function UsercentricsCookieConsent() {
   return (
     <>
-      {/* Usercentrics Cookie Consent Management */}
-      <Script
-        src="https://web.cmp.usercentrics.eu/modules/autoblocker.js"
-        strategy="beforeInteractive"
-      />
-      <Script
-        id="usercentrics-cmp"
-        src="https://web.cmp.usercentrics.eu/ui/loader.js"
-        data-settings-id="fcqZDSJeT1abLZ"
-        strategy="beforeInteractive"
-        async
-      />
+      {/* CSS fix to ensure the cookie banner appears above all other elements */}
+      <style jsx global>{`
+        #usercentrics-root {
+          position: relative;
+          z-index: 9999 !important; /* Ensure it's above all other elements */
+        }
+      `}</style>
     </>
   );
 }

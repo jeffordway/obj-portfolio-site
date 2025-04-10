@@ -80,7 +80,12 @@ export async function generateMetadata({
   // searchParams // Include if needed later
 }: Props): Promise<Metadata> {
   const { slug } = await params; // Await params here
-  const client = createClient({ apiVersion, dataset, projectId, useCdn });
+  const client = createClient({ 
+    apiVersion, 
+    dataset, 
+    projectId, 
+    useCdn: false // Disable CDN to ensure fresh data
+  });
 
   try {
     const project = await client.fetch<{
@@ -122,7 +127,12 @@ export default async function ProjectPage({
 }: Props) {
   // Await the promise to get the actual slug value
   const { slug } = await params;
-  const client = createClient({ apiVersion, dataset, projectId, useCdn });
+  const client = createClient({ 
+    apiVersion, 
+    dataset, 
+    projectId, 
+    useCdn: false // Disable CDN to ensure fresh data
+  });
 
   // Fetch full project data with optimized image queries
   const projectQuery = groq`*[_type == "project" && slug.current == $slug][0] {
