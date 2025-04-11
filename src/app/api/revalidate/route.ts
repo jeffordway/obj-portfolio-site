@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const { body, isValidSignature } = await parseBody<{
       _type: string;
       slug?: { current: string } | undefined;
-    }>(req, process.env.SANITY_WEBHOOK_SECRET);
+    }>(req, process.env.NEXT_PUBLIC_SANITY_HOOK_SECRET);
 
     // Verify the webhook signature
     if (!isValidSignature) {
