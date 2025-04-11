@@ -14,8 +14,13 @@ const clientConfig = {
   apiVersion,
   // Only use CDN in production to ensure fresh content during development
   useCdn: process.env.NODE_ENV === "production",
-  // Disable stega in production for better performance
-  stega: process.env.NODE_ENV !== "production",
+  // Configure stega - required for visual editing experience
+  stega: {
+    // Enable stega in development only for better performance in production
+    enabled: process.env.NODE_ENV !== "production",
+    // Required when stega is enabled - URL to your Sanity Studio
+    studioUrl: `/studio`,
+  },
 };
 
 // Create a standard Sanity client

@@ -77,7 +77,7 @@ const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
 
     // Classes for the hover overlay
     const overlayClasses = cn(
-      "absolute inset-0 flex flex-col justify-center items-center p-4",
+      "absolute inset-0 flex flex-col justify-center items-center p-4 md:p-8",
       "bg-background/80 text-foreground",
       "opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100",
       "z-10 text-center"
@@ -107,21 +107,41 @@ const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
                 {description}
               </Text>
             )}
-            {/* Render tags if provided */}
+            {/* Render tags if provided (sorted alphabetically) */}
             {tags && tags.length > 0 && (
               <div className="mt-2 flex flex-wrap justify-center gap-1">
-                {tags.map((tag, index) => {
-                  // For string tags, create a basic Tag component
-                  if (typeof tag === 'string') {
-                    return <Tag key={tag} label={tag} showTooltip={false} />;
-                  }
-                  
-                  // For React elements (which should be Tag components based on our typing)
-                  if (React.isValidElement(tag)) {
-                    // Clone the element with the key and disable tooltip
-                    return React.cloneElement(tag, {
-                      key: tag.key || `tag-${index}`,
-                      showTooltip: false
+                {[...tags]
+                  // Sort tags alphabetically - string tags by their text, React elements by their label prop
+                  .sort((a, b) => {
+                    // For string tags, compare directly
+                    if (typeof a === 'string' && typeof b === 'string') {
+                      return a.localeCompare(b);
+                    }
+                    
+                    // For React elements, try to compare by label prop
+                    const aLabel = React.isValidElement(a) && a.props.label ? a.props.label : '';
+                    const bLabel = React.isValidElement(b) && b.props.label ? b.props.label : '';
+                    
+                    // If both have labels, compare them
+                    if (aLabel && bLabel) {
+                      return aLabel.localeCompare(bLabel);
+                    }
+                    
+                    // If only one has a label, prioritize the one with a label
+                    return aLabel ? -1 : bLabel ? 1 : 0;
+                  })
+                  .map((tag, index) => {
+                    // For string tags, create a basic Tag component
+                    if (typeof tag === 'string') {
+                      return <Tag key={tag} label={tag} showTooltip={false} />;
+                    }
+                    
+                    // For React elements (which should be Tag components based on our typing)
+                    if (React.isValidElement(tag)) {
+                      // Clone the element with the key and disable tooltip
+                      return React.cloneElement(tag, {
+                        key: tag.key || `tag-${index}`,
+                        showTooltip: false
                     });
                   }
                   
