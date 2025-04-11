@@ -1,6 +1,6 @@
 import React from "react";
-import { createClient } from "next-sanity";
-import { apiVersion, dataset, projectId, useCdn } from "@/sanity/env";
+// Import the query functions and types from our centralized queries file
+import { getSkills, getAboutPageData, type Skill, type AboutPageData } from "@/lib/sanity/queries";
 import { HeroBackground } from "@/components/layouts/HeroBackground";
 import { HeroContent } from "@/components/layouts/HeroContent";
 import { Section } from "@/components/layouts/Section";
@@ -18,51 +18,12 @@ import { coreValues } from "@/lib/site";
 // Use direct path to public video file instead of next-video import
 const aboutVideoPath = "/videos/about.mp4";
 
-// --- TypeScript Interfaces for Sanity Data ---
-interface AboutPageSkill {
-  _id: string;
-  title: string;
-  description?: string;
-  slug?: { current: string }; // Use slug instead of iconName
-  category: {
-    // Include category info directly
-    _id: string;
-    title: string;
-    slug?: { current: string }; // Use slug instead of iconName
-  };
-}
-
-interface AboutPageData {
-  _id: string;
-  title: string;
-  headline: string;
-  aboutContent: PortableTextBlock[];
-  bentoItems: BentoGridItem[];
-}
+// Types are now imported from @/lib/sanity/queries
 
 export default async function HomePage() {
   // --- Fetch Skills Data from Sanity ---
-  const client = createClient({ apiVersion, dataset, projectId, useCdn });
-  // Updated query to fetch all skills and expand their category reference
-  const skillsQuery = `*[_type == "skill"]{
-    _id,
-    title,
-    description,
-    slug, // Use slug instead of iconName
-    "category": category->{ // Expand the referenced category
-      _id,
-      title,
-      slug // Use slug instead of iconName
-    }
-  } | order(category.title asc, title asc)`; // Order by category then skill title
-
-  // Update the type of skillsData
-  let skillsData: AboutPageSkill[] = []; // Default to empty array
-  try {
-    skillsData = await client.fetch(skillsQuery);
-  } catch (error) {
-    console.error("Failed to fetch skills data:", error);
-  }
+  // Using the centralized getSkills function
+  const skillsData = await getSkills();
 
   // --- Bento Grid Items ---
   const bentoItems: BentoGridItem[] = [
@@ -151,30 +112,11 @@ export default async function HomePage() {
     ));
   };
 
-  // Fetch about page data
-  const aboutQuery = `*[_type == "aboutPage"][0]{
-    _id,
-    title,
-    headline,
-    aboutContent,
-    "bentoItems": bentoGridItems[]->{
-      _id,
-      title,
-      description,
-      imageUrl,
-      imageAlt,
-      href,
-      className,
-      imagePriority
-    }
-  }`;
-
-  let aboutData: AboutPageData | null = null;
-  try {
-    aboutData = await client.fetch(aboutQuery);
+  // Fetch about page data using the centralized getAboutPageData function
+  const aboutData = await getAboutPageData();
+  
+  if (aboutData) {
     console.log("About page data fetched:", JSON.stringify(aboutData, null, 2));
-  } catch (error) {
-    console.error("Failed to fetch about page data:", error);
   }
 
   return (

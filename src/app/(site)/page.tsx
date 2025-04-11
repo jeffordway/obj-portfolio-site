@@ -14,8 +14,8 @@ import { Avatar } from "@/components/ui/avatar/Avatar";
 import { Card } from "@/components/ui/card/Card";
 
 // Sanity imports
-import { sanityFetch } from "@/lib/sanity";
 import { urlFor } from "@/sanity/lib/image";
+import { getProjects, type Project } from "@/lib/sanity/queries";
 
 // UI components
 import { Tag } from "@/components/ui/tag/Tag";
@@ -30,26 +30,7 @@ import { LazyProjects } from '@/components/features/LazyProjects';
 // Use direct path to public video file instead of next-video import
 const homeVideoPath = "/videos/home.mp4";
 
-/**
- * Types for Sanity data
- */
-interface Category {
-  _id: string;
-  title: string;
-  description?: string;
-  slug?: { current: string }; // Use slug instead of iconName
-}
-
-interface Project {
-  _id: string;
-  title: string;
-  slug: {
-    current: string;
-  };
-  heroImage: { asset: { _ref: string } };
-  headline: string;
-  categories: Category[];
-}
+// Types are now imported from @/lib/sanity/queries
 
 export const metadata: Metadata = {
   title: "Jeff Ordway - Purpose-Driven Design and Development",
@@ -57,44 +38,7 @@ export const metadata: Metadata = {
     "I build tools to help you live boldly, serve purposefully, and pursue excellence.",
 };
 
-/**
- * Fetch projects from Sanity with tag-based revalidation
- */
-async function getProjects(): Promise<Project[]> {
-  // Define the GROQ query for projects
-  const query = `*[_type == "project"] | order(date desc) {
-    _id,
-    title,
-    slug,
-    heroImage { 
-      ..., 
-      asset->{
-        _id,
-        _ref, 
-        _type,
-        url
-      }
-    },
-    headline,
-    "categories": categories[]->{ 
-      _id,
-      title,
-      description,
-      slug
-    }
-  }`;
-
-  try {
-    // Use the sanityFetch function with tag-based revalidation
-    return await sanityFetch<Project[]>({
-      query,
-      tags: ['project'] // This tag will be revalidated when projects change
-    });
-  } catch (error) {
-    console.error("Failed to fetch projects:", error);
-    return [];
-  }
-}
+// Projects are now fetched using the centralized getProjects function from @/lib/sanity/queries
 
 // Enable revalidation every 60 seconds as a fallback
 export const revalidate = 60;

@@ -8,24 +8,8 @@ import { Icon } from '@/components/ui/icon/Icon';
 import { Text } from '@/components/ui/typography/Text';
 import { urlFor } from '@/sanity/lib/image';
 
-// Import the Project and Category interfaces
-interface Category {
-  _id: string;
-  title: string;
-  description?: string;
-  slug?: { current: string };
-}
-
-interface Project {
-  _id: string;
-  title: string;
-  slug: {
-    current: string;
-  };
-  heroImage: { asset: { _ref: string } };
-  headline: string;
-  categories: Category[];
-}
+// Import the Project and Category types from our centralized queries file
+import { type Project, type Category } from '@/lib/sanity/queries';
 
 export function LazyProjects({ projects }: { projects: Project[] }) {
   const [visibleCount, setVisibleCount] = useState(6);
@@ -53,11 +37,11 @@ export function LazyProjects({ projects }: { projects: Project[] }) {
           <Card
             key={project._id}
             title={project.title}
-            description={project.headline}
-            imageUrl={urlFor(project.heroImage).url()}
+            description={project.headline || ''}
+            imageUrl={project.heroImage ? urlFor(project.heroImage).url() : ''}
             imageAlt={`${project.title} project screenshot`}
             href={`/projects/${project.slug.current}`}
-            tags={project.categories?.map((category) => (
+            tags={project.categories ? project.categories.map((category) => (
               <Tag
                 key={category._id}
                 label={category.title}
@@ -68,7 +52,7 @@ export function LazyProjects({ projects }: { projects: Project[] }) {
                 }
                 tooltipContent={category.description}
               />
-            ))}
+            )) : undefined}
             className="aspect-square w-full"
           />
         ))

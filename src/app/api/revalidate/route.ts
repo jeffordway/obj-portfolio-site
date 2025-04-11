@@ -37,6 +37,29 @@ export async function POST(req: NextRequest) {
       console.log(`Revalidating specific tag: ${specificTag}`);
       revalidateTag(specificTag);
     }
+    
+    // For new content, we need to revalidate the relevant collection pages
+    // This ensures new content appears on list pages without requiring a redeployment
+    switch (body._type) {
+      case 'project':
+        console.log('Revalidating projects collection');
+        revalidateTag('projects-collection');
+        break;
+      case 'category':
+        console.log('Revalidating categories collection');
+        revalidateTag('categories-collection');
+        // Also revalidate projects since they display categories
+        revalidateTag('projects-collection');
+        break;
+      case 'skill':
+        console.log('Revalidating skills collection');
+        revalidateTag('skills-collection');
+        break;
+      default:
+        // For any other content type, revalidate a general content tag
+        console.log(`Revalidating general content for type: ${body._type}`);
+        revalidateTag('content');
+    }
 
     // Return success response
     return NextResponse.json({

@@ -1,9 +1,8 @@
 import React from "react";
-import { groq } from "next-sanity";
-import { sanityFetch } from "@/lib/sanity";
 import { urlFor } from "@/sanity/lib/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getProjectBySlug, type Project, type ProjectImage } from "@/lib/sanity/queries";
 import { HeroBackground } from "@/components/layouts/HeroBackground";
 import { HeroContent } from "@/components/layouts/HeroContent";
 import { Section } from "@/components/layouts/Section";
@@ -21,50 +20,7 @@ import { siteConfig } from "@/lib/site";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageObject } from "@sanity/image-url/lib/types/types";
 
-// --- TypeScript Interfaces for Sanity Data ---
-
-// Base type for Sanity images with required asset reference
-interface SanityImageRef extends SanityImageObject {
-  asset: {
-    _ref: string;
-    _type: "reference";
-  };
-}
-
-// Specific type for images used in the project, extending the base
-interface ProjectImage extends SanityImageRef {
-  alt?: string;
-  title?: string;
-  headline?: string;
-}
-
-interface SkillCategory {
-  _id: string;
-  title: string;
-}
-
-interface ProjectSkill {
-  _id: string;
-  title: string;
-  description?: string;
-  category: SkillCategory;
-}
-
-interface Project {
-  _id: string;
-  title: string;
-  slug: { current: string };
-  headline?: string;
-  heroImage?: ProjectImage; // Optional hero image
-  mainImage?: ProjectImage; // Optional main image (fallback)
-  content?: PortableTextBlock[];
-  githubRepo?: { showButton?: boolean; url?: string };
-  prototype?: { showButton?: boolean; url?: string; buttonText?: string };
-  skills?: ProjectSkill[];
-  projectImages?: ProjectImage[];
-  additionalImages?: ProjectImage[];
-  date?: string; // Note: mapped from publishedAt in query, but not used in JSX
-}
+// Types are now imported from @/lib/sanity/queries
 
 // Define Props type matching the documentation example (params/searchParams as Promises)
 type Props = {
@@ -82,15 +38,8 @@ export async function generateMetadata({
   const { slug } = await params; // Await params here
 
   try {
-    // Use sanityFetch with tag-based revalidation
-    const project = await sanityFetch<{
-      title: string;
-      headline?: string;
-    } | null>({
-      query: groq`*[_type == "project" && slug.current == $slug][0]{ title, headline }`,
-      params: { slug },
-      tags: ['project', `project-${slug}`] // Tag with both collection and specific item
-    });
+    // Use the centralized getProjectBySlug function for metadata
+    const project = await getProjectBySlug(slug);
 
     if (!project) {
       notFound(); // Trigger 404 if project not found
@@ -127,80 +76,8 @@ export default async function ProjectPage({
   // Await the promise to get the actual slug value
   const { slug } = await params;
 
-  // Fetch full project data with optimized image queries using sanityFetch
-  const projectQuery = groq`*[_type == "project" && slug.current == $slug][0] {
-    _id,
-    title,
-    slug,
-    headline,
-    // Prioritize hero image with complete asset data
-    heroImage { 
-      ..., 
-      asset->{
-        _id,
-        _ref, 
-        _type,
-        url,
-        metadata {
-          lqip,
-          dimensions
-        }
-      }
-    },
-    // Also optimize mainImage as it's used as fallback for hero
-    mainImage { 
-      ..., 
-      asset->{
-        _id,
-        _ref, 
-        _type,
-        url,
-        metadata {
-          lqip,
-          dimensions
-        }
-      }
-    },
-    content,
-    githubRepo,
-    prototype,
-    "skills": skills[]->{
-      _id,
-      title,
-      description,
-      slug,
-      "category": category->{
-        _id,
-        title,
-        slug
-      }
-    },
-    projectImages[] { 
-      ..., 
-      asset->{
-        _id,
-        _ref, 
-        _type,
-        url
-      }
-    },
-    additionalImages[] { 
-      ..., 
-      asset->{
-        _id,
-        _ref, 
-        _type,
-        url
-      }
-    },
-    "date": publishedAt // Use publishedAt for date if available
-  }`;
-
-  const project = await sanityFetch<Project | null>({
-    query: projectQuery,
-    params: { slug },
-    tags: ['project', `project-${slug}`] // Tag with both collection and specific item
-  });
+  // Use the centralized getProjectBySlug function
+  const project = await getProjectBySlug(slug);
 
   // If project data is null or undefined, trigger 404
   if (!project) {

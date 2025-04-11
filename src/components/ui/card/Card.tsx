@@ -77,7 +77,7 @@ const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
 
     // Classes for the hover overlay
     const overlayClasses = cn(
-      "absolute inset-0 flex flex-col justify-center items-center p-4 md:p-8",
+      "absolute inset-0 flex flex-col justify-center items-center p-8",
       "bg-background/80 text-foreground",
       "opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100",
       "z-10 text-center"
