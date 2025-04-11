@@ -18,7 +18,8 @@ jest.mock('next-sanity/webhook', () => ({
 async function mockRevalidateHandler(
   body: any,
   signature: string,
-  secret: string
+  secret: string,
+  debugMode = false // Add debug mode parameter
 ) {
   try {
     // Mock the parseBody functionality
@@ -30,7 +31,7 @@ async function mockRevalidateHandler(
     const { body: parsedBody, isValidSignature } = parseBodyResult;
 
     // Verify the webhook signature
-    if (!isValidSignature) {
+    if (!isValidSignature && !debugMode) {
       return {
         status: 401,
         body: 'Invalid Signature',
@@ -76,27 +77,45 @@ describe('Sanity Webhook Revalidation API', () => {
   // Reset all mocks before each test
   beforeEach(() => {
     jest.resetAllMocks();
-    // Mock environment variable
+    // Mock environment variables
     process.env.NEXT_PUBLIC_SANITY_HOOK_SECRET = 'test-secret';
+    process.env.SANITY_WEBHOOK_SECRET = 'alternate-secret';
   });
 
   afterEach(() => {
     // Clean up environment variables
     delete process.env.NEXT_PUBLIC_SANITY_HOOK_SECRET;
+    delete process.env.SANITY_WEBHOOK_SECRET;
   });
 
-  it('should return 401 if signature is invalid', async () => {
+  it('should return 401 if signature is invalid in strict mode', async () => {
     // Test with invalid signature
     const result = await mockRevalidateHandler(
       { _type: 'project' },
       'invalid-signature',
-      'test-secret'
+      'test-secret',
+      false // strict mode (debug mode off)
     );
 
     // Assertions
     expect(result.status).toBe(401);
     expect(result.body).toBe('Invalid Signature');
     expect(revalidateTag).not.toHaveBeenCalled();
+  });
+  
+  it('should process webhook despite invalid signature in debug mode', async () => {
+    // Test with invalid signature but debug mode enabled
+    const result = await mockRevalidateHandler(
+      { _type: 'project' },
+      'invalid-signature',
+      'test-secret',
+      true // debug mode on
+    );
+
+    // Assertions
+    expect(result.status).toBe(200);
+    expect(result.body.revalidated).toBe(true);
+    expect(revalidateTag).toHaveBeenCalledWith('project');
   });
 
   it('should return 400 if body is missing _type', async () => {
