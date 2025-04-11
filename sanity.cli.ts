@@ -13,5 +13,6 @@ const studioHost = process.env.SANITY_STUDIO_HOST || process.env.NEXT_PUBLIC_SAN
 export default defineCliConfig({ 
   api: { projectId, dataset },
   // Set the hostname for Sanity Studio deployment
-  studioHost
+  studioHost,
+  autoUpdates: true,
 })
