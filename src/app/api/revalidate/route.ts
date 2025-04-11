@@ -1,6 +1,7 @@
 /**
  * Revalidation API endpoint for Sanity webhooks
  * This handles on-demand revalidation when content is published in Sanity
+ * Based on Sanity's official documentation: https://www.sanity.io/guides/sanity-webhooks-and-on-demand-revalidation-in-nextjs
  */
 import { revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
@@ -16,22 +17,25 @@ export async function POST(req: NextRequest) {
 
     // Verify the webhook signature
     if (!isValidSignature) {
-      console.error("Invalid webhook signature");
-      return new Response("Invalid signature", { status: 401 });
+      console.error("Invalid signature");
+      return new Response("Invalid Signature", { status: 401 });
     }
 
     // Ensure the body contains a document type
     if (!body?._type) {
-      console.error("Webhook body missing _type");
-      return new Response("Bad request - missing document type", { status: 400 });
+      console.error("Bad request - missing document type");
+      return new Response("Bad Request", { status: 400 });
     }
 
     // Revalidate based on document type
+    console.log(`Revalidating tag: ${body._type}`);
     revalidateTag(body._type);
     
     // Also revalidate specific content if slug is available
     if (body.slug?.current) {
-      revalidateTag(`${body._type}-${body.slug.current}`);
+      const specificTag = `${body._type}-${body.slug.current}`;
+      console.log(`Revalidating specific tag: ${specificTag}`);
+      revalidateTag(specificTag);
     }
 
     // Return success response
@@ -39,8 +43,7 @@ export async function POST(req: NextRequest) {
       status: 200,
       revalidated: true,
       now: Date.now(),
-      type: body._type,
-      slug: body.slug?.current
+      body
     });
   } catch (error: any) {
     console.error("Revalidation error:", error);
