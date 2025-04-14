@@ -9,28 +9,18 @@ import { Section } from "@/components/layouts/Section";
 // UI components
 import { Text } from "@/components/ui/typography/Text";
 import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
-import { AutoGrid } from "@/components/ui/grid/AutoGrid";
 import { Avatar } from "@/components/ui/avatar/Avatar";
-import { Card } from "@/components/ui/card/Card";
 
 // Sanity imports
-import { urlFor } from "@/sanity/lib/image";
-import { getProjects, type Project } from "@/lib/sanity/queries";
-
-// UI components
-import { Tag } from "@/components/ui/tag/Tag";
-import { Icon } from "@/components/ui/icon/Icon";
+import { getProjects } from "@/lib/sanity/queries";
 
 // Assets
 import avatarImage from "@/assets/avatar.png";
 
-// Import the LazyProjects component
+// Features
 import { LazyProjects } from '@/components/features/LazyProjects';
 
-// Use direct path to public video file instead of next-video import
 const homeVideoPath = "/videos/home.mp4";
-
-// Types are now imported from @/lib/sanity/queries
 
 export const metadata: Metadata = {
   title: "Jeff Ordway - Purpose-Driven Design and Development",
@@ -38,9 +28,6 @@ export const metadata: Metadata = {
     "I build tools to help you live boldly, serve purposefully, and pursue excellence.",
 };
 
-// Projects are now fetched using the centralized getProjects function from @/lib/sanity/queries
-
-// Enable revalidation every 60 seconds as a fallback
 export const revalidate = 60;
 
 export default async function HomePage() {
