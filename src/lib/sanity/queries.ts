@@ -173,6 +173,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       _id,
       title,
       description,
+      slug,
       "category": category->{
         _id,
         title,
