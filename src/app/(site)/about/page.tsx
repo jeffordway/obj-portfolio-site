@@ -162,7 +162,7 @@ export default async function HomePage() {
                   fill
                   priority={true}
                   sizes="(max-width: 768px) 300px, 25vw"
-                  className="object-cover rounded-md"
+                  className="object-cover"
                 />
               </div>
               <OneColumnGrid gap={4}>

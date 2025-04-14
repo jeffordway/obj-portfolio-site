@@ -1,14 +1,14 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import Video from 'next-video';
-import Image, { StaticImageData } from 'next/image';
-import imageUrlBuilder from '@sanity/image-url';
-import { client } from '@/sanity/lib/client';
+import React from "react";
+import { cn } from "@/lib/utils";
+import Video from "next-video";
+import Image, { StaticImageData } from "next/image";
+import imageUrlBuilder from "@sanity/image-url";
+import { client } from "@/sanity/lib/client";
 import type {
   SanityImageSource,
   SanityImageObject,
-  SanityImageWithAssetStub
-} from '@sanity/image-url/lib/types/types';
+  SanityImageWithAssetStub,
+} from "@sanity/image-url/lib/types/types";
 
 // We'll use standard Sanity types without extensions to keep the code clean
 
@@ -28,41 +28,45 @@ function urlFor(source: SanityImageObject | SanityImageWithAssetStub) {
  * Type guard for Next.js StaticImageData
  */
 function isStaticImageData(obj: unknown): obj is StaticImageData {
-  return typeof obj === 'object' && 
-         obj !== null && 
-         'src' in obj && 
-         typeof obj.src === 'string' && 
-         'height' in obj && 
-         'width' in obj;
+  return (
+    typeof obj === "object" &&
+    obj !== null &&
+    "src" in obj &&
+    typeof obj.src === "string" &&
+    "height" in obj &&
+    "width" in obj
+  );
 }
 
 /**
  * Type guard for Sanity image objects
  */
-function isSanityImageWithAsset(obj: unknown): obj is SanityImageObject | SanityImageWithAssetStub {
+function isSanityImageWithAsset(
+  obj: unknown
+): obj is SanityImageObject | SanityImageWithAssetStub {
   return (
-    typeof obj === 'object' &&
+    typeof obj === "object" &&
     obj !== null &&
-    (('asset' in obj && 
-      typeof obj.asset === 'object' && 
-      obj.asset !== null && 
-      (('_ref' in obj.asset && typeof obj.asset._ref === 'string') ||
-       ('url' in obj.asset && typeof obj.asset.url === 'string'))) ||
-     ('_type' in obj && obj._type === 'image' && '_ref' in obj))
+    (("asset" in obj &&
+      typeof obj.asset === "object" &&
+      obj.asset !== null &&
+      (("_ref" in obj.asset && typeof obj.asset._ref === "string") ||
+        ("url" in obj.asset && typeof obj.asset.url === "string"))) ||
+      ("_type" in obj && obj._type === "image" && "_ref" in obj))
   );
 }
 
 /**
  * Import the Video component type
  */
-import type { VideoProps } from 'next-video';
+import type { VideoProps } from "next-video";
 
 /**
  * Define a type that matches what next-video expects for the src prop
  * Based on the documentation and error messages
  * Also allows for direct string URLs for videos in public folder
  */
-type VideoSource = NonNullable<VideoProps['src']> | string;
+type VideoSource = NonNullable<VideoProps["src"]> | string;
 
 /**
  * Props for the HeroBackground component
@@ -83,11 +87,10 @@ interface HeroBackgroundProps {
 export function HeroBackground({
   videoSrc,
   imageSrc,
-  imageAlt = 'Background image',
+  imageAlt = "Background image",
   className,
   overlayClassName,
 }: HeroBackgroundProps) {
-
   // Process image source to get final URL and blur data
   let finalSrc: string | StaticImageData | undefined = undefined;
   let finalBlurUrl: string | undefined = undefined;
@@ -102,12 +105,8 @@ export function HeroBackground({
       try {
         // Standard Sanity image reference format with optimized quality
         // Using higher quality (90) for hero images since they're visually important
-        finalSrc = urlFor(imageSrc)
-          .auto('format')
-          .fit('max')
-          .quality(90)
-          .url();
-        
+        finalSrc = urlFor(imageSrc).auto("format").fit("max").quality(90).url();
+
         // Generate a low-quality placeholder for blur effect
         // This is the Next.js recommended approach for blur placeholders
         finalBlurUrl = urlFor(imageSrc)
@@ -119,7 +118,7 @@ export function HeroBackground({
       } catch (error) {
         console.error("Error generating Sanity image URL:", error, imageSrc);
       }
-    } else if (typeof imageSrc === 'string') {
+    } else if (typeof imageSrc === "string") {
       // Handle direct string URLs
       finalSrc = imageSrc;
     } else {
@@ -136,23 +135,23 @@ export function HeroBackground({
   return (
     <div
       className={cn(
-        'fixed inset-0 min-h-screen overflow-hidden z-10',
-        className,
+        "fixed inset-0 min-h-screen overflow-hidden z-10",
+        className
       )}
       data-has-video={!!videoSrc}
       data-has-image={!!finalSrc}
     >
       {/* Video Background */}
-      {videoSrc && (
-        typeof videoSrc === 'string' ? (
+      {videoSrc &&
+        (typeof videoSrc === "string" ? (
           // Direct video URL - use native video element to avoid watermark
           <video
             src={videoSrc}
             className="w-full h-screen"
             style={{
-              position: 'fixed',
-              inset: '0px',
-              objectFit: 'cover',
+              position: "fixed",
+              inset: "0px",
+              objectFit: "cover",
             }}
             autoPlay
             loop
@@ -166,21 +165,26 @@ export function HeroBackground({
           <Video
             src={videoSrc}
             className="w-full h-screen"
-            style={{
-              position: 'fixed',
-              inset: '0px',
-              '--media-object-fit': 'cover',
-            } as React.CSSProperties}
+            style={
+              {
+                position: "fixed",
+                inset: "0px",
+                "--media-object-fit": "cover",
+              } as React.CSSProperties
+            }
             autoPlay
             loop
             muted
             playsInline
             controls={false}
             // Using higher quality settings to prioritize video loading
-            poster={typeof videoSrc !== 'string' && videoSrc.blurDataURL ? videoSrc.blurDataURL : undefined}
+            poster={
+              typeof videoSrc !== "string" && videoSrc.blurDataURL
+                ? videoSrc.blurDataURL
+                : undefined
+            }
           />
-        )
-      )}
+        ))}
       {/* Image Background - handles both Sanity and local images */}
       {shouldRenderImage && finalSrc && (
         <div className="fixed inset-0 w-full h-screen">
@@ -194,7 +198,7 @@ export function HeroBackground({
             placeholder={finalBlurUrl ? "blur" : "empty"}
             blurDataURL={finalBlurUrl}
             style={{
-              objectFit: 'cover',
+              objectFit: "cover",
             }}
             // The 'priority' attribute is the Next.js recommended way to prioritize LCP images
             // It preloads the image resource, sets fetchpriority='high', and disables lazy loading
@@ -205,14 +209,14 @@ export function HeroBackground({
       {/* Overlay with customizable opacity */}
       <div
         className={cn(
-          'absolute inset-0 bg-background/90 dark:bg-background/70',
-          overlayClassName,
+          "absolute inset-0 bg-background/80 dark:bg-background/20",
+          overlayClassName
         )}
         aria-hidden="true"
-        style={{ pointerEvents: 'none' }}
+        style={{ pointerEvents: "none" }}
       />
     </div>
   );
 }
 
-HeroBackground.displayName = 'HeroBackground';
+HeroBackground.displayName = "HeroBackground";

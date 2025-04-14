@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* Define the dark mode variant based on the .dark class */
-@custom-variant dark (&.dark *);
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Expose CSS variables to Tailwind */
 @theme {
