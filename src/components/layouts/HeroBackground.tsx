@@ -209,7 +209,7 @@ export function HeroBackground({
       {/* Overlay with customizable opacity */}
       <div
         className={cn(
-          "absolute inset-0 bg-background/80 dark:bg-background/20",
+          "absolute inset-0 bg-background/80 dark:bg-background/60",
           overlayClassName
         )}
         aria-hidden="true"

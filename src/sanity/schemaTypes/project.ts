@@ -24,82 +24,6 @@ export default defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
-    // Hero image for the project (required)
-    defineField({
-      name: "heroImage",
-      title: "Hero Image",
-      type: "image",
-      options: {
-        hotspot: true,
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    // Project images (16:9 ratio, one per column)
-    defineField({
-      name: "projectImages",
-      title: "Project Images",
-      description: "Add project images in 16:9 ratio (will display one per column)",
-      type: "array",
-      of: [
-        {
-          type: "image",
-          options: { hotspot: true },
-          fields: [
-            {
-              name: "alt",
-              type: "string",
-              title: "Alternative text",
-              description: "Important for SEO and accessibility",
-            },
-            {
-              name: "title",
-              type: "string",
-              title: "Title",
-              description: "Optional title for the image (displayed on hover)",
-            },
-            {
-              name: "headline",
-              type: "string",
-              title: "Headline",
-              description: "Optional headline for the image (displayed on hover)",
-            },
-          ],
-        },
-      ],
-    }),
-    // Additional images (1:1 ratio, two per column)
-    defineField({
-      name: "additionalImages",
-      title: "Additional Images",
-      description: "Add additional images in 1:1 ratio (will display two per column)",
-      type: "array",
-      of: [
-        {
-          type: "image",
-          options: { hotspot: true },
-          fields: [
-            {
-              name: "alt",
-              type: "string",
-              title: "Alternative text",
-              description: "Important for SEO and accessibility",
-            },
-            {
-              name: "title",
-              type: "string",
-              title: "Title",
-              description: "Optional title for the image (displayed on hover)",
-            },
-            {
-              name: "headline",
-              type: "string",
-              title: "Headline",
-              description: "Optional headline for the image (displayed on hover)",
-            },
-          ],
-        },
-      ],
-    }),
     // Categories for the project (required)
     defineField({
       name: "categories",
@@ -187,6 +111,21 @@ export default defineType({
         {
           type: "image",
           options: { hotspot: true },
+          fields: [
+            {
+              name: "alt",
+              type: "string",
+              title: "Alternative text",
+              description: "Important for SEO and accessibility",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "caption",
+              type: "string",
+              title: "Caption",
+              description: "Optional caption for the image",
+            },
+          ],
         },
       ],
     }),
@@ -195,6 +134,127 @@ export default defineType({
       name: "date",
       title: "Date",
       type: "date",
+    }),
+    // Hero image for the project (required)
+    defineField({
+      name: "heroImage",
+      title: "Hero Image",
+      type: "image",
+      options: {
+        hotspot: true,
+        storeOriginalFilename: true,
+      },
+      fields: [
+        {
+          name: "alt",
+          type: "string",
+          title: "Alternative text",
+          description: "Required for accessibility and SEO",
+          validation: (Rule) => Rule.required(),
+        },
+        {
+          name: "caption",
+          type: "string",
+          title: "Caption",
+          description: "Optional caption for the hero image",
+        },
+        {
+          name: "filename",
+          type: "string",
+          title: "Filename",
+          description: "Provide a descriptive filename (without extension)",
+          validation: (Rule) => Rule.required(),
+        },
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    // Project images (16:9 ratio, one per column)
+    defineField({
+      name: "projectImages",
+      title: "Project Images",
+      description: "Add project images in 16:9 ratio (will display one per column)",
+      type: "array",
+      of: [
+        {
+          type: "image",
+          options: { 
+            hotspot: true,
+            storeOriginalFilename: true,
+          },
+          fields: [
+            {
+              name: "alt",
+              type: "string",
+              title: "Alternative text",
+              description: "Required for accessibility and SEO",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "title",
+              type: "string",
+              title: "Title",
+              description: "Optional title for the image (displayed on hover)",
+            },
+            {
+              name: "headline",
+              type: "string",
+              title: "Headline",
+              description: "Optional headline for the image (displayed on hover)",
+            },
+            {
+              name: "filename",
+              type: "string",
+              title: "Filename",
+              description: "Provide a descriptive filename (without extension)",
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+        },
+      ],
+    }),
+    // Additional images (1:1 ratio, two per column)
+    defineField({
+      name: "additionalImages",
+      title: "Additional Images",
+      description: "Add additional images in 1:1 ratio (will display two per column)",
+      type: "array",
+      of: [
+        {
+          type: "image",
+          options: { 
+            hotspot: true,
+            storeOriginalFilename: true,
+          },
+          fields: [
+            {
+              name: "alt",
+              type: "string",
+              title: "Alternative text",
+              description: "Required for accessibility and SEO",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "title",
+              type: "string",
+              title: "Title",
+              description: "Optional title for the image (displayed on hover)",
+            },
+            {
+              name: "headline",
+              type: "string",
+              title: "Headline",
+              description: "Optional headline for the image (displayed on hover)",
+            },
+            {
+              name: "filename",
+              type: "string",
+              title: "Filename",
+              description: "Provide a descriptive filename (without extension)",
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+        },
+      ],
     }),
   ],
   // Preview configuration for the Sanity Studio
