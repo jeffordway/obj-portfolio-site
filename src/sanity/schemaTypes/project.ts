@@ -47,6 +47,36 @@ export default defineType({
       type: "text",
       validation: (Rule) => Rule.required(),
     }),
+    // Rich text content for the project
+    defineField({
+      name: "content",
+      title: "Content",
+      type: "array",
+      of: [
+        { 
+          type: "block" 
+        },
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            {
+              name: "alt",
+              type: "string",
+              title: "Alternative text",
+              description: "Important for SEO and accessibility",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "caption",
+              type: "string",
+              title: "Caption",
+              description: "Optional caption for the image",
+            },
+          ],
+        },
+      ],
+    }),
     // GitHub repository link (optional)
     defineField({
       name: "githubRepo",
@@ -96,36 +126,6 @@ export default defineType({
           title: "Button Text",
           type: "string",
           initialValue: "View Prototype",
-        },
-      ],
-    }),
-    // Rich text content for the project
-    defineField({
-      name: "content",
-      title: "Content",
-      type: "array",
-      of: [
-        { 
-          type: "block" 
-        },
-        {
-          type: "image",
-          options: { hotspot: true },
-          fields: [
-            {
-              name: "alt",
-              type: "string",
-              title: "Alternative text",
-              description: "Important for SEO and accessibility",
-              validation: (Rule) => Rule.required(),
-            },
-            {
-              name: "caption",
-              type: "string",
-              title: "Caption",
-              description: "Optional caption for the image",
-            },
-          ],
         },
       ],
     }),
