@@ -345,17 +345,6 @@
         "type": "array"
       },
       {
-        "validation": [
-          {
-            "rules": [
-              {
-                "flag": "presence",
-                "constraint": "required"
-              }
-            ],
-            "level": "error"
-          }
-        ],
         "of": [
           {
             "to": [
@@ -498,18 +487,8 @@
             "type": "string"
           },
           {
-            "validation": [
-              {
-                "rules": [
-                  {
-                    "flag": "presence",
-                    "constraint": "required"
-                  }
-                ],
-                "level": "error"
-              }
-            ],
-            "description": "Provide a descriptive filename (without extension)",
+            "description": "Automatically generated from project title",
+            "readOnly": true,
             "name": "filename",
             "type": "string"
           }
