@@ -75,7 +75,6 @@ export default defineType({
       title: "Skills",
       type: "array",
       of: [{ type: "reference", to: { type: "skill" } }],
-      validation: (Rule) => Rule.required(),
     }),
     // GitHub repository link (optional)
     defineField({
@@ -162,8 +161,20 @@ export default defineType({
           name: "filename",
           type: "string",
           title: "Filename",
-          description: "Provide a descriptive filename (without extension)",
-          validation: (Rule) => Rule.required(),
+          description: "Automatically generated from project title",
+          readOnly: true,
+          initialValue: ({ document }: { document?: { title?: string } }) => {
+            // Generate filename from project title if available
+            const title = document?.title;
+            if (title) {
+              return title
+                .toLowerCase()
+                .replace(/\s+/g, '-') // Replace spaces with hyphens
+                .replace(/[^a-z0-9-]/g, '') // Remove special characters
+                .concat('-hero'); // Add -hero suffix
+            }
+            return 'project-hero'; // Fallback if no title
+          },
         },
       ],
       validation: (Rule) => Rule.required(),
