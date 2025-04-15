@@ -61,13 +61,12 @@ export default defineType({
         },
       ],
     }),
-    // Categories for the project (required)
+    // Categories for the project (optional)
     defineField({
       name: "categories",
       title: "Categories",
       type: "array",
       of: [{ type: "reference", to: { type: "category" } }],
-      validation: (Rule) => Rule.required(),
     }),
     // Skills used in the project (required)
     defineField({
