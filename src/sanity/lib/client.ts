@@ -16,8 +16,11 @@ export const client = createClient({
   apiVersion,
   // Always disable CDN in development to get fresh data
   useCdn: !isDevelopment,
-  // Disable stega in development for cleaner responses
-  stega: !isDevelopment,
+  // Configure stega (visual editing) settings
+  stega: {
+    enabled: !isDevelopment,
+    studioUrl: !isDevelopment ? '/studio' : undefined,
+  },
   // Force published content perspective
   perspective: 'published',
   // Disable token caching in development

@@ -1,50 +1,43 @@
 /**
  * Icons library for the application
  * Uses Remix icons from @remixicon/react
+ * 
+ * This file provides:
+ * - Type-safe access to icons via the IconName type
+ * - Consistent mapping between icon names and components
+ * - Helper functions for working with icons
  */
 import {
   // Category icons
   RiLineChartLine,
   RiProductHuntLine,
   RiCodeSSlashFill,
-  RiPaletteLine,
   RiTerminalBoxLine,
   RiSmartphoneLine,
-  RiRobotLine,
   RiGitBranchLine,
+  RiPaletteLine,
+  RiLayoutLine,
   RiTestTubeLine,
   RiTeamLine,
-  RiBugLine,
-
-  // Analytics & Collaboration icons
+  
+  // Skill icons
+  RiBarChartBoxLine,
   RiChat3Line,
   RiCodeBoxLine,
   RiCodeLine,
-  RiBarChartBoxLine,
-
-  // Product Management icons
   RiTaskLine,
   RiRoadMapLine,
   RiUserLine,
-
-  // Software Development icons
   RiReactjsLine,
   RiDatabase2Line,
   RiCss3Line,
   RiJavascriptLine,
   RiHtml5Line,
-
-  // UI/UX Design icons
   RiPaintBrushLine,
-  RiLayoutLine,
   RiImageLine,
   RiPencilRuler2Line,
-
-  // Legacy icons (for backward compatibility)
-  RiPresentationLine,
-  RiCalendarLine,
-  RiDatabase2Fill,
-
+  RiBugLine,
+  
   // Social Media icons
   RiGithubFill,
   RiLinkedinBoxFill,
@@ -70,14 +63,12 @@ export type RemixIconType = RemixiconComponentType;
 
 /**
  * Type for supported icon names
- * This helps with type safety when referencing icons by name
  */
 export type IconName =
   // Categories
   | "front-end-development"
   | "back-end-development"
   | "mobile-development"
-  | "applied-ai"
   | "deployment-devops"
   | "uiux-design-tools"
   | "uiux-research-process"
@@ -85,7 +76,6 @@ export type IconName =
   | "product-management"
   | "collaboration-tools"
   | "analytics-marketing"
-  | "testing-frameworks"
 
   // Skills (Front-End Development)
   | "html"
@@ -97,10 +87,8 @@ export type IconName =
   | "bootstrap"
   | "webflow"
   | "axios"
-  | "handlebars"
   | "tailwind-css"
-  | "open-weather-api"
-  | "google-maps-api"
+  | "jest"
 
   // Skills (Back-End Development)
   | "nodejs"
@@ -110,19 +98,11 @@ export type IconName =
   | "sanity"
   | "express"
   | "sequelize"
-  | "json-server"
-  | "jwt-authentication"
 
   // Skills (Mobile Development)
   | "react-native"
   | "expo"
   | "ionic"
-
-  // Skills (Applied AI)
-  | "chatbot-development"
-  | "generative-ai-integration"
-  | "prompt-engineering"
-  | "vercel-ai-sdk"
 
   // Skills (Deployment & DevOps)
   | "git"
@@ -159,9 +139,10 @@ export type IconName =
   | "okrs"
   | "scrum"
   | "strategy"
-  | "ai-driven-user-engagement"
-  | "ai-feature-validation"
-  | "ai-workflow-automation"
+  | "customer-engagement"
+  | "functional-leadership"
+  | "problem-solving"
+  | "stakeholder-management"
   | "feature-prioritization"
   | "market-research"
   | "product-lifecycle-management"
@@ -182,31 +163,9 @@ export type IconName =
   | "mailchimp"
   | "seo"
 
-  // Skills (Testing Frameworks)
-  | "jest"
-
-  // Legacy icon names (for backward compatibility)
-  | "RiLineChartLine"
-  | "RiTeamLine"
-  | "RiChat3Line"
-  | "RiPresentationLine"
-  | "RiProductHuntLine"
-  | "RiTaskLine"
-  | "RiCalendarLine"
-  | "RiRoadMapLine"
-  | "RiCodeSSlashFill"
-  | "RiTerminalBoxLine"
-  | "RiGitBranchLine"
-  | "RiDatabase2Fill"
-  | "RiPencilRuler2Line"
-  | "RiPaletteLine"
-  | "RiLayoutLine"
-  | "RiUserLine"
-
   // Social media icons
   | "github"
   | "linkedin"
-  | "X"
   | "twitter"
   | "facebook"
   | "instagram"
@@ -224,11 +183,10 @@ export type IconName =
  * Maps icon names to their corresponding Remix icon components
  */
 export const iconMap: Record<IconName, RemixIconType> = {
-  // Categories (unique icons)
+  // Categories
   "front-end-development": RiCodeSSlashFill,
   "back-end-development": RiTerminalBoxLine,
   "mobile-development": RiSmartphoneLine,
-  "applied-ai": RiRobotLine,
   "deployment-devops": RiGitBranchLine,
   "uiux-design-tools": RiPaletteLine,
   "uiux-research-process": RiLayoutLine,
@@ -236,9 +194,8 @@ export const iconMap: Record<IconName, RemixIconType> = {
   "product-management": RiProductHuntLine,
   "collaboration-tools": RiTeamLine,
   "analytics-marketing": RiLineChartLine,
-  "testing-frameworks": RiBugLine,
 
-  // Front-End Development Skills
+  // Skills (Front-End Development)
   html: RiHtml5Line,
   css: RiCss3Line,
   javascript: RiJavascriptLine,
@@ -248,12 +205,10 @@ export const iconMap: Record<IconName, RemixIconType> = {
   bootstrap: RiLayoutLine,
   webflow: RiLayoutLine,
   axios: RiCodeLine,
-  handlebars: RiCodeLine,
   "tailwind-css": RiCss3Line,
-  "open-weather-api": RiCodeLine,
-  "google-maps-api": RiCodeLine,
+  jest: RiBugLine,
 
-  // Back-End Development Skills
+  // Skills (Back-End Development)
   nodejs: RiTerminalBoxLine,
   mongodb: RiDatabase2Line,
   sql: RiDatabase2Line,
@@ -261,33 +216,25 @@ export const iconMap: Record<IconName, RemixIconType> = {
   sanity: RiDatabase2Line,
   express: RiTerminalBoxLine,
   sequelize: RiDatabase2Line,
-  "json-server": RiDatabase2Line,
-  "jwt-authentication": RiCodeLine,
 
-  // Mobile Development Skills
+  // Skills (Mobile Development)
   "react-native": RiReactjsLine,
   expo: RiSmartphoneLine,
   ionic: RiSmartphoneLine,
 
-  // Applied AI Skills
-  "chatbot-development": RiRobotLine,
-  "generative-ai-integration": RiRobotLine,
-  "prompt-engineering": RiRobotLine,
-  "vercel-ai-sdk": RiRobotLine,
-
-  // Deployment & DevOps Skills
+  // Skills (Deployment & DevOps)
   git: RiGitBranchLine,
   netlify: RiCodeLine,
   vercel: RiCodeLine,
 
-  // UI/UX Design Tools
+  // Skills (UI/UX Design Tools)
   "adobe-illustrator": RiPaintBrushLine,
   "adobe-indesign": RiPaintBrushLine,
   "adobe-photoshop": RiImageLine,
   "adobe-xd": RiPaletteLine,
   figma: RiPaletteLine,
 
-  // UI/UX Research & Process
+  // Skills (UI/UX Research & Process)
   "journey-mapping": RiRoadMapLine,
   prototyping: RiLayoutLine,
   "user-flows": RiRoadMapLine,
@@ -298,21 +245,22 @@ export const iconMap: Record<IconName, RemixIconType> = {
   "ux-writing": RiPencilRuler2Line,
   wireframing: RiLayoutLine,
 
-  // UI/UX Testing & Standards
+  // Skills (UI/UX Testing & Standards)
   "ab-testing": RiTestTubeLine,
   accessibility: RiUserLine,
   "design-systems": RiPaletteLine,
   "usability-testing": RiUserLine,
 
-  // Product Management Skills
+  // Skills (Product Management)
   agile: RiRoadMapLine,
   kanban: RiLayoutLine,
   okrs: RiTaskLine,
   scrum: RiTeamLine,
   strategy: RiRoadMapLine,
-  "ai-driven-user-engagement": RiTaskLine,
-  "ai-feature-validation": RiTaskLine,
-  "ai-workflow-automation": RiTaskLine,
+  "customer-engagement": RiUserLine,
+  "functional-leadership": RiTeamLine,
+  "problem-solving": RiTaskLine,
+  "stakeholder-management": RiUserLine,
   "feature-prioritization": RiTaskLine,
   "market-research": RiBarChartBoxLine,
   "product-lifecycle-management": RiRoadMapLine,
@@ -320,45 +268,22 @@ export const iconMap: Record<IconName, RemixIconType> = {
   "survey-monkey": RiChat3Line,
   "user-stories": RiUserLine,
 
-  // Collaboration Tools
+  // Skills (Collaboration Tools)
   "google-workspace": RiCodeBoxLine,
-  "microsoft-365": RiCodeLine,
+  "microsoft-365": RiCodeBoxLine,
   slack: RiChat3Line,
-  trello: RiTrelloLine,
 
-  // Analytics & Marketing
+  // Skills (Analytics & Marketing)
   "active-net": RiLineChartLine,
   "constant-contact": RiChat3Line,
   "google-analytics": RiBarChartBoxLine,
   mailchimp: RiChat3Line,
   seo: RiBarChartBoxLine,
 
-  // Testing Frameworks
-  jest: RiBugLine,
-
-  // Legacy icon names (for backward compatibility)
-  RiLineChartLine: RiLineChartLine,
-  RiTeamLine: RiTeamLine,
-  RiChat3Line: RiChat3Line,
-  RiPresentationLine: RiPresentationLine,
-  RiProductHuntLine: RiProductHuntLine,
-  RiTaskLine: RiTaskLine,
-  RiCalendarLine: RiCalendarLine,
-  RiRoadMapLine: RiRoadMapLine,
-  RiCodeSSlashFill: RiCodeSSlashFill,
-  RiTerminalBoxLine: RiTerminalBoxLine,
-  RiGitBranchLine: RiGitBranchLine,
-  RiDatabase2Fill: RiDatabase2Fill,
-  RiPencilRuler2Line: RiPencilRuler2Line,
-  RiPaletteLine: RiPaletteLine,
-  RiLayoutLine: RiLayoutLine,
-  RiUserLine: RiUserLine,
-
   // Social Media icons
   github: RiGithubFill,
   linkedin: RiLinkedinBoxFill,
-  X: RiTwitterXFill,
-  twitter: RiTwitterXFill, // Alias for backward compatibility
+  twitter: RiTwitterXFill,
   facebook: RiFacebookBoxFill,
   instagram: RiInstagramLine,
   youtube: RiYoutubeFill,
@@ -369,6 +294,7 @@ export const iconMap: Record<IconName, RemixIconType> = {
   dribbble: RiDribbbleLine,
   behance: RiBehanceLine,
   pinterest: RiPinterestLine,
+  trello: RiTrelloLine
 };
 
 /**
@@ -395,24 +321,35 @@ export function getIconComponent(slug?: string): RemixIconType | undefined {
   // Normalize the slug (lowercase, trim)
   const normalizedSlug = slug.toLowerCase().trim();
   
+  // Map legacy slugs to current ones (for backward compatibility)
+  const legacyMappings: Record<string, IconName> = {
+    // Old category names
+    'analytics--collaboration': 'analytics-marketing',
+    'software-development': 'front-end-development',
+    'uiux-design': 'uiux-design-tools',
+    
+    // Old skill names
+    'customer-engagement': 'product-management',
+    'functional-leadership': 'product-management',
+    'problem-solving': 'product-management',
+    'stakeholder-management': 'product-management'
+  };
+  
+  if (normalizedSlug in legacyMappings) {
+    return iconMap[legacyMappings[normalizedSlug]];
+  }
+  
   // Direct lookup in the iconMap
   if (normalizedSlug in iconMap) {
     return iconMap[normalizedSlug as IconName];
   }
   
-  // Check if the slug is a valid icon name after normalization
+  // Case-insensitive match
   const iconKeys = Object.keys(iconMap) as IconName[];
   const matchingKey = iconKeys.find(key => key.toLowerCase() === normalizedSlug);
   if (matchingKey) {
     return iconMap[matchingKey];
   }
   
-  // For backward compatibility, check if it's a legacy icon name
-  if (slug.startsWith("Ri") && iconKeys.includes(slug as IconName)) {
-    return iconMap[slug as IconName];
-  }
-  
-  // If not found, log for debugging and return undefined
-  console.debug(`Icon not found for slug: ${slug}`);
   return undefined;
 }

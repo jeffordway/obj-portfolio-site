@@ -5,7 +5,7 @@ describe('Icons Library', () => {
   describe('slugify function', () => {
     it('converts strings to slug format', () => {
       expect(slugify('Product Management')).toBe('product-management');
-      expect(slugify('UI/UX Design')).toBe('uiux-design');
+      expect(slugify('UI/UX Design Tools')).toBe('uiux-design-tools');
       expect(slugify('React.js')).toBe('reactjs');
       // The actual implementation trims after replacing spaces with hyphens
       expect(slugify('  Spaced  Text  ')).toBe('-spaced-text-');
@@ -49,8 +49,8 @@ describe('Icons Library', () => {
     it('contains the expected icon mappings', () => {
       // Check for category icons
       expect(iconMap['product-management']).toBeDefined();
-      expect(iconMap['software-development']).toBeDefined();
-      expect(iconMap['uiux-design']).toBeDefined();
+      expect(iconMap['front-end-development']).toBeDefined();
+      expect(iconMap['uiux-design-tools']).toBeDefined();
       
       // Check for skill icons
       expect(iconMap['react']).toBeDefined();
