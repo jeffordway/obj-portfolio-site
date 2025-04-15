@@ -256,7 +256,7 @@ export default async function HomePage() {
                 </OneColumnGrid>
                 <OneColumnGrid gap={8} showDividers={true}>
                   <OneColumnGrid gap={4}>
-                    <Text variant="title">Skills</Text>
+                    <Text variant="title">Technical Skills</Text>
                     {/* Pass fetched data to SkillsDisplay, using the correct prop name */}
                     <SkillsDisplay skills={skillsData} />
                   </OneColumnGrid>

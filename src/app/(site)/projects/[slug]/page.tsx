@@ -152,7 +152,7 @@ export default async function ProjectPage({
               {" "}
               {/* Make skills sticky */}
               <OneColumnGrid gap={4}>
-                <Text variant="title">Skills Used</Text>
+                <Text variant="title">Technical Skills</Text>
                 {project.skills && project.skills.length > 0 ? (
                   <SkillsDisplay skills={project.skills} />
                 ) : (
