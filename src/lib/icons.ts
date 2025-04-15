@@ -141,6 +141,7 @@ export type IconName =
   | "prototyping"
   | "user-flows"
   | "user-interviews"
+  | "user-personas"
   | "user-research"
   | "user-surveys"
   | "ux-writing"
@@ -291,6 +292,7 @@ export const iconMap: Record<IconName, RemixIconType> = {
   prototyping: RiLayoutLine,
   "user-flows": RiRoadMapLine,
   "user-interviews": RiUserLine,
+  "user-personas": RiUserLine,
   "user-research": RiUserLine,
   "user-surveys": RiChat3Line,
   "ux-writing": RiPencilRuler2Line,
