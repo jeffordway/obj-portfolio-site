@@ -20,8 +20,9 @@ export const projectId = assertValue(
 )
 
 /**
- * Set to true to enable CDN caching for Sanity content
- * Use false for development to get the latest content
+ * Controls CDN caching for Sanity content
+ * - In development: Always false to get the latest content
+ * - In production: True for better performance with CDN caching
  */
 export const useCdn = process.env.NODE_ENV === 'production'
 
