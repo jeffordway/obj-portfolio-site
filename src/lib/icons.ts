@@ -389,20 +389,28 @@ export function slugify(input: string): string {
  */
 export function getIconComponent(slug?: string): RemixIconType | undefined {
   if (!slug) return undefined;
-
-  // Check if the slug is a valid icon name
-  if ((Object.keys(iconMap) as IconName[]).includes(slug as IconName)) {
-    return iconMap[slug as IconName];
+  
+  // Normalize the slug (lowercase, trim)
+  const normalizedSlug = slug.toLowerCase().trim();
+  
+  // Direct lookup in the iconMap
+  if (normalizedSlug in iconMap) {
+    return iconMap[normalizedSlug as IconName];
   }
-
+  
+  // Check if the slug is a valid icon name after normalization
+  const iconKeys = Object.keys(iconMap) as IconName[];
+  const matchingKey = iconKeys.find(key => key.toLowerCase() === normalizedSlug);
+  if (matchingKey) {
+    return iconMap[matchingKey];
+  }
+  
   // For backward compatibility, check if it's a legacy icon name
-  if (
-    slug.startsWith("Ri") &&
-    (Object.keys(iconMap) as IconName[]).includes(slug as IconName)
-  ) {
+  if (slug.startsWith("Ri") && iconKeys.includes(slug as IconName)) {
     return iconMap[slug as IconName];
   }
-
-  // If not found, return undefined
+  
+  // If not found, log for debugging and return undefined
+  console.debug(`Icon not found for slug: ${slug}`);
   return undefined;
 }
