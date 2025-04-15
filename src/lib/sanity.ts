@@ -40,10 +40,14 @@ export async function sanityFetch<T>({
   params?: Record<string, any>;
   tags?: string[];
 }): Promise<T> {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  
   return client.fetch<T>(query, params, {
-    // Use force-cache to enable tag-based revalidation
-    cache: "force-cache",
-    // Specify tags for revalidation
-    next: { tags },
+    // In development: Use no-store to always fetch fresh data
+    // In production: Use force-cache to enable tag-based revalidation
+    cache: isDevelopment ? "no-store" : "force-cache",
+    // In development: Revalidate on every request
+    // In production: Use tags for selective revalidation
+    next: isDevelopment ? { revalidate: 0 } : { tags },
   });
 }

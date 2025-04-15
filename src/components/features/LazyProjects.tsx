@@ -10,9 +10,14 @@ import { urlFor } from '@/sanity/lib/image';
 
 // Import the Project and Category types from our centralized queries file
 import { type Project, type Category } from '@/lib/sanity/queries';
+// Import the custom hook for deriving categories from skills
+import { useProjectsWithDerivedCategories } from '@/hooks/useDerivedCategories';
 
 export function LazyProjects({ projects }: { projects: Project[] }) {
   const [visibleCount, setVisibleCount] = useState(6);
+  
+  // Use our custom hook to derive categories from skills
+  const projectsWithCategories = useProjectsWithDerivedCategories(projects);
   
   // Load more projects when user scrolls to the bottom
   useEffect(() => {
@@ -28,7 +33,7 @@ export function LazyProjects({ projects }: { projects: Project[] }) {
   }, [projects.length]);
   
   // Only show the first 'visibleCount' projects
-  const visibleProjects = projects.slice(0, visibleCount);
+  const visibleProjects = projectsWithCategories.slice(0, visibleCount);
   
   return (
     <AutoGrid gap={8}>
