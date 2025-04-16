@@ -144,28 +144,18 @@ export default defineType({
           validation: (Rule) => Rule.required(),
         },
         {
-          name: "caption",
-          type: "string",
-          title: "Caption",
-          description: "Optional caption for the hero image",
-        },
-        {
           name: "filename",
           type: "string",
           title: "Filename",
-          description: "Automatically generated from project title",
+          description: "Automatically generated from project slug",
           readOnly: true,
-          initialValue: ({ document }: { document?: { title?: string } }) => {
-            // Generate filename from project title if available
-            const title = document?.title;
-            if (title) {
-              return title
-                .toLowerCase()
-                .replace(/\s+/g, '-') // Replace spaces with hyphens
-                .replace(/[^a-z0-9-]/g, '') // Remove special characters
-                .concat('-hero'); // Add -hero suffix
+          initialValue: ({ document }: { document?: { slug?: { current?: string } } }) => {
+            // Generate filename from project slug if available
+            const slugCurrent = document?.slug?.current;
+            if (slugCurrent) {
+              return `${slugCurrent}-hero`;
             }
-            return 'project-hero'; // Fallback if no title
+            return 'project-hero'; // Fallback if no slug
           },
         },
       ],

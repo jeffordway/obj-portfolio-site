@@ -323,21 +323,6 @@
           {
             "to": [
               {
-                "type": "category"
-              }
-            ],
-            "type": "reference",
-            "title": "Reference to category"
-          }
-        ],
-        "name": "categories",
-        "type": "array"
-      },
-      {
-        "of": [
-          {
-            "to": [
-              {
                 "type": "skill"
               }
             ],
@@ -471,12 +456,7 @@
             "title": "Alternative text"
           },
           {
-            "description": "Optional caption for the hero image",
-            "name": "caption",
-            "type": "string"
-          },
-          {
-            "description": "Automatically generated from project title",
+            "description": "Automatically generated from project slug",
             "readOnly": true,
             "name": "filename",
             "type": "string"

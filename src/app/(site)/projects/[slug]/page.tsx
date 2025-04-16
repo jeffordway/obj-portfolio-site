@@ -97,9 +97,9 @@ export default async function ProjectPage({
           imageSrc={backgroundImageSource}
           imageAlt={project.title}
         />
-        <HeroContent>
-          <Section>
-            <OneColumnGrid className="items-center text-center">
+        <HeroContent className="flex flex-col items-center justify-center text-center">
+          <Section maxWidth="container">
+            <OneColumnGrid gap={4} alignItems="center" justifyContent="center">
               <Text variant="title">{project.title}</Text>
               <Text variant="subtitle" align="center">
                 {project.headline}
