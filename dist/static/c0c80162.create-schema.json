@@ -454,12 +454,6 @@
             "name": "alt",
             "type": "string",
             "title": "Alternative text"
-          },
-          {
-            "description": "Automatically generated from project slug",
-            "readOnly": true,
-            "name": "filename",
-            "type": "string"
           }
         ],
         "name": "heroImage",

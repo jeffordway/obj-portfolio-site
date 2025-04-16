@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import HeroImageFilenameInput from '../components/HeroImageFilenameInput';
 
 // Project schema definition for Sanity Studio
 export default defineType({
@@ -142,21 +143,6 @@ export default defineType({
           title: "Alternative text",
           description: "Required for accessibility and SEO",
           validation: (Rule) => Rule.required(),
-        },
-        {
-          name: "filename",
-          type: "string",
-          title: "Filename",
-          description: "Automatically generated from project slug",
-          readOnly: true,
-          initialValue: ({ document }: { document?: { slug?: { current?: string } } }) => {
-            // Generate filename from project slug if available
-            const slugCurrent = document?.slug?.current;
-            if (slugCurrent) {
-              return `${slugCurrent}-hero`;
-            }
-            return 'project-hero'; // Fallback if no slug
-          },
         },
       ],
       validation: (Rule) => Rule.required(),
