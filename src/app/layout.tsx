@@ -1,8 +1,14 @@
+// --- Core Next.js Types & Fonts ---
 import type { Metadata } from "next";
+import { Barlow } from "next/font/google";
+
+// --- Providers & Analytics ---
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Barlow } from "next/font/google";
-import { ThemeProvider } from "@/providers/ThemeProvider";
+import { GoogleTagManager } from '@next/third-parties/google';
+
+// --- Global Styles ---
 import "@/styles/globals.css";
 
 // --- Metadata & SEO ---
@@ -25,7 +31,7 @@ export const metadata: Metadata = {
   ],
 };
 
-// Separate viewport export for Next.js 15
+// --- Viewport (Next.js 15+) ---
 export const viewport = {
   width: "device-width",
   initialScale: 1,
@@ -41,15 +47,20 @@ const primaryFont = Barlow({
   fallback: ["system-ui", "sans-serif"],
 });
 
+// --- Root Layout ---
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      {/* Analytics & Tag Managers (head-level) */}
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
       <body className={`${primaryFont.className} ${primaryFont.variable} antialiased`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        {/* Theme & Context Providers */}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+        {/* Analytics Scripts */}
         <Analytics />
         <SpeedInsights />
       </body>
