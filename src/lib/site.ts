@@ -4,7 +4,7 @@
  */
 
 // Import the IconName type from our icons library
-import { type IconName } from './icons';
+import { type IconName } from "./icons";
 
 // --- Type Interfaces ---
 export interface NavLink {
@@ -65,25 +65,24 @@ export const navLinks: NavLink[] = [
   { href: "/studio", label: "Studio", showNavBar: false },
 ];
 
-
 /**
  * Social media links for the site
  */
 export const socialLinks: SocialLink[] = [
-  { 
-    name: "GitHub", 
-    href: "https://github.com/jeffordway", 
-    iconName: "github" 
+  {
+    name: "GitHub",
+    href: "https://github.com/jeffordway",
+    iconName: "github",
   },
   {
     name: "LinkedIn",
     href: "https://www.linkedin.com/in/jeffordway/",
     iconName: "linkedin",
   },
-  { 
-    name: "X", 
-    href: "https://x.com/indigohawk931", 
-    iconName: "X" 
+  {
+    name: "X",
+    href: "https://x.com/indigohawk931",
+    iconName: "X",
   },
 ];
 
@@ -92,7 +91,8 @@ export const socialLinks: SocialLink[] = [
  */
 export const siteConfig: SiteConfig = {
   name: "Jeff Ordway",
-  description: "I build tools to help you live boldly, serve purposefully, and pursue excellence.",
+  description:
+    "I build tools to help you live boldly, serve purposefully, and pursue excellence.",
   url: "https://jeffordway.com",
   author: "Jeff Ordway",
   copyrightYear: new Date().getFullYear(),

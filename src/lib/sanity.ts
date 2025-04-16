@@ -5,7 +5,7 @@
  */
 import { createClient } from "next-sanity";
 import { apiVersion, dataset, projectId, useCdn } from "@/sanity/env";
-import 'server-only';
+import "server-only";
 
 // Configuration for Sanity client
 const clientConfig = {
@@ -40,8 +40,8 @@ export async function sanityFetch<T>({
   params?: Record<string, any>;
   tags?: string[];
 }): Promise<T> {
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  
+  const isDevelopment = process.env.NODE_ENV === "development";
+
   return client.fetch<T>(query, params, {
     // In development: Use no-store to always fetch fresh data
     // In production: Use force-cache to enable tag-based revalidation

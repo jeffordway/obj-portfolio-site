@@ -1,16 +1,17 @@
-import { Resend } from 'resend';
-import * as React from 'react';
-import { z } from 'zod';
-import ContactFormEmail from '@/emails/ContactFormEmail';
+import { Resend } from "resend";
+import * as React from "react";
+import { z } from "zod";
+import ContactFormEmail from "@/emails/ContactFormEmail";
 
 // Define the Zod schema for validation
 export const ContactFormSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required.' }),
-  email: z.string().email({ message: 'Invalid email address.' }),
-  subject: z.string().min(1, { message: 'Subject is required.' }),
-  message: z.string()
-    .min(10, { message: 'Message must be at least 10 characters.' })
-    .max(500, { message: 'Message cannot exceed 500 characters.' }),
+  name: z.string().min(1, { message: "Name is required." }),
+  email: z.string().email({ message: "Invalid email address." }),
+  subject: z.string().min(1, { message: "Subject is required." }),
+  message: z
+    .string()
+    .min(10, { message: "Message must be at least 10 characters." })
+    .max(500, { message: "Message cannot exceed 500 characters." }),
 });
 
 // Define the types for our function
@@ -52,7 +53,7 @@ export async function processContactForm(
       return {
         success: false,
         error: {
-          message: 'Invalid input.',
+          message: "Invalid input.",
           details: validationResult.error.flatten().fieldErrors,
         },
         status: 400,
@@ -67,7 +68,7 @@ export async function processContactForm(
       return {
         success: false,
         error: {
-          message: 'Server configuration error: Missing API key',
+          message: "Server configuration error: Missing API key",
         },
         status: 500,
       };
@@ -77,14 +78,14 @@ export async function processContactForm(
       return {
         success: false,
         error: {
-          message: 'Server configuration error: Missing recipient email',
+          message: "Server configuration error: Missing recipient email",
         },
         status: 500,
       };
     }
 
     // Determine the 'from' address
-    const fromAddress = fromEmail || 'onboarding@resend.dev';
+    const fromAddress = fromEmail || "onboarding@resend.dev";
 
     // Instantiate Resend with the API key
     const resend = new Resend(resendApiKey);
@@ -108,7 +109,7 @@ export async function processContactForm(
       return {
         success: false,
         error: {
-          message: 'Failed to send email',
+          message: "Failed to send email",
           details: { error: [error.message] },
         },
         status: 500,
@@ -118,22 +119,25 @@ export async function processContactForm(
     // Return a success response with proper type handling
     return {
       success: true,
-      data: data ? {
-        id: data.id,
-        // Include other properties from data except id to avoid duplication
-        ...(Object.entries(data)
-          .filter(([key]) => key !== 'id')
-          .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}))
-      } : null,
+      data: data
+        ? {
+            id: data.id,
+            // Include other properties from data except id to avoid duplication
+            ...Object.entries(data)
+              .filter(([key]) => key !== "id")
+              .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
+          }
+        : null,
       status: 200,
     };
   } catch (err) {
     // Handle other errors
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    const errorMessage =
+      err instanceof Error ? err.message : "An unknown error occurred";
     return {
       success: false,
       error: {
-        message: 'Internal Server Error',
+        message: "Internal Server Error",
         details: { error: [errorMessage] },
       },
       status: 500,

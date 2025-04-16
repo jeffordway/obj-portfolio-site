@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useTheme as useNextTheme } from 'next-themes';
+import { useState, useEffect } from "react";
+import { useTheme as useNextTheme } from "next-themes";
 
 /**
  * Extended theme hook that provides additional functionality beyond next-themes
@@ -22,9 +22,9 @@ export function useTheme() {
    * Determine the next theme in the cycle: light -> dark -> system -> light
    */
   const getNextTheme = (): string => {
-    if (theme === 'system') return 'light';
-    if (theme === 'light') return 'dark';
-    return 'system'; // If theme is 'dark' or any other value
+    if (theme === "system") return "light";
+    if (theme === "light") return "dark";
+    return "system"; // If theme is 'dark' or any other value
   };
 
   /**
@@ -38,7 +38,7 @@ export function useTheme() {
    * Get a formatted label for the current theme
    */
   const getCurrentThemeLabel = (): string => {
-    return theme ? theme.charAt(0).toUpperCase() + theme.slice(1) : '';
+    return theme ? theme.charAt(0).toUpperCase() + theme.slice(1) : "";
   };
 
   /**

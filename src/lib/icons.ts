@@ -1,7 +1,7 @@
 /**
  * Icons library for the application
  * Uses Remix icons from @remixicon/react
- * 
+ *
  * This file provides:
  * - Type-safe access to icons via the IconName type
  * - Consistent mapping between icon names and components
@@ -19,7 +19,7 @@ import {
   RiLayoutLine,
   RiTestTubeLine,
   RiTeamLine,
-  
+
   // Skill icons
   RiBarChartBoxLine,
   RiChat3Line,
@@ -37,7 +37,7 @@ import {
   RiImageLine,
   RiPencilRuler2Line,
   RiBugLine,
-  
+
   // Social Media icons
   RiGithubFill,
   RiLinkedinBoxFill,
@@ -296,7 +296,7 @@ export const iconMap: Record<IconName, RemixIconType> = {
   behance: RiBehanceLine,
   pinterest: RiPinterestLine,
   trello: RiTrelloLine,
-  X: RiTwitterXFill
+  X: RiTwitterXFill,
 };
 
 /**
@@ -319,39 +319,41 @@ export function slugify(input: string): string {
  */
 export function getIconComponent(slug?: string): RemixIconType | undefined {
   if (!slug) return undefined;
-  
+
   // Normalize the slug (lowercase, trim)
   const normalizedSlug = slug.toLowerCase().trim();
-  
+
   // Map legacy slugs to current ones (for backward compatibility)
   const legacyMappings: Record<string, IconName> = {
     // Old category names
-    'analytics--collaboration': 'analytics-marketing',
-    'software-development': 'front-end-development',
-    'uiux-design': 'uiux-design-tools',
-    
+    "analytics--collaboration": "analytics-marketing",
+    "software-development": "front-end-development",
+    "uiux-design": "uiux-design-tools",
+
     // Old skill names
-    'customer-engagement': 'product-management',
-    'functional-leadership': 'product-management',
-    'problem-solving': 'product-management',
-    'stakeholder-management': 'product-management'
+    "customer-engagement": "product-management",
+    "functional-leadership": "product-management",
+    "problem-solving": "product-management",
+    "stakeholder-management": "product-management",
   };
-  
+
   if (normalizedSlug in legacyMappings) {
     return iconMap[legacyMappings[normalizedSlug]];
   }
-  
+
   // Direct lookup in the iconMap
   if (normalizedSlug in iconMap) {
     return iconMap[normalizedSlug as IconName];
   }
-  
+
   // Case-insensitive match
   const iconKeys = Object.keys(iconMap) as IconName[];
-  const matchingKey = iconKeys.find(key => key.toLowerCase() === normalizedSlug);
+  const matchingKey = iconKeys.find(
+    (key) => key.toLowerCase() === normalizedSlug
+  );
   if (matchingKey) {
     return iconMap[matchingKey];
   }
-  
+
   return undefined;
 }
