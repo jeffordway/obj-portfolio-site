@@ -71,4 +71,51 @@ describe('<Checkbox />', () => {
     icon = screen.getByRole('checkbox').parentElement?.querySelector('svg');
     expect(icon).toHaveClass('opacity-100');
   });
+
+  it('receives focus via keyboard navigation (tab)', () => {
+    render(<Checkbox label={label} />, { wrapper: Wrapper });
+    const checkbox = screen.getByRole('checkbox');
+    checkbox.focus();
+    expect(checkbox).toHaveFocus();
+  });
+
+
+  it('has correct aria attributes', () => {
+    render(<Checkbox label={label} checked disabled onChange={() => {}} />, { wrapper: Wrapper });
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toBeChecked();
+    expect(checkbox).toBeDisabled();
+  });
+
+  it('label click toggles the checkbox and fires onChange', () => {
+    const handleChange = jest.fn();
+    render(<Checkbox label={label} onChange={handleChange} />, { wrapper: Wrapper });
+    const labelEl = screen.getByText(label);
+    fireEvent.click(labelEl);
+    expect(handleChange).toHaveBeenCalled();
+  });
+
+  it('uses custom id if provided', () => {
+    render(<Checkbox label={label} id="custom-id" />, { wrapper: Wrapper });
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox.id).toBe('custom-id');
+    // Label htmlFor should match
+    const labelEl = screen.getByText(label).closest('label');
+    expect(labelEl).toHaveAttribute('for', 'custom-id');
+  });
+
+  it('forwards extra props (data-testid, aria-label)', () => {
+    render(<Checkbox data-testid="my-checkbox" aria-label="My Checkbox" />, { wrapper: Wrapper });
+    const checkbox = screen.getByTestId('my-checkbox');
+    expect(checkbox).toHaveAttribute('aria-label', 'My Checkbox');
+  });
+
+  // If error/helper text is supported, add tests here (pseudo-example):
+  // it('renders error/helper text and associates with input', () => {
+  //   render(<Checkbox label={label} error="Required" helperText="Helpful info" />, { wrapper: Wrapper });
+  //   expect(screen.getByText('Required')).toBeInTheDocument();
+  //   expect(screen.getByText('Helpful info')).toBeInTheDocument();
+  //   const checkbox = screen.getByRole('checkbox');
+  //   expect(checkbox).toHaveAttribute('aria-describedby');
+  // });
 });
