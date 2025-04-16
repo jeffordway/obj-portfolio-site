@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useTheme } from '@/hooks/useTheme';
-import React, { ReactNode } from 'react';
+import { Wrapper } from '../../testUtils/testUtils';
 
 // Mock variables to control the next-themes behavior
 let mockTheme = 'light';
@@ -16,23 +16,12 @@ jest.mock('next-themes', () => ({
   }),
 }));
 
-// Create a wrapper component for the tests
-interface WrapperProps {
-  children: ReactNode;
-}
-
-const Wrapper = ({ children }: WrapperProps): React.ReactElement => {
-  return <>{children}</>;
-};
 
 describe('useTheme hook', () => {
   beforeEach(() => {
     // Reset mock state before each test
     mockTheme = 'light';
     mockSetTheme.mockClear();
-    
-    // Clear all mocks
-    jest.clearAllMocks();
   });
 
   it('should initialize with the correct values', () => {

@@ -47,7 +47,6 @@ describe('Contact Form Processing', () => {
 
   afterEach(() => {
     process.env = originalEnv;
-    jest.clearAllMocks();
   });
 
   it('should successfully process valid form data', async () => {

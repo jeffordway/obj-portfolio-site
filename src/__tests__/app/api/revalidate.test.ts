@@ -76,7 +76,8 @@ async function mockRevalidateHandler(
 describe('Sanity Webhook Revalidation API', () => {
   // Reset all mocks before each test
   beforeEach(() => {
-    jest.resetAllMocks();
+    // Reset revalidateTag mock to ensure test isolation
+    (revalidateTag as jest.Mock).mockClear();
     // Mock environment variables
     process.env.NEXT_PUBLIC_SANITY_HOOK_SECRET = 'test-secret';
     process.env.SANITY_WEBHOOK_SECRET = 'alternate-secret';

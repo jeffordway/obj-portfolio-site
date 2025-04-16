@@ -91,14 +91,10 @@ describe('Contact API Route', () => {
       CONTACT_FORM_FROM_EMAIL: 'test-from@example.com',
       CONTACT_FORM_TO_EMAIL: 'test-to@example.com',
     };
-    
-    // Reset mocks
-    jest.clearAllMocks();
   });
 
   afterEach(() => {
     process.env = originalEnv;
-    jest.clearAllMocks();
   });
 
   it('should successfully process valid form data', async () => {

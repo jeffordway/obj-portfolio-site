@@ -23,6 +23,8 @@ export const Spinner = ({ className, size = 'md', ...props }: SpinnerProps) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      role="status"
+      aria-label="Loading"
       className={cn('animate-spin', sizeClasses[size], className)} // Apply animation, size, and custom classes
       {...props}
     >

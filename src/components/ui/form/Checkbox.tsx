@@ -7,16 +7,18 @@ import { RiCheckLine } from "@remixicon/react";
 export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
   label?: string;
-  containerClassName?: string;
-  // className will apply to the visual checkbox box itself
+  className?: string; // Applies to the root label container (for consistency)
+  boxClassName?: string; // Applies to the visual checkbox box
+  containerClassName?: string; // Deprecated, kept for backward compatibility
 }
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
       label,
-      className, // This applies to the visual box
-      containerClassName, // This applies to the root label element
+      className, // Now applies to the root label
+      boxClassName, // Applies to the visual box
+      containerClassName, // Deprecated
       disabled,
       checked,
       ...props
@@ -31,7 +33,8 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         className={cn(
           "inline-flex items-center group", // Use group for potential future styling
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
-          containerClassName
+          containerClassName, // Deprecated
+          className // New: applies to root label
         )}
       >
         <div className="relative">
@@ -59,7 +62,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               !disabled && "peer-hover:border-accent/80 peer-checked:peer-hover:bg-accent/90",
               // Disabled state (overrides others)
               "peer-disabled:opacity-70 peer-disabled:cursor-not-allowed peer-disabled:border-foreground/30 peer-checked:peer-disabled:bg-foreground/30 peer-checked:peer-disabled:border-foreground/30",
-              className // Allow custom classes for the box
+              boxClassName // New: custom classes for the box
             )}
             aria-hidden="true" // Hide from screen readers as the input is the control
           >

@@ -1,16 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
 import { useForm } from '@/hooks/useForm';
 import { z } from 'zod';
-import React, { ReactNode } from 'react';
+import { Wrapper, mockConsole } from '../../testUtils/testUtils';
 
 // Create a wrapper component for the tests
-interface WrapperProps {
-  children: ReactNode;
-}
-
-const Wrapper = ({ children }: WrapperProps): React.ReactElement => {
-  return <>{children}</>;
-};
 
 // Mock HTML element with focus method
 const mockFocus = jest.fn();
@@ -34,10 +27,8 @@ describe('useForm hook', () => {
   // Mock submit function
   const mockSubmit = jest.fn().mockImplementation(() => Promise.resolve());
 
-  beforeEach(() => {
-    // Reset mocks before each test
-    jest.clearAllMocks();
-  });
+  // Reset mocks and console before each test
+  mockConsole('error');
 
   it('should initialize with the correct values', () => {
     const { result } = renderHook(
@@ -139,6 +130,43 @@ describe('useForm hook', () => {
     expect(['Email is required', 'Invalid email']).toContain(result.current.errors.email);
     expect(result.current.status).toBe('idle');
     expect(mockSubmit).not.toHaveBeenCalled();
+  });
+
+  it('should focus the first error field when validation fails', async () => {
+    // Spy on document.querySelector and the focus method
+    const focusSpy = jest.fn();
+    (document.querySelector as jest.Mock).mockImplementation((selector: string) => {
+      if (selector === '[name="name"]') {
+        return { focus: focusSpy };
+      }
+      return null;
+    });
+
+    const { result } = renderHook(
+      () =>
+        useForm({
+          initialValues: { name: '', email: '' },
+          validationSchema: testSchema,
+          onSubmit: mockSubmit,
+        }),
+      { wrapper: Wrapper }
+    );
+
+    // Manually set an error before submitting to trigger focus logic
+    act(() => {
+      // @ts-expect-error: direct state mutation for test only
+      result.current.errors.name = 'Name is required';
+    });
+
+    const mockFormEvent = {
+      preventDefault: jest.fn(),
+    } as unknown as React.FormEvent<HTMLFormElement>;
+
+    await act(async () => {
+      await result.current.handleSubmit(mockFormEvent);
+    });
+
+    expect(focusSpy).toHaveBeenCalled();
   });
 
   it('should submit the form when validation passes', async () => {
@@ -279,17 +307,10 @@ describe('useForm hook', () => {
       preventDefault: jest.fn(),
     } as unknown as React.FormEvent<HTMLFormElement>;
 
-    // Mock console.error to prevent test output pollution
-    const originalConsoleError = console.error;
-    console.error = jest.fn();
-
     // Submit the form
     await act(async () => {
       await result.current.handleSubmit(mockFormEvent);
     });
-
-    // Restore console.error
-    console.error = originalConsoleError;
 
     // Check that error state was set
     expect(result.current.status).toBe('error');

@@ -9,7 +9,11 @@ import { RiArrowRightLine } from "@remixicon/react";
 
 // --- Props Definition ---
 
-interface CardProps {
+/**
+ * CardProps defines the API for the Card component.
+ * - children are rendered in the overlay after tags and before the Learn More button.
+ */
+export interface CardProps {
   /** Source URL or StaticImport for the background image. */
   imageUrl: string | StaticImageData;
   /** Alt text for the background image (required for accessibility). */
@@ -35,11 +39,13 @@ interface CardProps {
     React.ComponentPropsWithoutRef<"div"> & React.ComponentPropsWithoutRef<"a">,
     keyof CardProps | "ref"
   >;
+  /** Optional custom content, rendered in the overlay after tags and before the button. */
+  children?: React.ReactNode;
 }
 
 // --- Component Implementation ---
 
-const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
+export const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
   (
     {
       imageUrl,
@@ -53,6 +59,7 @@ const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
       hoverEffect = true,
       className,
       htmlProps = {},
+      children,
       ...rest
     },
     ref
@@ -94,7 +101,6 @@ const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
           sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
           className={imageClasses}
         />
-        {/* Only render the overlay if the effect should be active */}
         {shouldApplyHoverEffect && (
           <div className={overlayClasses}>
             {title && (
@@ -107,50 +113,36 @@ const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
                 {description}
               </Text>
             )}
-            {/* Render tags if provided (sorted alphabetically) */}
             {tags && tags.length > 0 && (
               <div className="mt-2 flex flex-wrap justify-center gap-1">
                 {[...tags]
-                  // Sort tags alphabetically - string tags by their text, React elements by their label prop
                   .sort((a, b) => {
-                    // For string tags, compare directly
                     if (typeof a === 'string' && typeof b === 'string') {
                       return a.localeCompare(b);
                     }
-                    
-                    // For React elements, try to compare by label prop
                     const aLabel = React.isValidElement(a) && a.props.label ? a.props.label : '';
                     const bLabel = React.isValidElement(b) && b.props.label ? b.props.label : '';
-                    
-                    // If both have labels, compare them
                     if (aLabel && bLabel) {
                       return aLabel.localeCompare(bLabel);
                     }
-                    
-                    // If only one has a label, prioritize the one with a label
                     return aLabel ? -1 : bLabel ? 1 : 0;
                   })
                   .map((tag, index) => {
-                    // For string tags, create a basic Tag component
                     if (typeof tag === 'string') {
                       return <Tag key={tag} label={tag} showTooltip={false} />;
                     }
-                    
-                    // For React elements (which should be Tag components based on our typing)
                     if (React.isValidElement(tag)) {
-                      // Clone the element with the key and disable tooltip
                       return React.cloneElement(tag, {
                         key: tag.key || `tag-${index}`,
                         showTooltip: false
-                    });
-                  }
-                  
-                  // Shouldn't reach here with proper typing
-                  return null;
-                })}
+                      });
+                    }
+                    return null;
+                  })}
               </div>
             )}
-            {/* Render Learn More button if href is provided */}
+            {/* Custom children rendered here, after tags and before the button */}
+            {children}
             {href && (
               <Button
                 variant="ghost"
@@ -197,5 +189,3 @@ const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>(
 );
 
 Card.displayName = "Card";
-
-export { Card };
