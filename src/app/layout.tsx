@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Barlow } from "next/font/google";
-import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from "@/providers/ThemeProvider";
-import { UsercentricsCookieConsent } from "@/components/analytics/UsercentricsCookieConsent";
 import "@/styles/globals.css";
 
 // --- Metadata & SEO ---
@@ -50,11 +48,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <UsercentricsCookieConsent />
       <body className={`${primaryFont.className} ${primaryFont.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
         <Analytics />
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />
         <SpeedInsights />
       </body>
     </html>
