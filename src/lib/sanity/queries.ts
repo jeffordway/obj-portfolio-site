@@ -120,12 +120,12 @@ export async function getProjects(): Promise<Project[]> {
     },
     headline,
     // Direct categories reference
-    "categories": categories[]->{ 
+    "categories": categories[]->{
       _id,
       title,
       description,
       slug
-    },
+    } | order(title asc),
     // Skills with their categories for deriving categories when needed
     "skills": skills[]->{
       _id,
@@ -138,7 +138,7 @@ export async function getProjects(): Promise<Project[]> {
         description,
         slug
       }
-    }
+    } | order(title asc)
   }`;
 
   try {
@@ -194,7 +194,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         title,
         slug
       }
-    },
+    } | order(title asc),
     projectImages[] { 
       ..., 
       asset->{
@@ -219,7 +219,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       title,
       description,
       slug
-    }
+    } | order(title asc)
   }`;
 
   try {
