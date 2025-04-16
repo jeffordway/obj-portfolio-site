@@ -177,7 +177,8 @@ export type IconName =
   | "dribbble"
   | "behance"
   | "pinterest"
-  | "trello";
+  | "trello"
+  | "X";
 
 /**
  * Maps icon names to their corresponding Remix icon components
@@ -294,7 +295,8 @@ export const iconMap: Record<IconName, RemixIconType> = {
   dribbble: RiDribbbleLine,
   behance: RiBehanceLine,
   pinterest: RiPinterestLine,
-  trello: RiTrelloLine
+  trello: RiTrelloLine,
+  X: RiTwitterXFill
 };
 
 /**
