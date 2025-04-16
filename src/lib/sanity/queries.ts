@@ -104,6 +104,7 @@ export const TAGS = {
  * @returns Array of projects
  */
 export async function getProjects(): Promise<Project[]> {
+  // Using proper projections and references following Sanity best practices
   const query = `*[_type == "project"] | order(date desc) {
     _id,
     title,
@@ -118,11 +119,25 @@ export async function getProjects(): Promise<Project[]> {
       }
     },
     headline,
+    // Direct categories reference
     "categories": categories[]->{ 
       _id,
       title,
       description,
       slug
+    },
+    // Skills with their categories for deriving categories when needed
+    "skills": skills[]->{
+      _id,
+      title,
+      description,
+      slug,
+      "category": category->{
+        _id,
+        title,
+        description,
+        slug
+      }
     }
   }`;
 

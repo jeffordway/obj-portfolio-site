@@ -61,13 +61,6 @@ export default defineType({
         },
       ],
     }),
-    // Categories for the project (optional)
-    defineField({
-      name: "categories",
-      title: "Categories",
-      type: "array",
-      of: [{ type: "reference", to: { type: "category" } }],
-    }),
     // Skills used in the project (required)
     defineField({
       name: "skills",
