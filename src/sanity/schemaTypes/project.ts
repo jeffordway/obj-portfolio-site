@@ -1,20 +1,17 @@
 import { defineField, defineType } from "sanity";
-import HeroImageFilenameInput from '../components/HeroImageFilenameInput';
 
-// Project schema definition for Sanity Studio
+// Temporary Project schema for clean validation
 export default defineType({
   name: "project",
   title: "Project",
   type: "document",
   fields: [
-    // Title field (required)
     defineField({
       name: "title",
       title: "Title",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
-    // URL slug for the project (required)
     defineField({
       name: "slug",
       title: "Slug",
@@ -25,22 +22,18 @@ export default defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
-    // Short headline for the project (required)
     defineField({
       name: "headline",
       title: "Headline",
       type: "text",
       validation: (Rule) => Rule.required(),
     }),
-    // Rich text content for the project
     defineField({
       name: "content",
       title: "Content",
       type: "array",
       of: [
-        { 
-          type: "block" 
-        },
+        { type: "block" },
         {
           type: "image",
           options: { hotspot: true },
@@ -62,14 +55,12 @@ export default defineType({
         },
       ],
     }),
-    // Skills used in the project (required)
     defineField({
       name: "skills",
       title: "Skills",
       type: "array",
       of: [{ type: "reference", to: { type: "skill" } }],
     }),
-    // GitHub repository link (optional)
     defineField({
       name: "githubRepo",
       title: "GitHub Repository",
@@ -86,13 +77,10 @@ export default defineType({
           name: "url",
           title: "GitHub URL",
           type: "url",
-          validation: Rule => Rule.uri({
-            scheme: ["http", "https"]
-          }),
+          validation: Rule => Rule.uri({ scheme: ["http", "https"] }),
         },
       ],
     }),
-    // Prototype link (optional)
     defineField({
       name: "prototype",
       title: "Prototype",
@@ -109,9 +97,7 @@ export default defineType({
           name: "url",
           title: "Prototype URL",
           type: "url",
-          validation: Rule => Rule.uri({
-            scheme: ["http", "https"]
-          }),
+          validation: Rule => Rule.uri({ scheme: ["http", "https"] }),
         },
         {
           name: "buttonText",
@@ -121,13 +107,11 @@ export default defineType({
         },
       ],
     }),
-    // Project completion date
     defineField({
       name: "date",
       title: "Date",
       type: "date",
     }),
-    // Hero image for the project (required)
     defineField({
       name: "heroImage",
       title: "Hero Image",
@@ -147,7 +131,6 @@ export default defineType({
       ],
       validation: (Rule) => Rule.required(),
     }),
-    // Project images (16:9 ratio, one per column)
     defineField({
       name: "projectImages",
       title: "Project Images",
@@ -156,7 +139,7 @@ export default defineType({
       of: [
         {
           type: "image",
-          options: { 
+          options: {
             hotspot: true,
             storeOriginalFilename: true,
           },
@@ -180,18 +163,10 @@ export default defineType({
               title: "Headline",
               description: "Optional headline for the image (displayed on hover)",
             },
-            {
-              name: "filename",
-              type: "string",
-              title: "Filename",
-              description: "Provide a descriptive filename (without extension)",
-              validation: (Rule) => Rule.required(),
-            },
           ],
         },
       ],
     }),
-    // Additional images (1:1 ratio, two per column)
     defineField({
       name: "additionalImages",
       title: "Additional Images",
@@ -200,7 +175,7 @@ export default defineType({
       of: [
         {
           type: "image",
-          options: { 
+          options: {
             hotspot: true,
             storeOriginalFilename: true,
           },
@@ -224,19 +199,11 @@ export default defineType({
               title: "Headline",
               description: "Optional headline for the image (displayed on hover)",
             },
-            {
-              name: "filename",
-              type: "string",
-              title: "Filename",
-              description: "Provide a descriptive filename (without extension)",
-              validation: (Rule) => Rule.required(),
-            },
           ],
         },
       ],
     }),
   ],
-  // Preview configuration for the Sanity Studio
   preview: {
     select: {
       title: "title",

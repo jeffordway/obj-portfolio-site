@@ -494,22 +494,6 @@
                 "description": "Optional headline for the image (displayed on hover)",
                 "name": "headline",
                 "type": "string"
-              },
-              {
-                "validation": [
-                  {
-                    "rules": [
-                      {
-                        "flag": "presence",
-                        "constraint": "required"
-                      }
-                    ],
-                    "level": "error"
-                  }
-                ],
-                "description": "Provide a descriptive filename (without extension)",
-                "name": "filename",
-                "type": "string"
               }
             ],
             "type": "image"
@@ -552,22 +536,6 @@
               {
                 "description": "Optional headline for the image (displayed on hover)",
                 "name": "headline",
-                "type": "string"
-              },
-              {
-                "validation": [
-                  {
-                    "rules": [
-                      {
-                        "flag": "presence",
-                        "constraint": "required"
-                      }
-                    ],
-                    "level": "error"
-                  }
-                ],
-                "description": "Provide a descriptive filename (without extension)",
-                "name": "filename",
                 "type": "string"
               }
             ],
