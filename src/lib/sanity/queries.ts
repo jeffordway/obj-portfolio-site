@@ -6,7 +6,7 @@
  */
 import { sanityFetch } from '@/lib/sanity';
 import { type PortableTextBlock } from '@portabletext/types';
-import { type SanityImageObject } from '@sanity/image-url/lib/types/types';
+import { type SanityImageObject } from '@sanity/image-url';
 
 // --- Type Definitions ---
 

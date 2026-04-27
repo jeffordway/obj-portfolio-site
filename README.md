@@ -41,7 +41,7 @@ A modern, responsive portfolio website built with Next.js 15, TypeScript, Tailwi
 
 ### Prerequisites
 - Node.js 18.17.0 or higher
-- npm or yarn
+- pnpm
 
 ### Installation
 
@@ -53,9 +53,7 @@ cd obj-portfolio-site
 
 2. Install dependencies
 ```bash
-npm install
-# or
-yarn install
+pnpm install
 ```
 
 3. Set up environment variables
@@ -71,23 +69,17 @@ RESEND_API_KEY=your_resend_api_key
 
 Run the development server:
 ```bash
-npm run dev
-# or
-yarn dev
+pnpm dev
 ```
 
 For email development and testing:
 ```bash
-npm run email
-# or
-yarn email
+pnpm email
 ```
 
 To run both simultaneously:
 ```bash
-npm run all
-# or
-yarn all
+pnpm all
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
@@ -97,23 +89,17 @@ Email preview server runs on [http://localhost:3001](http://localhost:3001).
 
 Run tests:
 ```bash
-npm test
-# or
-yarn test
+pnpm test
 ```
 
 Watch mode:
 ```bash
-npm run test:watch
-# or
-yarn test:watch
+pnpm test:watch
 ```
 
 Coverage report:
 ```bash
-npm run test:coverage
-# or
-yarn test:coverage
+pnpm test:coverage
 ```
 
 ## Project Structure

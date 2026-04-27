@@ -2,20 +2,15 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import Video from "next-video";
 import Image, { StaticImageData } from "next/image";
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder, type SanityImageSource, type SanityImageObject, type SanityImageWithAssetStub } from "@sanity/image-url";
 import { client } from "@/sanity/lib/client";
-import type {
-  SanityImageSource,
-  SanityImageObject,
-  SanityImageWithAssetStub,
-} from "@sanity/image-url/lib/types/types";
 
 // We'll use standard Sanity types without extensions to keep the code clean
 
 /**
  * Initialize Sanity image URL builder
  */
-const builder = imageUrlBuilder(client);
+const builder = createImageUrlBuilder(client);
 
 /**
  * Converts a Sanity image reference to a URL builder

@@ -16,10 +16,6 @@ const nextConfig: NextConfig = {
     // !! WARN !! Only ignore type errors in production
     ignoreBuildErrors: process.env.NODE_ENV === "production",
   },
-  eslint: {
-    // !! WARN !! Only ignore ESLint errors in production
-    ignoreDuringBuilds: process.env.NODE_ENV === "production",
-  },
   // Transpile Sanity packages that use modern JavaScript features
   transpilePackages: ["@sanity"],
 
