@@ -57,11 +57,6 @@ export function ContactForm({ className }: ContactFormProps) {
     },
     validationSchema: contactFormSchema,
     onSubmit: async (data) => {
-      // Check message length before submission (custom validation)
-      if (data.message.length > 500) {
-        throw new Error("Message exceeds maximum length of 500 characters");
-      }
-      
       // API Submission
       const response = await fetch("/api/contact", {
         method: "POST",

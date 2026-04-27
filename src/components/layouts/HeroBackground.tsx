@@ -153,7 +153,7 @@ export function HeroBackground({
             muted
             playsInline
             controls={false}
-            preload="auto"
+            preload="metadata"
           />
         ) : (
           // Next-video import
@@ -165,7 +165,7 @@ export function HeroBackground({
                 position: "fixed",
                 inset: "0px",
                 "--media-object-fit": "cover",
-              } as React.CSSProperties
+              } as any
             }
             autoPlay
             loop

@@ -28,7 +28,7 @@ export function LazyProjects({ projects }: { projects: Project[] }) {
       }
     };
     
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [projects.length]);
   

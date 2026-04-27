@@ -11,13 +11,23 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Ensure Sanity Studio works correctly
-  typescript: {
-    // !! WARN !! Only ignore type errors in production
-    ignoreBuildErrors: process.env.NODE_ENV === "production",
-  },
   // Transpile Sanity packages that use modern JavaScript features
   transpilePackages: ["@sanity"],
+  // Security headers
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        ],
+      },
+    ];
+  },
 
   // Configure webpack to handle SVG files
   webpack(config) {

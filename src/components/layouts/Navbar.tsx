@@ -126,6 +126,9 @@ export const Navbar = ({ className }: NavbarProps) => {
       <MobileMenuPortal>
         <div
           id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation menu"
           className={cn(
             "fixed inset-0 z-40 flex flex-col bg-background/90 px-6 pt-24 pb-12 transition-transform duration-300 ease-in-out md:hidden",
             "justify-center items-center",
