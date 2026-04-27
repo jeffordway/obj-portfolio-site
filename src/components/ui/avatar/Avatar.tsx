@@ -129,6 +129,7 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
           alt={alt}
           // Explicit width/height, remove fill
           className="aspect-square h-full w-full object-cover" // Still use object-cover
+          suppressHydrationWarning
           {...imageProps} // Spread Image-related props + width/height
         />
       </span>

@@ -100,6 +100,7 @@ export const Card = React.forwardRef<HTMLDivElement | HTMLAnchorElement, CardPro
           priority={imagePriority}
           sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
           className={imageClasses}
+          suppressHydrationWarning
         />
         {shouldApplyHoverEffect && (
           <div className={overlayClasses}>
