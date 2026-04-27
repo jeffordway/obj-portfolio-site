@@ -1,9 +1,9 @@
 import React from 'react';
-import { PortableText as SanityPortableText, PortableTextComponents } from '@portabletext/react';
+import { PortableText as PortableTextComponent, PortableTextComponents } from '@portabletext/react';
 import { Text } from './Text'; // Assuming Text component is in the same directory
 import Link from 'next/link';
 import { cn } from '@/lib/utils'; // Import your utility for class names
-import type { PortableTextBlock } from '@portabletext/types'; // Import PortableTextBlock
+import type { PortableTextBlock } from '@portabletext/react'; // Import PortableTextBlock
 
 // --- Props Definition ---
 
@@ -94,7 +94,7 @@ export const PortableText: React.FC<PortableTextProps> = ({ value, className }) 
   return (
     <div className={cn('prose dark:prose-invert max-w-none', className)}> 
       {/* Using prose for default spacing/styling fallbacks, adjust as needed */}
-      <SanityPortableText value={value} components={portableTextComponents} />
+      <PortableTextComponent value={value} components={portableTextComponents} />
     </div>
   );
 };

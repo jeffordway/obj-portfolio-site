@@ -42,13 +42,13 @@ export async function POST(req: NextRequest) {
 
     // Revalidate based on document type
     console.log(`Revalidating tag: ${body._type}`);
-    revalidateTag(body._type);
+    revalidateTag(body._type, {});
     
     // Also revalidate specific content if slug is available
     if (body.slug?.current) {
       const specificTag = `${body._type}-${body.slug.current}`;
       console.log(`Revalidating specific tag: ${specificTag}`);
-      revalidateTag(specificTag);
+      revalidateTag(specificTag, {});
     }
     
     // For new content, we need to revalidate the relevant collection pages
@@ -56,22 +56,22 @@ export async function POST(req: NextRequest) {
     switch (body._type) {
       case 'project':
         console.log('Revalidating projects collection');
-        revalidateTag('projects-collection');
+        revalidateTag('projects-collection', {});
         break;
       case 'category':
         console.log('Revalidating categories collection');
-        revalidateTag('categories-collection');
+        revalidateTag('categories-collection', {});
         // Also revalidate projects since they display categories
-        revalidateTag('projects-collection');
+        revalidateTag('projects-collection', {});
         break;
       case 'skill':
         console.log('Revalidating skills collection');
-        revalidateTag('skills-collection');
+        revalidateTag('skills-collection', {});
         break;
       default:
         // For any other content type, revalidate a general content tag
         console.log(`Revalidating general content for type: ${body._type}`);
-        revalidateTag('content');
+        revalidateTag('content', {});
     }
 
     // Return success response

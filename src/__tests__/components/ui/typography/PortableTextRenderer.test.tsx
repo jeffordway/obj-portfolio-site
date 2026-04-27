@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { PortableText } from '@/components/ui/typography/PortableTextRenderer';
 import { Text } from '@/components/ui/typography/Text';
-import type { PortableTextBlock } from '@portabletext/types';
+import type { PortableTextBlock } from '@portabletext/react';
 
 // Define types for our mock implementation
 interface MockSpan {

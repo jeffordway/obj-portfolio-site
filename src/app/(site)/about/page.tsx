@@ -12,7 +12,7 @@ import Image from "next/image";
 import profileImage from "@/assets/profile.jpg";
 import { SkillsDisplay } from "@/components/features/SkillsDisplay";
 import { BentoGrid, type BentoGridItem } from "@/components/features/BentoGrid";
-import { type PortableTextBlock } from "@portabletext/types"; // Import PortableTextBlock
+import { type PortableTextBlock } from "@portabletext/react"; // Import PortableTextBlock
 import { coreValues } from "@/lib/site";
 
 // Use direct path to public video file instead of next-video import

@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     const tag = searchParams.get('tag') || 'project';
     
     // Revalidate the specified tag
-    revalidateTag(tag);
+    revalidateTag(tag, {});
     
     // Return success response with details
     return NextResponse.json({

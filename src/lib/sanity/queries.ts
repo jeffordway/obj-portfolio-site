@@ -5,7 +5,7 @@
  * Following Sanity's best practices for organizing queries and revalidation tags.
  */
 import { sanityFetch } from '@/lib/sanity';
-import { type PortableTextBlock } from '@portabletext/types';
+import { type PortableTextBlock } from '@portabletext/react';
 import { type SanityImageObject } from '@sanity/image-url';
 
 // --- Type Definitions ---

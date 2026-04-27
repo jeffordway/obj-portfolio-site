@@ -17,7 +17,7 @@ import { Card } from "@/components/ui/card/Card";
 import { SkillsDisplay } from "@/components/features/SkillsDisplay";
 import { PortableText } from "@/components/ui/typography/PortableTextRenderer";
 import { siteConfig } from "@/lib/site";
-import type { PortableTextBlock } from "@portabletext/types";
+import type { PortableTextBlock } from "@portabletext/react";
 import type { SanityImageObject } from "@sanity/image-url";
 
 // Types are now imported from @/lib/sanity/queries
