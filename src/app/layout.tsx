@@ -55,7 +55,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       {/* Analytics & Tag Managers (head-level) */}
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
-      <body className={`${primaryFont.className} ${primaryFont.variable} antialiased`}>
+      <body className={`${primaryFont.className} ${primaryFont.variable} antialiased`} suppressHydrationWarning>
         {/* Theme & Context Providers */}
         <ThemeProvider>
           {children}
