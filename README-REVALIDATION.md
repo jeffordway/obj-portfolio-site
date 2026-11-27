@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   try {
     // Parse and validate the webhook request
     // Try both environment variables for the webhook secret
-    const secret = process.env.NEXT_PUBLIC_SANITY_HOOK_SECRET || process.env.SANITY_WEBHOOK_SECRET;
+    const secret = process.env.SANITY_WEBHOOK_SECRET;
     
     console.log(`Webhook received for revalidation. Using secret: ${secret ? 'Secret exists' : 'No secret found'}`);
     
@@ -104,7 +104,7 @@ Add the following to your `.env.local` file:
 
 ```
 # Both variables are supported for compatibility
-NEXT_PUBLIC_SANITY_HOOK_SECRET=your-webhook-secret-here
+SANITY_WEBHOOK_SECRET=your-webhook-secret-here
 SANITY_WEBHOOK_SECRET=your-webhook-secret-here
 ```
 
@@ -154,7 +154,7 @@ This ensures that even if webhooks fail, content will eventually update.
 
 If you're seeing "Invalid Signature" errors in your logs:
 
-1. **Check Environment Variables**: Ensure both `NEXT_PUBLIC_SANITY_HOOK_SECRET` and `SANITY_WEBHOOK_SECRET` are set correctly in your environment variables. The revalidation endpoint now tries both.
+1. **Check Environment Variables**: Ensure `SANITY_WEBHOOK_SECRET` is set in your environment variables and matches the secret on the Sanity webhook. Requests with a missing or wrong signature are rejected with a 401.
 
 2. **Debug Mode**: The revalidation endpoint now includes a debug mode that will process webhooks even with invalid signatures. This helps identify if the issue is with the signature verification or with the revalidation process itself.
 

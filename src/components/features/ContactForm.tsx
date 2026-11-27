@@ -26,6 +26,8 @@ const contactFormSchema = z.object({
     .string()
     .min(10, { message: "Message must be at least 10 characters" })
     .max(500, { message: "Message cannot exceed 500 characters" }),
+  // Honeypot field. Hidden from people, so it should always be empty.
+  website: z.string().optional(),
 });
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
@@ -54,6 +56,7 @@ export function ContactForm({ className }: ContactFormProps) {
       email: "",
       subject: "",
       message: "",
+      website: "",
     },
     validationSchema: contactFormSchema,
     onSubmit: async (data) => {
@@ -169,6 +172,19 @@ export function ContactForm({ className }: ContactFormProps) {
         required
         disabled={status === "submitting"}
       />
+      {/* Honeypot: off-screen and skipped by keyboards and screen readers. Bots fill it, people do not. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor="contact-website">Website</label>
+        <input
+          type="text"
+          id="contact-website"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          value={values.website ?? ""}
+          onChange={handleChange("website")}
+        />
+      </div>
       <div className="flex justify-start">
         <Button
           type="submit"
