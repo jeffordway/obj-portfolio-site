@@ -57,12 +57,9 @@ export const navLinks: NavLink[] = [
   { href: "/", label: "Projects", showNavBar: true },
   { href: "/about", label: "About", showNavBar: true },
   { href: "/contact", label: "Contact", showNavBar: true },
-  { href: "/cookie-policy", label: "Cookie Policy", showNavBar: false },
   { href: "/privacy-policy", label: "Privacy Policy", showNavBar: false },
   { href: "/terms", label: "Terms", showNavBar: false },
-  { href: "/disclaimer", label: "Disclaimer", showNavBar: false },
   //{ href: "/design-system", label: "Design System", showNavBar: false },
-  { href: "/studio", label: "Studio", showNavBar: false },
 ];
 
 /**

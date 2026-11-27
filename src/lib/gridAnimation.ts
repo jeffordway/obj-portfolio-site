@@ -97,6 +97,15 @@ export function startGrid(
     "(prefers-reduced-motion: reduce)"
   );
 
+  /**
+   * What the visitor chose with the pause button: true = paused, false = play,
+   * null = no choice yet. Until they choose, the device's reduced-motion
+   * setting decides.
+   */
+  let userPaused: boolean | null = null;
+  const motionOff = () =>
+    userPaused !== null ? userPaused : reduceMotionQuery.matches;
+
   let width = 0;
   let height = 0;
   let cols = 0;
@@ -375,10 +384,9 @@ export function startGrid(
   function draw() {
     ctx.clearRect(0, 0, width, height);
     drawGridLines();
-    // With reduced motion on, show the still grid and no moving lights.
-    if (!reduceMotionQuery.matches) {
-      for (const pulse of pulses) drawPulse(pulse);
-    }
+    // When paused, the lights simply hold still where they are. With reduced
+    // motion on they never start, so only the still grid shows.
+    for (const pulse of pulses) drawPulse(pulse);
     ctx.globalAlpha = 1;
   }
 
@@ -393,7 +401,7 @@ export function startGrid(
   }
 
   function play() {
-    if (running || reduceMotionQuery.matches) return;
+    if (running || motionOff()) return;
     running = true;
     lastFrameTime = performance.now();
     frameId = requestAnimationFrame(loop);
@@ -407,11 +415,19 @@ export function startGrid(
   /** Only animate when someone can actually see it. */
   function updatePlayState() {
     const scrolledPast = window.scrollY > window.innerHeight;
-    if (document.hidden || scrolledPast || reduceMotionQuery.matches) {
+    if (document.hidden || scrolledPast || motionOff()) {
       pause();
     } else {
       play();
     }
+  }
+
+  /** The pause button (BackgroundMotionToggle) sends this event. */
+  function handleMotionToggle(event: Event) {
+    const detail = (event as CustomEvent<{ paused?: boolean }>).detail;
+    userPaused = !!detail?.paused;
+    updatePlayState();
+    draw();
   }
 
   function handleMotionPreferenceChange() {
@@ -435,6 +451,7 @@ export function startGrid(
   document.addEventListener("visibilitychange", updatePlayState);
   window.addEventListener("scroll", updatePlayState, { passive: true });
   reduceMotionQuery.addEventListener("change", handleMotionPreferenceChange);
+  window.addEventListener("background-motion", handleMotionToggle);
 
   resize();
   updatePlayState();
@@ -445,6 +462,7 @@ export function startGrid(
     resizeObserver.disconnect();
     document.removeEventListener("visibilitychange", updatePlayState);
     window.removeEventListener("scroll", updatePlayState);
+    window.removeEventListener("background-motion", handleMotionToggle);
     reduceMotionQuery.removeEventListener(
       "change",
       handleMotionPreferenceChange

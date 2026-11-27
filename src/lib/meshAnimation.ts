@@ -74,6 +74,15 @@ export function startMesh(
     "(prefers-reduced-motion: reduce)"
   );
 
+  /**
+   * What the visitor chose with the pause button: true = paused, false = play,
+   * null = no choice yet. Until they choose, the device's reduced-motion
+   * setting decides.
+   */
+  let userPaused: boolean | null = null;
+  const motionOff = () =>
+    userPaused !== null ? userPaused : reduceMotionQuery.matches;
+
   let width = 0;
   let height = 0;
   let cols = 0;
@@ -209,7 +218,7 @@ export function startMesh(
   }
 
   function play() {
-    if (running || reduceMotionQuery.matches) return;
+    if (running || motionOff()) return;
     running = true;
     frameId = requestAnimationFrame(loop);
   }
@@ -222,11 +231,19 @@ export function startMesh(
   /** Only animate when someone can actually see it. */
   function updatePlayState() {
     const scrolledPast = window.scrollY > window.innerHeight;
-    if (document.hidden || scrolledPast || reduceMotionQuery.matches) {
+    if (document.hidden || scrolledPast || motionOff()) {
       pause();
     } else {
       play();
     }
+  }
+
+  /** The pause button (BackgroundMotionToggle) sends this event. */
+  function handleMotionToggle(event: Event) {
+    const detail = (event as CustomEvent<{ paused?: boolean }>).detail;
+    userPaused = !!detail?.paused;
+    updatePlayState();
+    draw(performance.now());
   }
 
   function handleMotionPreferenceChange() {
@@ -250,6 +267,7 @@ export function startMesh(
   document.addEventListener("visibilitychange", updatePlayState);
   window.addEventListener("scroll", updatePlayState, { passive: true });
   reduceMotionQuery.addEventListener("change", handleMotionPreferenceChange);
+  window.addEventListener("background-motion", handleMotionToggle);
 
   resize();
   updatePlayState();
@@ -260,6 +278,7 @@ export function startMesh(
     resizeObserver.disconnect();
     document.removeEventListener("visibilitychange", updatePlayState);
     window.removeEventListener("scroll", updatePlayState);
+    window.removeEventListener("background-motion", handleMotionToggle);
     reduceMotionQuery.removeEventListener(
       "change",
       handleMotionPreferenceChange

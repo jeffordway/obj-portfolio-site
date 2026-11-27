@@ -6,7 +6,6 @@ import { Barlow } from "next/font/google";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { GoogleTagManager } from '@next/third-parties/google';
 
 // --- Global Styles ---
 import "@/styles/globals.css";
@@ -20,8 +19,8 @@ export const metadata: Metadata = {
   description:
     "Hey, I'm Jeff Ordway, a creator with a passion for purpose and a knack for turning faith into action. I build tools to help you live boldly, serve purposefully, and pursue excellence.",
   authors: [{ name: "Jeff Ordway" }],
-  creator: "Nielsen Ossowski Creative LLC",
-  publisher: "Nielsen Ossowski Creative LLC",
+  creator: "Jeff Ordway",
+  publisher: "Jeff Ordway",
   keywords: [
     "design",
     "development",
@@ -53,14 +52,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      {/* Analytics & Tag Managers (head-level) */}
-      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
       <body className={`${primaryFont.className} ${primaryFont.variable} antialiased`} suppressHydrationWarning>
         {/* Theme & Context Providers */}
         <ThemeProvider>
           {children}
         </ThemeProvider>
-        {/* Analytics Scripts */}
+        {/* Anonymous, cookie-free visit and speed statistics from Vercel.
+            If you add any other tracking tool, update the Privacy Policy page too. */}
         <Analytics />
         <SpeedInsights />
       </body>

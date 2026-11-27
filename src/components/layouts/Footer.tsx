@@ -85,8 +85,9 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
 
             {/* Copyright Notice */}
             <Text variant="caption" className="text-center pt-4">
-              &copy; {currentYear} Nielsen Ossowski Creative LLC. All rights
-              reserved.
+              &copy; {currentYear} Jeff Ordway. All rights reserved.
+              <br />
+              Views here are my own and do not represent any employer.
             </Text>
           </div>
         </Section>

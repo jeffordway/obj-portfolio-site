@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   },
   // Transpile Sanity packages that use modern JavaScript features
   transpilePackages: ["@sanity"],
+  // Old legal pages were merged into two. Send old links to the right place.
+  async redirects() {
+    return [
+      { source: '/cookie-policy', destination: '/privacy-policy', permanent: true },
+      { source: '/disclaimer', destination: '/terms', permanent: true },
+    ];
+  },
   // Security headers
   async headers() {
     return [

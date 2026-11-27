@@ -5,6 +5,7 @@ import { createImageUrlBuilder, type SanityImageSource, type SanityImageObject, 
 import { client } from "@/sanity/lib/client";
 import { MeshBackground } from "@/components/ui/background/MeshBackground";
 import { GridBackground } from "@/components/ui/background/GridBackground";
+import { BackgroundMotionToggle } from "@/components/ui/background/BackgroundMotionToggle";
 
 // We'll use standard Sanity types without extensions to keep the code clean
 
@@ -127,7 +128,11 @@ export function HeroBackground({
   // Only render image if there's no video and we have a valid image source
   const shouldRenderImage = !animation && !videoSrc && finalSrc;
 
+  // Anything that moves gets a pause button
+  const hasMotion = !!animation || !!videoSrc;
+
   return (
+    <>
     <div
       className={cn(
         "fixed inset-0 min-h-screen overflow-hidden z-10",
@@ -149,6 +154,7 @@ export function HeroBackground({
         <video
           src={videoSrc}
           poster={videoPoster}
+          data-background-video
           className="w-full h-screen"
           style={{
             position: "fixed",
@@ -196,6 +202,9 @@ export function HeroBackground({
         />
       )}
     </div>
+    {/* Sits outside the background layer so it stays clickable above the hero text */}
+    {hasMotion && <BackgroundMotionToggle />}
+    </>
   );
 }
 
