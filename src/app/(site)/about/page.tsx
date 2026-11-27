@@ -126,6 +126,7 @@ export default async function HomePage() {
         {/* Background Layer */}
         <HeroBackground
           videoSrc={aboutVideoPath}
+          videoPoster="/videos/about-poster.jpg"
           imageAlt="About page background video"
         />
 

@@ -43,7 +43,19 @@ export function LazyProjects({ projects }: { projects: Project[] }) {
             key={project._id}
             title={project.title}
             description={project.headline || ''}
-            imageUrl={project.heroImage ? urlFor(project.heroImage).url() : ''}
+            imageUrl={
+              project.heroImage
+                ? // Cards are square and never wider than about 800px on screen,
+                  // so ask Sanity for a 1000px square, not the full original upload.
+                  urlFor(project.heroImage)
+                    .width(1000)
+                    .height(1000)
+                    .fit('crop')
+                    .auto('format')
+                    .quality(80)
+                    .url()
+                : ''
+            }
             imageAlt={`${project.title} project screenshot`}
             href={`/projects/${project.slug.current}`}
             tags={project.categories ? project.categories.map((category) => (

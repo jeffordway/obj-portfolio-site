@@ -176,7 +176,7 @@ export default async function ProjectPage({
                   {project.projectImages.map((image: ProjectImage, index: number) => (
                     <Card
                       key={`${project._id}-projimg-${index}`}
-                      imageUrl={urlFor(image).width(1200).quality(80).url()}
+                      imageUrl={urlFor(image).width(1600).auto("format").quality(80).url()}
                       imageAlt={image.alt || `Project image ${index + 1}`}
                       title={image.title}
                       description={image.headline}
@@ -199,6 +199,7 @@ export default async function ProjectPage({
                           imageUrl={urlFor(image)
                             .width(800)
                             .height(800)
+                            .auto("format")
                             .quality(80)
                             .url()}
                           imageAlt={

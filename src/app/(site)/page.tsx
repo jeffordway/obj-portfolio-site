@@ -20,8 +20,6 @@ import avatarImage from "@/assets/avatar.png";
 // Features
 import { LazyProjects } from '@/components/features/LazyProjects';
 
-const homeVideoPath = "/videos/home.mp4";
-
 export const metadata: Metadata = {
   title: "Jeff Ordway - Purpose-Driven Design and Development",
   description:
@@ -38,8 +36,7 @@ export default async function HomePage() {
       {/* Hero Section */}
       <div className="relative">
         <HeroBackground
-          videoSrc={homeVideoPath}
-          imageAlt="Home page background video"
+          animation="mesh"
         />
 
         <HeroContent className="flex flex-col items-center justify-center text-center">
