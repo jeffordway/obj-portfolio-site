@@ -9,9 +9,8 @@
  * It has no React in it on purpose, so it is easy to test and reuse.
  * Call startGrid(canvas) to begin. It returns a function that stops everything.
  *
- * Colors come from CSS, so light and dark themes both work:
- * - grid lines use the canvas's text color
- * - pulses use the --accent color (falls back to the text color)
+ * The color comes from CSS: the grid and the pulses both use the canvas's text
+ * color. So on a dark theme the light is white, and on a light theme it is dark.
  */
 
 export interface GridOptions {
@@ -23,8 +22,12 @@ export interface GridOptions {
   density?: number;
   /** Pulse speed, in grid squares per second. */
   speed?: number;
-  /** Length of the fading tail, in grid squares. */
+  /** Length of the fading tail behind a pulse, in grid squares. */
   tailLength?: number;
+  /** How far the glow reaches out in front of a pulse, in grid squares. */
+  leadLength?: number;
+  /** Size of the soft glow around the head of a pulse, in CSS pixels. */
+  glowRadius?: number;
   /** Chance (0 to 1) that a pulse turns when it reaches a crossing. */
   turnChance?: number;
 }
@@ -37,12 +40,26 @@ const DIRECTIONS: readonly [number, number][] = [
   [0, -1],
 ];
 
+/**
+ * A blurred line is faked by drawing it several times: [width in px, strength].
+ * Wide and faint first, thin and bright last.
+ */
+const GLOW_LAYERS: readonly [number, number][] = [
+  [9, 0.07],
+  [5, 0.16],
+  [2.5, 0.35],
+  [1.2, 0.9],
+];
+
 interface Pulse {
   /** Crossing the pulse last left, in grid squares. */
   col: number;
   row: number;
   /** Index into DIRECTIONS. */
   direction: number;
+  /** The direction it will take at the next crossing, chosen ahead of time
+   *  so the glow in front can bend around the corner with it. */
+  nextDirection: number;
   /** How far it is along the current square's edge, 0 to 1. */
   progress: number;
   /** Its own speed, in squares per second. */
@@ -65,8 +82,10 @@ export function startGrid(
     cellSize = 72,
     lineAlpha = 0.09,
     density = 14,
-    speed = 4,
-    tailLength = 4,
+    speed = 2.2,
+    tailLength = 5,
+    leadLength = 1.2,
+    glowRadius = 26,
     turnChance = 0.3,
   } = options;
 
@@ -87,7 +106,8 @@ export function startGrid(
   let offsetY = 0;
   let pulses: Pulse[] = [];
   let lineColor = "#ffffff";
-  let pulseColor = "#ffffff";
+  /** A small pre-drawn picture of the soft glow, stamped at each pulse's head. */
+  let glowSprite: HTMLCanvasElement | null = null;
   let frameId = 0;
   let lastFrameTime = 0;
   let running = false;
@@ -95,11 +115,19 @@ export function startGrid(
   const toX = (col: number) => offsetX + col * cellSize;
   const toY = (row: number) => offsetY + row * cellSize;
 
+  /** Usually straight on, sometimes a left or right turn. */
+  function pickNextDirection(direction: number) {
+    if (Math.random() >= turnChance) return direction;
+    const turn = Math.random() < 0.5 ? 1 : 3; // right or left
+    return (direction + turn) % 4;
+  }
+
   /** Put a pulse at a random crossing, heading in a random direction. */
   function resetPulse(pulse: Pulse, delay: number) {
     pulse.col = Math.floor(Math.random() * (cols + 1));
     pulse.row = Math.floor(Math.random() * (rows + 1));
     pulse.direction = Math.floor(Math.random() * 4);
+    pulse.nextDirection = pickNextDirection(pulse.direction);
     pulse.progress = 0;
     pulse.speed = speed * (0.7 + Math.random() * 0.6);
     pulse.stepsLeft = 8 + Math.floor(Math.random() * 16);
@@ -144,9 +172,41 @@ export function startGrid(
   }
 
   function readColors() {
-    const styles = getComputedStyle(canvas);
-    lineColor = styles.color || "#ffffff";
-    pulseColor = styles.getPropertyValue("--accent").trim() || lineColor;
+    lineColor = getComputedStyle(canvas).color || "#ffffff";
+    buildGlowSprite();
+  }
+
+  /**
+   * Draw the soft round glow once, in the current color, onto a tiny hidden
+   * canvas. Stamping that picture each frame is much cheaper than blurring live.
+   */
+  function buildGlowSprite() {
+    const size = Math.ceil(glowRadius * 2);
+    const sprite = document.createElement("canvas");
+    sprite.width = size * 2; // 2x so it stays smooth on sharp screens
+    sprite.height = size * 2;
+    const spriteCtx = sprite.getContext("2d");
+    if (!spriteCtx) return;
+    spriteCtx.scale(2, 2);
+
+    // First paint the shape of the glow: solid in the middle, fading to nothing.
+    const gradient = spriteCtx.createRadialGradient(
+      glowRadius, glowRadius, 0,
+      glowRadius, glowRadius, glowRadius
+    );
+    gradient.addColorStop(0, "rgba(0,0,0,1)");
+    gradient.addColorStop(0.08, "rgba(0,0,0,0.85)");
+    gradient.addColorStop(0.25, "rgba(0,0,0,0.32)");
+    gradient.addColorStop(0.55, "rgba(0,0,0,0.09)");
+    gradient.addColorStop(1, "rgba(0,0,0,0)");
+    spriteCtx.fillStyle = gradient;
+    spriteCtx.fillRect(0, 0, size, size);
+
+    // Then tint that shape with the theme color.
+    spriteCtx.globalCompositeOperation = "source-in";
+    spriteCtx.fillStyle = lineColor;
+    spriteCtx.fillRect(0, 0, size, size);
+    glowSprite = sprite;
   }
 
   /** Move every pulse forward by dt seconds. */
@@ -180,10 +240,8 @@ export function startGrid(
         pulse.trail.unshift({ x: toX(pulse.col), y: toY(pulse.row) });
         if (pulse.trail.length > tailLength + 2) pulse.trail.pop();
 
-        if (Math.random() < turnChance) {
-          const turn = Math.random() < 0.5 ? 1 : 3; // right or left
-          pulse.direction = (pulse.direction + turn) % 4;
-        }
+        pulse.direction = pulse.nextDirection;
+        pulse.nextDirection = pickNextDirection(pulse.direction);
 
         // If it has run off the screen, let it fade out.
         const offScreen =
@@ -215,6 +273,56 @@ export function startGrid(
     ctx.stroke();
   }
 
+  /**
+   * Draw one stretch of light along a path of points, brightest at the start
+   * and fading to nothing over maxPixels. Each piece is drawn three times, wide
+   * and faint, then narrower and brighter, which reads as a soft blurred line.
+   */
+  function drawFadingPath(
+    startX: number,
+    startY: number,
+    path: { x: number; y: number }[],
+    maxPixels: number,
+    brightness: number
+  ) {
+    const pieceLength = 6;
+    let travelled = 0;
+    let fromX = startX;
+    let fromY = startY;
+
+    for (const point of path) {
+      const segmentLength = Math.hypot(point.x - fromX, point.y - fromY);
+      if (segmentLength > 0) {
+        const pieces = Math.max(1, Math.ceil(segmentLength / pieceLength));
+        for (let i = 0; i < pieces; i++) {
+          const start = i / pieces;
+          const end = (i + 1) / pieces;
+          const distance = travelled + segmentLength * start;
+          if (distance >= maxPixels) break;
+          const fade = 1 - distance / maxPixels;
+          const alpha = fade * fade * brightness;
+          const x1 = fromX + (point.x - fromX) * start;
+          const y1 = fromY + (point.y - fromY) * start;
+          const x2 = fromX + (point.x - fromX) * end;
+          const y2 = fromY + (point.y - fromY) * end;
+
+          for (const [lineWidth, strength] of GLOW_LAYERS) {
+            ctx.lineWidth = lineWidth;
+            ctx.globalAlpha = alpha * strength;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+          }
+        }
+      }
+      travelled += segmentLength;
+      if (travelled >= maxPixels) break;
+      fromX = point.x;
+      fromY = point.y;
+    }
+  }
+
   function drawPulse(pulse: Pulse) {
     if (pulse.delay > 0 || pulse.life <= 0) return;
 
@@ -222,59 +330,46 @@ export function startGrid(
     const headX = toX(pulse.col + dx * pulse.progress);
     const headY = toY(pulse.row + dy * pulse.progress);
 
-    // The tail is the path from the head back through the crossings it passed.
-    // It is drawn in short pieces, each a little fainter than the one before.
-    const tailPixels = tailLength * cellSize;
-    const pieceLength = 6;
-    let travelled = 0;
-    let fromX = headX;
-    let fromY = headY;
+    ctx.strokeStyle = lineColor;
+    ctx.lineCap = "butt";
 
-    ctx.strokeStyle = pulseColor;
-    ctx.lineWidth = 1.5;
-    ctx.lineCap = "round";
+    // The tail: back from the head through the crossings it has passed.
+    drawFadingPath(
+      headX,
+      headY,
+      pulse.trail,
+      tailLength * cellSize,
+      pulse.life * 0.8
+    );
 
-    for (const point of pulse.trail) {
-      const segmentLength = Math.hypot(point.x - fromX, point.y - fromY);
-      const pieces = Math.max(1, Math.ceil(segmentLength / pieceLength));
-      for (let i = 0; i < pieces; i++) {
-        const start = i / pieces;
-        const end = (i + 1) / pieces;
-        const distance = travelled + segmentLength * start;
-        if (distance >= tailPixels) break;
-        const fade = 1 - distance / tailPixels;
-        ctx.globalAlpha = fade * fade * pulse.life * 0.9;
-        ctx.beginPath();
-        ctx.moveTo(
-          fromX + (point.x - fromX) * start,
-          fromY + (point.y - fromY) * start
-        );
-        ctx.lineTo(
-          fromX + (point.x - fromX) * end,
-          fromY + (point.y - fromY) * end
-        );
-        ctx.stroke();
-      }
-      travelled += segmentLength;
-      if (travelled >= tailPixels) break;
-      fromX = point.x;
-      fromY = point.y;
+    // The lead: a shorter glow reaching ahead, following the turn it is about
+    // to make at the next crossing.
+    const nextCol = pulse.col + dx;
+    const nextRow = pulse.row + dy;
+    const [ndx, ndy] = DIRECTIONS[pulse.nextDirection];
+    const reach = Math.ceil(leadLength) + 1;
+    drawFadingPath(
+      headX,
+      headY,
+      [
+        { x: toX(nextCol), y: toY(nextRow) },
+        { x: toX(nextCol + ndx * reach), y: toY(nextRow + ndy * reach) },
+      ],
+      leadLength * cellSize,
+      pulse.life * 0.8
+    );
+
+    // The head: a soft, diffuse point of light.
+    if (glowSprite) {
+      ctx.globalAlpha = pulse.life;
+      ctx.drawImage(
+        glowSprite,
+        headX - glowRadius,
+        headY - glowRadius,
+        glowRadius * 2,
+        glowRadius * 2
+      );
     }
-
-    // The head: a soft glow with a bright dot in the middle.
-    ctx.fillStyle = pulseColor;
-    ctx.globalAlpha = 0.12 * pulse.life;
-    ctx.beginPath();
-    ctx.arc(headX, headY, 9, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalAlpha = 0.25 * pulse.life;
-    ctx.beginPath();
-    ctx.arc(headX, headY, 4.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalAlpha = pulse.life;
-    ctx.beginPath();
-    ctx.arc(headX, headY, 1.8, 0, Math.PI * 2);
-    ctx.fill();
   }
 
   function draw() {
