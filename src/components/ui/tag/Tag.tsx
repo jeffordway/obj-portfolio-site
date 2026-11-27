@@ -1,3 +1,8 @@
+"use client";
+
+// Tag runs in the browser so the tooltip receives a ready-made element.
+// (As a server component, dev mode handed the tooltip a placeholder it could not
+// use, and the tags disappeared on the about and project pages.)
 import * as React from "react";
 import { cn } from "@/lib/utils"; 
 import { Tooltip } from "@/components/ui/tooltip/Tooltip";

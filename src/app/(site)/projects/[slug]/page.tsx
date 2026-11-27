@@ -148,9 +148,10 @@ export default async function ProjectPage({
         <Section maxWidth="container">
           <TwoColumnGrid firstColSpan={3} gap={8}>
             {/* Left Column: Skills */}
-            <div className="sticky top-24 h-fit">
-              {" "}
-              {/* Make skills sticky */}
+            {/* Skills stay pinned while you scroll, but only on wider screens where
+                they sit beside the text. On phones they stack above it, so pinning
+                them would let the text slide over them. */}
+            <div className="md:sticky md:top-24 h-fit">
               <OneColumnGrid gap={4}>
                 <Text variant="title">Technical Skills</Text>
                 {project.skills && project.skills.length > 0 ? (
