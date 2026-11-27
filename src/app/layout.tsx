@@ -40,7 +40,7 @@ export const viewport = {
 const primaryFont = Barlow({
   variable: "--font-primary",
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"], // only the weights the site uses; each extra weight is another download
   display: "swap",
   preload: true,
   fallback: ["system-ui", "sans-serif"],
