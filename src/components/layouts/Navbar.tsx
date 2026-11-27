@@ -13,6 +13,7 @@ import { NavLogo } from "@/components/ui/navigation/NavLogo";
 import { Icon } from "@/components/ui/icon/Icon";
 import { Section } from "@/components/layouts/Section";
 import { navLinks, socialLinks } from "@/lib/site";
+import { useScroll } from "@/hooks/useScroll";
 
 export interface NavbarProps {
   className?: string;
@@ -22,6 +23,8 @@ export const Navbar = ({ className }: NavbarProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  // Once the page scrolls, the bar gets a soft background so content does not show through it
+  const { isScrolled } = useScroll({ scrollThreshold: 10 });
 
   useEffect(() => {
     setMounted(true);
@@ -83,7 +86,10 @@ export const Navbar = ({ className }: NavbarProps) => {
     <>
       <header
         className={cn(
-          "fixed top-0 z-[100] w-full bg-transparent", // Change to fixed with higher z-index
+          "fixed top-0 z-[100] w-full transition-colors duration-300",
+          isScrolled
+            ? "bg-background/80 backdrop-blur-md border-b border-foreground/10"
+            : "bg-transparent",
           className,
         )}
       >

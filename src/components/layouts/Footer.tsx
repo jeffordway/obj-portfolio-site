@@ -61,7 +61,8 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
         {...props}
       >
         <Section maxWidth="container">
-          <div className="flex flex-col items-center gap-4 pb-4 pt-8 md:pt-12">
+          {/* Extra bottom space on phones so the floating buttons do not cover the footer text */}
+          <div className="flex flex-col items-center gap-4 pb-24 md:pb-4 pt-8 md:pt-12">
             {/* Primary Navigation (showNavBar: true) */}
             <nav
               aria-label="Primary Footer Navigation"
