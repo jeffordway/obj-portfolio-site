@@ -4,12 +4,13 @@ import { OneColumnGrid } from "@/components/ui/grid/OneColumnGrid";
 import { Text } from "@/components/ui/typography/Text";
 
 import React from "react";
+import Link from "next/link";
 import type { Metadata } from "next";
 
 // Basic SEO metadata for this page
 export const metadata: Metadata = {
-  title: "Contact | Your Name - Portfolio", // Replace Your Name
-  description: "Learn more about my background and journey.", // Simplified description
+  title: "Contact",
+  description: "Send Jeff Ordway a message.",
 };
 
 /**
@@ -27,6 +28,13 @@ export default function ContactPage() {
           back to you as soon as possible.
         </Text>
         <ContactForm />
+        <Text variant="caption" className="text-muted-foreground">
+          I only use what you send here to reply to you. See the{" "}
+          <Link href="/privacy-policy" className="underline">
+            Privacy Policy
+          </Link>
+          .
+        </Text>
       </OneColumnGrid>
     </Section>
   );

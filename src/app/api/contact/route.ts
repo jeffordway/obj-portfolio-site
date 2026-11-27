@@ -11,10 +11,9 @@ const MAX_REQUESTS = 5 // 5 requests per minute
 
 function getRateLimitKey(request: NextRequest): string {
   // Use IP address as the rate limit key
-  const ip = request.headers.get('x-forwarded-for') || 
-             request.headers.get('x-real-ip') || 
-             'unknown'
-  return ip
+  // x-forwarded-for can be a comma-separated list. The first entry is the client.
+  const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+  return forwarded || request.headers.get('x-real-ip') || 'unknown'
 }
 
 function checkRateLimit(key: string): boolean {
@@ -50,6 +49,12 @@ export async function POST(request: NextRequest) {
     // Parse the request body
     const body = await request.json();
 
+    // Honeypot: real visitors never see or fill the "website" field.
+    // Bots usually fill every field. Pretend it worked and send nothing.
+    if (body && typeof body.website === 'string' && body.website.trim() !== '') {
+      return NextResponse.json({ message: 'Email sent successfully!' }, { status: 200 });
+    }
+
     // Process the contact form submission
     const result = await processContactForm(
       body,
@@ -67,16 +72,19 @@ export async function POST(request: NextRequest) {
 
     // Return the appropriate response
     return NextResponse.json(
-      result.success 
-        ? { message: 'Email sent successfully!', data: result.data }
-        : { error: result.error?.message, details: result.error?.details },
+      result.success
+        ? { message: 'Email sent successfully!' }
+        : {
+            error: result.error?.message,
+            // Field errors help the visitor fix the form. Server errors stay in the logs.
+            details: result.status === 400 ? result.error?.details : undefined,
+          },
       { status: result.status }
     );
 
   } catch (err) {
     // Handle unexpected errors
     console.error('API Route Error:', err);
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-    return NextResponse.json({ error: 'Internal Server Error', details: errorMessage }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

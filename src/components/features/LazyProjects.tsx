@@ -39,27 +39,49 @@ export function LazyProjects({ projects }: { projects: Project[] }) {
     <AutoGrid gap={8}>
       {visibleProjects.length > 0 ? (
         visibleProjects.map((project) => (
-          <Card
-            key={project._id}
-            title={project.title}
-            description={project.headline || ''}
-            imageUrl={project.heroImage ? urlFor(project.heroImage).url() : ''}
-            imageAlt={`${project.title} project screenshot`}
-            href={`/projects/${project.slug.current}`}
-            tags={project.categories ? project.categories.map((category) => (
-              <Tag
-                key={category._id}
-                label={category.title}
-                icon={
-                  category.slug?.current ? (
-                    <Icon name={category.slug.current} size="sm" />
-                  ) : undefined
-                }
-                tooltipContent={category.description}
-              />
-            )) : undefined}
-            className="aspect-square w-full"
-          />
+          // Title and summary sit under each card so they show without hovering (phones can't hover)
+          <div key={project._id} className="flex flex-col gap-3">
+            <Card
+              title={project.title}
+              description={project.headline || ''}
+              imageUrl={
+                project.heroImage
+                  ? // Cards are square and never wider than about 800px on screen,
+                    // so ask Sanity for a 1000px square, not the full original upload.
+                    urlFor(project.heroImage)
+                      .width(1000)
+                      .height(1000)
+                      .fit('crop')
+                      .auto('format')
+                      .quality(80)
+                      .url()
+                  : ''
+              }
+              imageAlt={`${project.title} project screenshot`}
+              href={`/projects/${project.slug.current}`}
+              tags={project.categories ? project.categories.map((category) => (
+                <Tag
+                  key={category._id}
+                  label={category.title}
+                  icon={
+                    category.slug?.current ? (
+                      <Icon name={category.slug.current} size="sm" />
+                    ) : undefined
+                  }
+                  tooltipContent={category.description}
+                />
+              )) : undefined}
+              className="aspect-square w-full"
+            />
+            <div>
+              <Text variant="heading">{project.title}</Text>
+              {project.headline && (
+                <Text variant="body-sm" className="text-foreground/60">
+                  {project.headline}
+                </Text>
+              )}
+            </div>
+          </div>
         ))
       ) : (
         <Text variant="body" className="col-span-full text-center italic">

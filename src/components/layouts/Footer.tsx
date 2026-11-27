@@ -61,7 +61,8 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
         {...props}
       >
         <Section maxWidth="container">
-          <div className="flex flex-col items-center gap-4 pb-4 pt-8 md:pt-12">
+          {/* Extra bottom space on phones so the floating buttons do not cover the footer text */}
+          <div className="flex flex-col items-center gap-4 pb-24 md:pb-4 pt-8 md:pt-12">
             {/* Primary Navigation (showNavBar: true) */}
             <nav
               aria-label="Primary Footer Navigation"
@@ -85,8 +86,9 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
 
             {/* Copyright Notice */}
             <Text variant="caption" className="text-center pt-4">
-              &copy; {currentYear} Nielsen Ossowski Creative LLC. All rights
-              reserved.
+              &copy; {currentYear} Jeff Ordway. All rights reserved.
+              <br />
+              Views here are my own and do not represent any employer.
             </Text>
           </div>
         </Section>

@@ -1,4 +1,3 @@
-import { withNextVideo } from "next-video/process";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -13,6 +12,13 @@ const nextConfig: NextConfig = {
   },
   // Transpile Sanity packages that use modern JavaScript features
   transpilePackages: ["@sanity"],
+  // Old legal pages were merged into two. Send old links to the right place.
+  async redirects() {
+    return [
+      { source: '/cookie-policy', destination: '/privacy-policy', permanent: true },
+      { source: '/disclaimer', destination: '/terms', permanent: true },
+    ];
+  },
   // Security headers
   async headers() {
     return [
@@ -28,39 +34,10 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-
-  // Configure webpack to handle SVG files
-  webpack(config) {
-    // Grab the existing rule that handles SVG imports
-    const fileLoaderRule = config.module.rules.find((rule: { test?: { test?: (path: string) => boolean } }) =>
-      rule.test?.test?.(".svg")
-    );
-
-    config.module.rules.push(
-      // Reapply the existing rule, but only for svg imports ending in ?url
-      {
-        ...fileLoaderRule,
-        test: /\.svg$/i,
-        resourceQuery: /url/, // *.svg?url
-      },
-      // Convert all other *.svg imports to React components
-      {
-        test: /\.svg$/i,
-        issuer: /\.[jt]sx?$/i,
-        resourceQuery: { not: [/url/] }, // exclude if *.svg?url
-        use: ["@svgr/webpack"],
-      }
-    );
-
-    // Modify the file loader rule to ignore *.svg, since we have it handled now.
-    fileLoaderRule.exclude = /\.svg$/i;
-
-    return config;
-  },
 };
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-export default withBundleAnalyzer(withNextVideo(nextConfig));
+export default withBundleAnalyzer(nextConfig);

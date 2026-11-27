@@ -43,7 +43,7 @@ type BaseTextProps<E extends TextElement = "p"> = {
   variant?: TextVariant;
   /** Text alignment. @default 'left' */
   align?: TextAlign;
-  /** Apply muted styling (reduced opacity). @default false */
+  /** Cut long text off with "..." on one line. @default false */
   truncate?: boolean;
   /** Additional CSS classes. */
   className?: string;

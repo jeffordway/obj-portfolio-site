@@ -126,6 +126,7 @@ export default async function HomePage() {
         {/* Background Layer */}
         <HeroBackground
           videoSrc={aboutVideoPath}
+          videoPoster="/videos/about-poster.jpg"
           imageAlt="About page background video"
         />
 
@@ -208,7 +209,8 @@ export default async function HomePage() {
                   {renderCoreValues()}
                 </OneColumnGrid>
               </OneColumnGrid>
-              <OneColumnGrid gap={8} showDividers={true}>
+              {/* max-w-prose keeps lines to a comfortable reading length on wide screens */}
+              <OneColumnGrid gap={8} showDividers={true} className="max-w-prose">
                 <OneColumnGrid gap={4} className="pb-8">
                   <Text variant="title">My Story</Text>
                   <Text>

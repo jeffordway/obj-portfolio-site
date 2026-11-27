@@ -1,9 +1,11 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import Video from "next-video";
 import Image, { StaticImageData } from "next/image";
 import { createImageUrlBuilder, type SanityImageSource, type SanityImageObject, type SanityImageWithAssetStub } from "@sanity/image-url";
 import { client } from "@/sanity/lib/client";
+import { MeshBackground } from "@/components/ui/background/MeshBackground";
+import { GridBackground } from "@/components/ui/background/GridBackground";
+import { BackgroundMotionToggle } from "@/components/ui/background/BackgroundMotionToggle";
 
 // We'll use standard Sanity types without extensions to keep the code clean
 
@@ -52,23 +54,15 @@ function isSanityImageWithAsset(
 }
 
 /**
- * Import the Video component type
- */
-import type { VideoProps } from "next-video";
-
-/**
- * Define a type that matches what next-video expects for the src prop
- * Based on the documentation and error messages
- * Also allows for direct string URLs for videos in public folder
- */
-type VideoSource = NonNullable<VideoProps["src"]> | string;
-
-/**
  * Props for the HeroBackground component
  */
 interface HeroBackgroundProps {
-  /** Video source from next-video import or direct URL string */
-  videoSrc?: VideoSource;
+  /** Coded animation to use as the background (no video or image needed) */
+  animation?: "mesh" | "grid";
+  /** Path or URL of a background video file */
+  videoSrc?: string;
+  /** Still image shown while the video loads */
+  videoPoster?: string;
   /** Image source from Sanity CMS or local static import */
   imageSrc?: SanityImageSource | StaticImageData;
   /** Alt text for the image (accessibility) */
@@ -80,7 +74,9 @@ interface HeroBackgroundProps {
 }
 
 export function HeroBackground({
+  animation,
   videoSrc,
+  videoPoster,
   imageSrc,
   imageAlt = "Background image",
   className,
@@ -98,9 +94,14 @@ export function HeroBackground({
     } else if (isSanityImageWithAsset(imageSrc)) {
       // Handle Sanity CMS images
       try {
-        // Standard Sanity image reference format with optimized quality
-        // Using higher quality (90) for hero images since they're visually important
-        finalSrc = urlFor(imageSrc).auto("format").fit("max").quality(90).url();
+        // Ask Sanity for a screen-sized version, not the full original upload.
+        // The image sits behind an overlay, so 2400px wide at quality 80 is plenty.
+        finalSrc = urlFor(imageSrc)
+          .width(2400)
+          .auto("format")
+          .fit("max")
+          .quality(80)
+          .url();
 
         // Generate a low-quality placeholder for blur effect
         // This is the Next.js recommended approach for blur placeholders
@@ -125,61 +126,49 @@ export function HeroBackground({
   }
 
   // Only render image if there's no video and we have a valid image source
-  const shouldRenderImage = !videoSrc && finalSrc;
+  const shouldRenderImage = !animation && !videoSrc && finalSrc;
+
+  // Anything that moves gets a pause button
+  const hasMotion = !!animation || !!videoSrc;
 
   return (
+    <>
     <div
       className={cn(
         "fixed inset-0 min-h-screen overflow-hidden z-10",
         className
       )}
-      data-has-video={!!videoSrc}
+      data-has-animation={!!animation}
+      data-has-video={!animation && !!videoSrc}
       data-has-image={!!finalSrc}
     >
+      {/* Coded animation background */}
+      {animation && (
+        <div className="fixed inset-0 h-screen w-full bg-background">
+          {animation === "grid" ? <GridBackground /> : <MeshBackground />}
+        </div>
+      )}
+
       {/* Video Background */}
-      {videoSrc &&
-        (typeof videoSrc === "string" ? (
-          // Direct video URL - use native video element to avoid watermark
-          <video
-            src={videoSrc}
-            className="w-full h-screen"
-            style={{
-              position: "fixed",
-              inset: "0px",
-              objectFit: "cover",
-            }}
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls={false}
-            preload="metadata"
-          />
-        ) : (
-          // Next-video import
-          <Video
-            src={videoSrc}
-            className="w-full h-screen"
-            style={
-              {
-                position: "fixed",
-                inset: "0px",
-                "--media-object-fit": "cover",
-              } as any
-            }
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls={false}
-            // Using higher quality settings to prioritize video loading
-            poster={
-              typeof videoSrc !== "string" && videoSrc.blurDataURL
-                ? videoSrc.blurDataURL
-                : undefined
-            }
-          />
-        ))}
+      {!animation && videoSrc && (
+        <video
+          src={videoSrc}
+          poster={videoPoster}
+          data-background-video
+          className="w-full h-screen"
+          style={{
+            position: "fixed",
+            inset: "0px",
+            objectFit: "cover",
+          }}
+          autoPlay
+          loop
+          muted
+          playsInline
+          controls={false}
+          preload="metadata"
+        />
+      )}
       {/* Image Background - handles both Sanity and local images */}
       {shouldRenderImage && finalSrc && (
         <div className="fixed inset-0 w-full h-screen">
@@ -189,7 +178,7 @@ export function HeroBackground({
             fill
             priority
             sizes="100vw"
-            quality={90}
+            quality={80}
             placeholder={finalBlurUrl ? "blur" : "empty"}
             blurDataURL={finalBlurUrl}
             style={{
@@ -201,16 +190,21 @@ export function HeroBackground({
         </div>
       )}
 
-      {/* Overlay with customizable opacity */}
-      <div
-        className={cn(
-          "absolute inset-0 bg-background/80 dark:bg-background/60",
-          overlayClassName
-        )}
-        aria-hidden="true"
-        style={{ pointerEvents: "none" }}
-      />
+      {/* Overlay with customizable opacity (the coded animations are already subtle, so they get none) */}
+      {!animation && (
+        <div
+          className={cn(
+            "absolute inset-0 bg-background/80 dark:bg-background/60",
+            overlayClassName
+          )}
+          aria-hidden="true"
+          style={{ pointerEvents: "none" }}
+        />
+      )}
     </div>
+    {/* Sits outside the background layer so it stays clickable above the hero text */}
+    {hasMotion && <BackgroundMotionToggle />}
+    </>
   );
 }
 

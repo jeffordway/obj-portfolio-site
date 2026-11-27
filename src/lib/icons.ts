@@ -53,6 +53,11 @@ import {
   RiBehanceLine,
   RiPinterestLine,
   RiTrelloLine,
+  RiMapPinLine,
+  RiSunCloudyLine,
+  RiServerLine,
+  RiShieldKeyholeLine,
+  RiBracesLine,
 } from "@remixicon/react";
 
 // Import the type from @remixicon/react
@@ -97,6 +102,11 @@ export type IconName =
   | "supabase"
   | "sanity"
   | "express"
+  | "google-maps-api"
+  | "handlebars"
+  | "json-server"
+  | "jwt-authentication"
+  | "open-weather-api"
   | "sequelize"
 
   // Skills (Mobile Development)
@@ -216,6 +226,11 @@ export const iconMap: Record<IconName, RemixIconType> = {
   supabase: RiDatabase2Line,
   sanity: RiDatabase2Line,
   express: RiTerminalBoxLine,
+  "google-maps-api": RiMapPinLine,
+  handlebars: RiBracesLine,
+  "json-server": RiServerLine,
+  "jwt-authentication": RiShieldKeyholeLine,
+  "open-weather-api": RiSunCloudyLine,
   sequelize: RiDatabase2Line,
 
   // Skills (Mobile Development)

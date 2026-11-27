@@ -2,6 +2,9 @@ import { client, sanityFetch } from "@/lib/sanity";
 
 import { mockConsole } from '../../testUtils/testUtils';
 
+// Fake next-sanity: Jest can't parse its ES module build, and these tests replace client.fetch anyway.
+jest.mock("next-sanity", () => ({ createClient: () => ({ fetch: jest.fn() }) }));
+
 describe("sanity.ts", () => {
   const originalNodeEnv = process.env.NODE_ENV;
 
