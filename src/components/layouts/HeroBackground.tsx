@@ -4,6 +4,7 @@ import Image, { StaticImageData } from "next/image";
 import { createImageUrlBuilder, type SanityImageSource, type SanityImageObject, type SanityImageWithAssetStub } from "@sanity/image-url";
 import { client } from "@/sanity/lib/client";
 import { MeshBackground } from "@/components/ui/background/MeshBackground";
+import { GridBackground } from "@/components/ui/background/GridBackground";
 
 // We'll use standard Sanity types without extensions to keep the code clean
 
@@ -56,7 +57,7 @@ function isSanityImageWithAsset(
  */
 interface HeroBackgroundProps {
   /** Coded animation to use as the background (no video or image needed) */
-  animation?: "mesh";
+  animation?: "mesh" | "grid";
   /** Path or URL of a background video file */
   videoSrc?: string;
   /** Still image shown while the video loads */
@@ -137,9 +138,9 @@ export function HeroBackground({
       data-has-image={!!finalSrc}
     >
       {/* Coded animation background */}
-      {animation === "mesh" && (
+      {animation && (
         <div className="fixed inset-0 h-screen w-full bg-background">
-          <MeshBackground />
+          {animation === "grid" ? <GridBackground /> : <MeshBackground />}
         </div>
       )}
 
@@ -183,7 +184,7 @@ export function HeroBackground({
         </div>
       )}
 
-      {/* Overlay with customizable opacity (the mesh is already subtle, so it gets none) */}
+      {/* Overlay with customizable opacity (the coded animations are already subtle, so they get none) */}
       {!animation && (
         <div
           className={cn(

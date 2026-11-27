@@ -36,7 +36,7 @@ export default async function HomePage() {
       {/* Hero Section */}
       <div className="relative">
         <HeroBackground
-          animation="mesh"
+          animation="grid"
         />
 
         <HeroContent className="flex flex-col items-center justify-center text-center">
